@@ -5,9 +5,9 @@ class CustomText extends Text {
   static final widthMockUp = 414;
   CustomText(
       {@required String text,
-      Color color,
-      BuildContext context,
-      int fontSize,
+      @required Color color,
+      @required BuildContext context,
+      @required int fontSize,
       int maxLines: 1,
       TextOverflow textOverflow: TextOverflow.ellipsis,
       TextAlign textAlign: TextAlign.start,

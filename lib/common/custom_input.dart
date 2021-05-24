@@ -10,21 +10,23 @@ class CustomOutLineInput extends StatefulWidget {
   final String labelText;
   final FocusNode focusNode;
   final FocusNode nextNode;
+  final Color backgroundColorLabel;
   final TextInputType textInputType;
   final TextEditingController controller;
   StatusTypeInput statusTypeInput;
   final bool isDisable;
   final bool isSecure;
   CustomOutLineInput(
-      {this.statusTypeInput,
+      {this.statusTypeInput: StatusTypeInput.VALID,
       this.controller,
+      this.backgroundColorLabel: CustomColor.white,
       this.textInputType: TextInputType.text,
-      this.isDisable,
+      @required this.isDisable,
       this.isSecure: false,
       this.nextNode,
       this.focusNode,
-      this.deviceSize,
-      this.labelText});
+      @required this.deviceSize,
+      @required this.labelText});
 
   @override
   _CustomOutLineInputState createState() => _CustomOutLineInputState();
@@ -93,24 +95,24 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
   Widget build(BuildContext context) {
     return Container(
       height: widget.statusTypeInput != StatusTypeInput.INVALID
-          ? widget.deviceSize.height / 8
-          : widget.deviceSize.height / 7,
+          ? widget.deviceSize.height / 9
+          : widget.deviceSize.height / 8,
       width: widget.deviceSize.width,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Stack(
           overflow: Overflow.visible,
           children: [
             Container(
-                height: widget.deviceSize.height / 14,
-                padding: const EdgeInsets.only(left: 16, top: 2),
+                height: widget.deviceSize.height / 15,
+                padding: const EdgeInsets.only(left: 16, top: 4, bottom: 2),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                     border: Border.all(color: colorBorder, width: 1)),
                 child: Center(
                   child: TextFormField(
                     obscureText: widget.isSecure,
                     keyboardType: widget.textInputType,
-                    style: TextStyle(color: colorLabel),
+                    style: TextStyle(color: colorLabel, fontSize: 16),
                     enabled: !widget.isDisable,
                     textInputAction: widget.nextNode != null
                         ? TextInputAction.next
@@ -133,12 +135,11 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
                   ),
                 )),
             Positioned(
-              top: -widget.deviceSize.height / 50,
+              top: -widget.deviceSize.height / 55,
               left: 16,
               child: Container(
-                color: CustomColor.white,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                color: widget.backgroundColorLabel,
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 child: CustomText(
                   text: widget.labelText,
                   color: colorLabel,
@@ -169,7 +170,7 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
               )
             : CustomSizedBox(
                 context: context,
-                height: 32,
+                height: 8,
               ),
       ]),
     );
