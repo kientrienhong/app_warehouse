@@ -17,12 +17,10 @@ class HomeScreen extends StatelessWidget {
       {
         'imagePath': 'assets/images/storage1.png',
         'name': 'Medium Storage',
-        'price': '40.000.000',
         'address':
             '12, Phan Văn Trị, Phường 6, Quận Gò Vấp, Thành Phố Hồ Chí Minh',
         'rating': 4,
-        'size': '50m x 30m x 10m',
-        'service': Service.FOR_RENT
+        'service': Service.PROTECTING_SERVICE
       },
       {
         'imagePath': 'assets/images/storage2.png',
@@ -43,12 +41,10 @@ class HomeScreen extends StatelessWidget {
       {
         'imagePath': 'assets/images/storage4.png',
         'name': 'Large Storage',
-        'price': '40.000.000',
-        'size': '50m x 30m x 10m',
         'address':
             '12, Phan Văn Trị, Phường 6, Quận Gò Vấp, Thành Phố Hồ Chí Minh',
         'rating': 4,
-        'service': Service.FOR_RENT
+        'service': Service.PROTECTING_SERVICE
       },
     ];
 

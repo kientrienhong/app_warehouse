@@ -33,6 +33,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_rating_bar: ^4.0.0
+  qr_flutter: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -62,7 +63,8 @@ flutter:
     - assets/images/plus.png
     - assets/images/sub.png
     - assets/images/paypal.png
-
+    - assets/images/largeBox.png
+    - assets/images/smallBox.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

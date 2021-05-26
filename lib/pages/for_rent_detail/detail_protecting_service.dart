@@ -1,16 +1,143 @@
-import 'package:app_warehouse/common/avatar_widget.dart';
 import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
 import 'package:app_warehouse/pages/for_rent_detail/bill_for_rent.dart';
+import 'package:app_warehouse/pages/for_rent_detail/bill_protecting_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 
-class DetailForRentScreen extends StatelessWidget {
+class DetailProtectingServiceScreen extends StatelessWidget {
   final Map<String, dynamic> data;
 
-  DetailForRentScreen({this.data});
+  DetailProtectingServiceScreen({this.data});
+
+  Widget _buildOptionBox(
+      {@required BuildContext context,
+      @required Size deviceSize,
+      @required String price,
+      @required String imagePath,
+      @required String size}) {
+    return Row(
+      children: [
+        Container(
+          width: deviceSize.width / 3,
+          height: deviceSize.height / 5,
+          child: Center(child: Image.asset(imagePath)),
+          decoration: BoxDecoration(
+              color: CustomColor.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 14,
+                    color: Color(0x000000).withOpacity(0.06),
+                    offset: Offset(0, 6)),
+              ]),
+        ),
+        CustomSizedBox(
+          context: context,
+          width: 16,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CustomText(
+                  color: CustomColor.black,
+                  context: context,
+                  text: 'Size: ',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                CustomText(
+                  color: CustomColor.black[2],
+                  context: context,
+                  text: size,
+                  fontSize: 16,
+                ),
+              ],
+            ),
+            CustomSizedBox(
+              context: context,
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CustomText(
+                  text: price,
+                  color: CustomColor.purple,
+                  context: context,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                CustomSizedBox(
+                  context: context,
+                  width: 4,
+                ),
+                CustomText(
+                  text: '|' + ' ',
+                  color: CustomColor.black,
+                  context: context,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                CustomSizedBox(
+                  context: context,
+                  width: 4,
+                ),
+                CustomText(
+                  text: 'month',
+                  color: CustomColor.black[1],
+                  context: context,
+                  fontSize: 12,
+                ),
+              ],
+            ),
+            CustomSizedBox(
+              context: context,
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomText(
+                    text: 'Amount: ',
+                    color: CustomColor.black,
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                CustomSizedBox(
+                  context: context,
+                  width: 16,
+                ),
+                Image.asset('assets/images/sub.png'),
+                CustomSizedBox(
+                  context: context,
+                  width: 8,
+                ),
+                CustomText(
+                  text: '1',
+                  color: CustomColor.purple,
+                  context: context,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                CustomSizedBox(
+                  context: context,
+                  width: 8,
+                ),
+                Image.asset('assets/images/plus.png'),
+              ],
+            )
+          ],
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +177,6 @@ class DetailForRentScreen extends StatelessWidget {
                 children: [
                   CustomText(
                       text: data['name'],
-                      color: CustomColor.black,
-                      context: context,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                  CustomText(
-                      text: data['size'],
                       color: CustomColor.black,
                       context: context,
                       fontWeight: FontWeight.bold,
@@ -110,80 +231,27 @@ class DetailForRentScreen extends StatelessWidget {
                   fontSize: 14),
               CustomSizedBox(
                 context: context,
-                height: 16,
+                height: 40,
               ),
-              Container(
-                height: deviceSize.height / 8.5,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: CustomColor.purple)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AvatarWidget(
-                        deviceSize: deviceSize,
-                        isHome: false,
-                        name: 'Clarren Jessica',
-                        imageUrl: 'assets/images/avatar.png',
-                        role: 'Owner'),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        height: deviceSize.height / 16,
-                        width: deviceSize.height / 16,
-                        color: CustomColor.green,
-                        child: TextButton(
-                            onPressed: () {},
-                            child: Image.asset('assets/images/call.png')),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildOptionBox(
+                  context: context,
+                  size: '0.5m x 1m x 2m',
+                  deviceSize: deviceSize,
+                  price: '400.000đ',
+                  imagePath: 'assets/images/smallBox.png'),
               CustomSizedBox(
                 context: context,
-                height: 8,
+                height: 40,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CustomText(
-                      text: 'Months: ',
-                      color: CustomColor.black,
-                      context: context,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Image.asset('assets/images/sub.png',
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  CustomText(
-                    text: '1',
-                    color: CustomColor.purple,
-                    context: context,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: TextButton(
-                        onPressed: () {},
-                        child: Image.asset('assets/images/plus.png',
-                            fit: BoxFit.cover)),
-                  ),
-                ],
-              ),
+              _buildOptionBox(
+                  context: context,
+                  size: '1m x 1m x 2m',
+                  deviceSize: deviceSize,
+                  price: '750.000đ',
+                  imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,
-                height: 8,
+                height: 32,
               ),
               Row(
                 children: [
@@ -199,7 +267,7 @@ class DetailForRentScreen extends StatelessWidget {
                     width: 8,
                   ),
                   CustomText(
-                      text: data['price'] + 'đ',
+                      text: '750,000đ',
                       color: CustomColor.purple,
                       context: context,
                       fontWeight: FontWeight.bold,
@@ -208,7 +276,7 @@ class DetailForRentScreen extends StatelessWidget {
               ),
               CustomSizedBox(
                 context: context,
-                height: 16,
+                height: 32,
               ),
               Container(
                   height: 40,
@@ -218,11 +286,10 @@ class DetailForRentScreen extends StatelessWidget {
                       color: CustomColor.lightBlue),
                   child: TextButton(
                       onPressed: () {
-                        print('test00');
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BillForRent(
+                                builder: (context) => BillProtectingService(
                                       data: data,
                                     )));
                       },
