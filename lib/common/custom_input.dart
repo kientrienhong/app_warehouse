@@ -95,7 +95,7 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
   Widget build(BuildContext context) {
     return Container(
       height: widget.statusTypeInput != StatusTypeInput.INVALID
-          ? widget.deviceSize.height / 9
+          ? widget.deviceSize.height / 9.5
           : widget.deviceSize.height / 8,
       width: widget.deviceSize.width,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -170,7 +170,7 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
               )
             : CustomSizedBox(
                 context: context,
-                height: 8,
+                height: 4,
               ),
       ]),
     );

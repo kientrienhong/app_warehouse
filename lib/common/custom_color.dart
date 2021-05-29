@@ -28,12 +28,16 @@ class CustomColor {
       _brightBluePrimaryValue, <int, Color>{0: Color(_brightBluePrimaryValue)});
 
   static const _redSemantic = 0xFFCE0200;
-  static const MaterialColor pink =
+  static const MaterialColor red =
       MaterialColor(_redSemantic, <int, Color>{0: Color(_redSemantic)});
 
   static const _greenSemantic = 0xFF00993C;
   static const MaterialColor green =
       MaterialColor(_greenSemantic, <int, Color>{0: Color(_greenSemantic)});
+
+  static const _orangeSemantic = 0xFFFF7C33;
+  static const MaterialColor orange =
+      MaterialColor(_orangeSemantic, <int, Color>{0: Color(_orangeSemantic)});
 
   static const _white = 0xFFFFFFFFF;
   static const MaterialColor white =

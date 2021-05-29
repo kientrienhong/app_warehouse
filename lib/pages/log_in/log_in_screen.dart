@@ -4,7 +4,9 @@ import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/pages/home/home_screen.dart';
+import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
+import 'package:app_warehouse/pages/forgot_password/forgot_password.dart';
+import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
 import 'package:app_warehouse/pages/sign_up/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -160,6 +162,7 @@ class _FormLogInState extends State<FormLogIn> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           CustomOutLineInput(
             deviceSize: widget.deviceSize,
@@ -176,6 +179,24 @@ class _FormLogInState extends State<FormLogIn> {
             isSecure: true,
             focusNode: _focusNodePassword,
             controller: _controllerPassword,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ForgotPasswordScreen()));
+            },
+            child: CustomText(
+                text: 'Forgot Password? ',
+                color: CustomColor.purple,
+                context: context,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
+          ),
+          CustomSizedBox(
+            context: context,
+            height: 10,
           ),
           _buildButton(
               color: Color(0xFFE16259),
@@ -199,10 +220,18 @@ class _FormLogInState extends State<FormLogIn> {
               width: double.infinity,
               textColor: CustomColor.white,
               onPressFunction: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
+                if (_email == 'owner') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OwnerHomeScreeen()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CustomerBottomNavigation()),
+                  );
+                }
               },
               buttonColor: CustomColor.purple,
               borderRadius: 4),

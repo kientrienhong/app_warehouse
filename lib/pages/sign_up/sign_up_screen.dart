@@ -38,9 +38,13 @@ class SignUpScreen extends StatelessWidget {
                     positionTop: deviceSize.height / 3,
                     size: deviceSize.width * 0.25),
                 Positioned(
-                    child: CustomAppBar(
-                  isHome: false,
-                )),
+                    top: deviceSize.height / 20,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 24.0),
+                      child: CustomAppBar(
+                        isHome: false,
+                      ),
+                    )),
                 Container(
                   width: deviceSize.width,
                   child: Column(
@@ -82,7 +86,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final _focusAddress = FocusNode();
   final _focusConfirmPassword = FocusNode();
   final _focusPhone = FocusNode();
-
+  String _role;
   final _controllerEmail = TextEditingController();
   final _controllerPassword = TextEditingController();
   final _controllerName = TextEditingController();
@@ -112,6 +116,13 @@ class _SignUpFormState extends State<SignUpForm> {
     _controllerAddress.dispose();
     _controllerConfirmPassword.dispose();
     _controllerPhone.dispose();
+    _role = 'Customer';
+  }
+
+  void onChangeDropdownCButton(String value) {
+    setState(() {
+      _role = value;
+    });
   }
 
   @override
@@ -119,6 +130,7 @@ class _SignUpFormState extends State<SignUpForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomOutLineInput(
             deviceSize: widget.deviceSize,
@@ -170,6 +182,36 @@ class _SignUpFormState extends State<SignUpForm> {
             isSecure: true,
             focusNode: _focusConfirmPassword,
             controller: _controllerConfirmPassword,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+                border: Border.all(color: CustomColor.black[3], width: 1),
+                borderRadius: BorderRadius.circular(8)),
+            child: DropdownButton(
+                icon: ImageIcon(
+                  AssetImage('assets/images/arrowDown.png'),
+                ),
+                iconSize: 16,
+                hint: CustomText(
+                    text: 'Role',
+                    color: CustomColor.black[2],
+                    context: context,
+                    fontSize: 16),
+                underline: Container(
+                  width: 0,
+                ),
+                value: _role,
+                onChanged: onChangeDropdownCButton,
+                items: <String>['Customer', 'Ower']
+                    .map((e) => DropdownMenuItem<String>(
+                        value: e,
+                        child: CustomText(
+                            text: e,
+                            color: CustomColor.black,
+                            context: context,
+                            fontSize: 16)))
+                    .toList()),
           ),
           CustomSizedBox(
             context: context,

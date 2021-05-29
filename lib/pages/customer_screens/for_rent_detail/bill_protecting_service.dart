@@ -1,0 +1,58 @@
+import 'package:app_warehouse/common/bill_widget.dart';
+import 'package:app_warehouse/common/custom_app_bar.dart';
+import 'package:app_warehouse/common/custom_color.dart';
+import 'package:app_warehouse/common/custom_sizebox.dart';
+import 'package:app_warehouse/common/custom_text_button.dart';
+import 'package:flutter/material.dart';
+
+class BillProtectingService extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  BillProtectingService({this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              CustomAppBar(
+                isHome: false,
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              BillWidget(
+                data: data,
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 24,
+              ),
+              Container(
+                height: 38,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: CustomColor.lightBlue),
+                child: CustomTextButton(
+                    text: 'Done',
+                    textColor: CustomColor.green,
+                    context: context,
+                    onPressFunction: () {},
+                    fontSize: 16),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 24,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

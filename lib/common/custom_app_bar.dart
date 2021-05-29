@@ -1,10 +1,8 @@
 import 'package:app_warehouse/common/avatar_widget.dart';
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  bool isHome;
+  final bool isHome;
   CustomAppBar({this.isHome});
 
   @override
@@ -33,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   : GestureDetector(
                       onTap: () => {Navigator.of(context).pop()},
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: const EdgeInsets.only(top: 16.0),
                         child: Image.asset('assets/images/arrowLeft.png'),
                       ),
                     ),
