@@ -1,16 +1,17 @@
-import 'package:app_warehouse/pages/customer_screens/history_booking/history_booking_screen.dart';
-import 'package:app_warehouse/pages/customer_screens/home/home_screen.dart';
+import 'package:app_warehouse/common/custom_color.dart';
+import 'package:app_warehouse/common/custom_owner_bottm_navigation.dart';
 import 'package:app_warehouse/pages/customer_screens/profile/profile_screen.dart';
-import 'package:app_warehouse/common/custom_bottom_navigation.dart';
+import 'package:app_warehouse/pages/owner_screens/bill/bill_screen.dart';
+import 'package:app_warehouse/pages/owner_screens/create_storage/create_storage_screen.dart';
+import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
 import 'package:flutter/material.dart';
 
-class CustomerBottomNavigation extends StatefulWidget {
+class OwnerBottomNavigation extends StatefulWidget {
   @override
-  _CustomerBottomNavigationState createState() =>
-      _CustomerBottomNavigationState();
+  _OwnerBottomNavigationState createState() => _OwnerBottomNavigationState();
 }
 
-class _CustomerBottomNavigationState extends State<CustomerBottomNavigation> {
+class _OwnerBottomNavigationState extends State<OwnerBottomNavigation> {
   int _index = 0;
 
   @override
@@ -32,18 +33,20 @@ class _CustomerBottomNavigationState extends State<CustomerBottomNavigation> {
     return Scaffold(
       // drawerScrimColor: Color.fromARGB(51, 51, 51, 5),
       resizeToAvoidBottomInset: true,
+      backgroundColor: CustomColor.white,
       // resizeToAvoidBottomPadding: false,
       body: Stack(
         children: [
           IndexedStack(
             index: _index,
             children: [
-              CustomerHomeScreen(),
-              HistoryBookingScreen(),
+              OwnerHomeScreen(),
+              BillScreen(),
+              CreateStorageScreen(),
               ProfileScreen()
             ],
           ),
-          CustomBottomNavigation(
+          CustomOwnerBottomNavigation(
             deviceSize: deviceSize,
             index: _index,
             tapTab: _tapTab,

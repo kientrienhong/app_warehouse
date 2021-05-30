@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 enum StatusCheckingStorage { Pending, Approved, Reject }
 
-class OwnerHomeScreeen extends StatelessWidget {
+class OwnerHomeScreen extends StatelessWidget {
   List<Map<String, dynamic>> mockUpData = [
     {
       'imagePath': 'assets/images/storage1.png',

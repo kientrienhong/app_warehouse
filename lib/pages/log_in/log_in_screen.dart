@@ -6,7 +6,7 @@ import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
 import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
 import 'package:app_warehouse/pages/forgot_password/forgot_password.dart';
-import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
+import 'package:app_warehouse/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import 'package:app_warehouse/pages/sign_up/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -223,7 +223,8 @@ class _FormLogInState extends State<FormLogIn> {
                 if (_email == 'owner') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OwnerHomeScreeen()),
+                    MaterialPageRoute(
+                        builder: (context) => OwnerBottomNavigation()),
                   );
                 } else {
                   Navigator.push(

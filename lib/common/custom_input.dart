@@ -24,7 +24,7 @@ class CustomOutLineInput extends StatefulWidget {
       @required this.isDisable,
       this.isSecure: false,
       this.nextNode,
-      this.focusNode,
+      @required this.focusNode,
       @required this.deviceSize,
       @required this.labelText});
 
