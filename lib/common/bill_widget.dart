@@ -1,3 +1,4 @@
+import 'package:app_warehouse/common/avatar_widget.dart';
 import 'package:app_warehouse/common/bill_info_widget.dart';
 import 'package:app_warehouse/common/box_info_bill_widget.dart';
 import 'package:app_warehouse/common/custom_color.dart';
@@ -38,6 +39,39 @@ class BillWidget extends StatelessWidget {
             price: '750.000đ',
             imagePath: 'assets/images/largeBox.png',
             size: '1m x 1m x 2m'),
+        CustomSizedBox(
+          context: context,
+          height: 24,
+        ),
+        Container(
+          height: deviceSize.height / 8,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: CustomColor.purple)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AvatarWidget(
+                  deviceSize: deviceSize,
+                  isHome: false,
+                  name: 'Clarren Jessica',
+                  imageUrl: 'assets/images/avatar.png',
+                  role: 'Owner'),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  height: deviceSize.height / 16,
+                  width: deviceSize.height / 16,
+                  color: CustomColor.green,
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Image.asset('assets/images/call.png')),
+                ),
+              ),
+            ],
+          ),
+        ),
         CustomSizedBox(
           context: context,
           height: 24,

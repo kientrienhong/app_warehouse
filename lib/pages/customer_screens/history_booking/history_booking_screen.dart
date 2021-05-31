@@ -43,10 +43,10 @@ class HistoryBookingScreen extends StatelessWidget {
           padding: EdgeInsets.only(left: 24, right: 24),
           child: SingleChildScrollView(
             child: Container(
-              height: deviceSize.height * 1.25,
+              height: deviceSize.height * 1.4,
               child: CarouselSlider(
                 options: CarouselOptions(
-                  height: deviceSize.height,
+                  height: deviceSize.height * 1.4,
                   viewportFraction: 1.0,
                   enlargeCenterPage: false,
                   // autoPlay: false,
@@ -55,7 +55,7 @@ class HistoryBookingScreen extends StatelessWidget {
                   return Builder(
                     builder: (BuildContext context) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 40),
                         child: BillWidget(
                           data: i,
                         ),

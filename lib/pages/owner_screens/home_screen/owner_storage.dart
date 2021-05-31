@@ -1,6 +1,7 @@
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/pages/owner_screens/create_storage/create_storage_screen.dart';
 import 'package:app_warehouse/pages/owner_screens/detail_storage/owner_detail_storage.dart';
 import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +131,17 @@ class OwnerStorage extends StatelessWidget {
                       itemSize: 18,
                       direction: Axis.horizontal,
                     ),
-                    Image.asset('assets/images/edit.png')
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => Scaffold(
+                                        backgroundColor: CustomColor.white,
+                                        body: CreateStorageScreen(),
+                                      )));
+                        },
+                        child: Image.asset('assets/images/edit.png'))
                   ],
                 ),
               )

@@ -253,6 +253,46 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                 height: 32,
               ),
               Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CustomText(
+                      text: 'Months: ',
+                      color: CustomColor.black,
+                      context: context,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                  Container(
+                    width: 32,
+                    height: 32,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Image.asset('assets/images/sub.png',
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                  CustomText(
+                    text: '1',
+                    color: CustomColor.purple,
+                    context: context,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  Container(
+                    width: 32,
+                    height: 32,
+                    child: TextButton(
+                        onPressed: () {},
+                        child: Image.asset('assets/images/plus.png',
+                            fit: BoxFit.cover)),
+                  ),
+                ],
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 32,
+              ),
+              Row(
                 children: [
                   CustomText(
                     text: 'Price: ',

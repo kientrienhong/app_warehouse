@@ -66,7 +66,7 @@ class LogInScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                              text: 'Haven\'s had account yet?',
+                              text: 'Haven\'t had account yet?',
                               color: CustomColor.black,
                               context: context,
                               fontWeight: FontWeight.bold,
@@ -221,13 +221,13 @@ class _FormLogInState extends State<FormLogIn> {
               textColor: CustomColor.white,
               onPressFunction: () {
                 if (_email == 'owner') {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => OwnerBottomNavigation()),
                   );
                 } else {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => CustomerBottomNavigation()),

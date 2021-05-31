@@ -3,6 +3,7 @@ import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text_button.dart';
+import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 class BillProtectingService extends StatelessWidget {
@@ -42,7 +43,16 @@ class BillProtectingService extends StatelessWidget {
                     text: 'Done',
                     textColor: CustomColor.green,
                     context: context,
-                    onPressFunction: () {},
+                    onPressFunction: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              (CustomerBottomNavigation()),
+                        ),
+                        (route) => false,
+                      );
+                    },
                     fontSize: 16),
               ),
               CustomSizedBox(
