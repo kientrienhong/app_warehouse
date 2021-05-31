@@ -55,7 +55,8 @@ class HistoryBookingScreen extends StatelessWidget {
                   return Builder(
                     builder: (BuildContext context) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 40, horizontal: 20),
                         child: BillWidget(
                           data: i,
                         ),

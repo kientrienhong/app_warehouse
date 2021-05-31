@@ -27,7 +27,7 @@ class BillWidget extends StatelessWidget {
         ),
         BoxInfoBillWidget(
             deviceSize: deviceSize,
-            price: '400.000đ',
+            price: '400.000 VND',
             imagePath: 'assets/images/smallBox.png',
             size: '0.5m x 1m x 2m'),
         CustomSizedBox(
@@ -36,7 +36,7 @@ class BillWidget extends StatelessWidget {
         ),
         BoxInfoBillWidget(
             deviceSize: deviceSize,
-            price: '750.000đ',
+            price: '750.000 VND',
             imagePath: 'assets/images/largeBox.png',
             size: '1m x 1m x 2m'),
         CustomSizedBox(

@@ -199,7 +199,7 @@ class DetailForRentScreen extends StatelessWidget {
                     width: 8,
                   ),
                   CustomText(
-                      text: data['price'] + 'đ',
+                      text: data['price'] + ' VND',
                       color: CustomColor.purple,
                       context: context,
                       fontWeight: FontWeight.bold,

@@ -115,7 +115,7 @@ class BillInfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
             CustomText(
-              text: '1.000.000đ',
+              text: '1.000.000 VND',
               color: CustomColor.purple,
               context: context,
               fontSize: 24,

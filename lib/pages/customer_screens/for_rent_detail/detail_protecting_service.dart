@@ -236,7 +236,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                   context: context,
                   size: '0.5m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '400.000đ',
+                  price: '400.000 VND',
                   imagePath: 'assets/images/smallBox.png'),
               CustomSizedBox(
                 context: context,
@@ -246,7 +246,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                   context: context,
                   size: '1m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '750.000đ',
+                  price: '750.000 VND',
                   imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,
@@ -306,7 +306,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                     width: 8,
                   ),
                   CustomText(
-                      text: '750,000đ',
+                      text: '750,000 VND',
                       color: CustomColor.purple,
                       context: context,
                       fontWeight: FontWeight.bold,
