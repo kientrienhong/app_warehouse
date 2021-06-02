@@ -8,8 +8,9 @@ class BoxInfoBillWidget extends StatelessWidget {
   final String imagePath;
   final String size;
   final String price;
-
-  BoxInfoBillWidget({this.deviceSize, this.imagePath, this.size, this.price});
+  final int amount;
+  BoxInfoBillWidget(
+      {this.amount: 1, this.deviceSize, this.imagePath, this.size, this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +112,7 @@ class BoxInfoBillWidget extends StatelessWidget {
                   width: 16,
                 ),
                 CustomText(
-                  text: '1',
+                  text: amount.toString(),
                   color: CustomColor.purple,
                   context: context,
                   fontSize: 24,
