@@ -1,5 +1,6 @@
 import 'package:app_warehouse/common/avatar_widget.dart';
 import 'package:app_warehouse/common/box_info_bill_widget.dart';
+import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
@@ -70,6 +71,9 @@ class DetailBillScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ListView(
           children: [
+            CustomAppBar(
+              isHome: false,
+            ),
             CustomSizedBox(
               context: context,
               height: 32,

@@ -42,7 +42,9 @@ class _OwnerBottomNavigationState extends State<OwnerBottomNavigation> {
             children: [
               OwnerHomeScreen(),
               BillScreen(),
-              CreateStorageScreen(),
+              CreateStorageScreen(
+                data: null,
+              ),
               ProfileScreen()
             ],
           ),

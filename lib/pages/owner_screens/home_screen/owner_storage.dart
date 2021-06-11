@@ -138,7 +138,9 @@ class OwnerStorage extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (_) => Scaffold(
                                         backgroundColor: CustomColor.white,
-                                        body: CreateStorageScreen(),
+                                        body: CreateStorageScreen(
+                                          data: data,
+                                        ),
                                       )));
                         },
                         child: Image.asset('assets/images/edit.png'))
