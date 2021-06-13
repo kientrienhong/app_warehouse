@@ -1,3 +1,10 @@
 abstract class LoginView {
-  void updateView();
+  //update views
+  void updateViewStatusButton(String email, String password);
+  void updateViewErrorMsg(String error);
+  void updateLoading();
+
+  // handle events
+  void onChangeInput();
+  void onClickSignUp(String email, String password);
 }

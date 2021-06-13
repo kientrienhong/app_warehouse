@@ -32,4 +32,12 @@ class User {
         phone: phone,
         role: role);
   }
+
+  User.fromJson(Map<String, dynamic> json)
+      : name = json['displayName'],
+        email = json['email'],
+        jwtToken = json['idToken'],
+        address = 'address',
+        phone = '077777777',
+        role = UserRole.customer;
 }

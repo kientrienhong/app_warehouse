@@ -1,10 +1,13 @@
 import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
+import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/pages/customer_screens/for_rent_detail/detail_for_rent_screen.dart';
 import 'package:app_warehouse/pages/customer_screens/home/storage_for_rent_widget.dart';
 import 'package:app_warehouse/pages/customer_screens/home/storage_procteting_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 enum Service { FOR_RENT, PROTECTING_SERVICE }
 
@@ -12,7 +15,7 @@ class CustomerHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-
+    User user = Provider.of<User>(context, listen: false);
     List<Map<String, dynamic>> mockUpData = [
       {
         'imagePath': 'assets/images/storage1.png',

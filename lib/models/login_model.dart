@@ -1,27 +1,28 @@
+import 'package:app_warehouse/models/entity/user.dart';
+
 class LoginModel {
-  String _username;
-  String _password;
   bool _isDisableLogin;
   String _errorMsg;
+  bool _isLoading;
+  User _user;
 
   LoginModel() {
-    this._username = '';
-    this._password = '';
     _isDisableLogin = true;
     _errorMsg = '';
+    _isLoading = false;
+    _user = User();
   }
+  get user => this._user;
+
+  set user(value) => this._user = value;
+
+  bool get isLoading => this._isLoading;
+
+  set isLoading(bool value) => this._isLoading = value;
 
   String get errorMsg => this._errorMsg;
 
   set errorMsg(String value) => this._errorMsg = value;
-
-  get username => this._username;
-
-  set username(value) => this._username = value;
-
-  get password => this._password;
-
-  set password(value) => this._password = value;
 
   get isDisableLogin => this._isDisableLogin;
 

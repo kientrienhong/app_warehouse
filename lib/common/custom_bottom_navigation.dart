@@ -5,7 +5,8 @@ class CustomBottomNavigation extends StatelessWidget {
   final Size deviceSize;
   final Function tapTab;
   final int index;
-  CustomBottomNavigation({this.deviceSize, this.tapTab, this.index});
+  CustomBottomNavigation(
+      {@required this.deviceSize, @required this.tapTab, @required this.index});
 
   @override
   Widget build(BuildContext context) {

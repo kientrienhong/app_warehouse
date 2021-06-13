@@ -9,10 +9,12 @@ class CustomButton extends StatelessWidget {
   final Function onPressFunction;
   final Color textColor;
   final String text;
+  final bool isLoading;
   CustomButton(
       {@required this.height,
       @required this.text,
       @required this.width,
+      @required this.isLoading,
       @required this.textColor,
       @required this.onPressFunction,
       @required this.buttonColor,
@@ -29,6 +31,7 @@ class CustomButton extends StatelessWidget {
       child: CustomTextButton(
         context: context,
         text: text,
+        isLoading: isLoading,
         textColor: textColor,
         fontSize: 16,
         onPressFunction: onPressFunction,
