@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:app_warehouse/api/api_services.dart';
 import 'package:app_warehouse/models/entity/storage.dart';
 import 'package:app_warehouse/models/home_model.dart';
 import 'package:app_warehouse/views/home_view.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomePresenter {
   HomeModel _model;

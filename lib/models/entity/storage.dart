@@ -12,8 +12,8 @@ class Storage {
   final String description;
   final int status;
   final String ownerName;
-  final int priceFrom;
-  final int priceTo;
+  final double priceFrom;
+  final double priceTo;
   Storage(
       {this.id,
       this.address,
@@ -82,8 +82,8 @@ class Storage {
       description: map['description'],
       status: map['status']?.toInt(),
       ownerName: map['ownerName'],
-      priceFrom: map['priceFrom']?.toInt(),
-      priceTo: map['priceTo']?.toInt(),
+      priceFrom: map['priceFrom']?.toDouble(),
+      priceTo: map['priceTo']?.toDouble(),
     );
   }
 

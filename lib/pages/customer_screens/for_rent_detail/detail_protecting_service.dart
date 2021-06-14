@@ -2,20 +2,33 @@ import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/pages/customer_screens/for_rent_detail/bill_protecting_service.dart';
+import 'package:app_warehouse/models/entity/storage.dart';
+import 'package:app_warehouse/presenters/customer_detail_storage_presenter.dart';
+import 'package:app_warehouse/views/customer_detail_storage_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 
-class DetailProtectingServiceScreen extends StatelessWidget {
-  final Map<String, dynamic> data;
+class DetailProtectingServiceScreen extends StatefulWidget {
+  final Storage data;
 
   DetailProtectingServiceScreen({this.data});
+
+  @override
+  _DetailProtectingServiceScreenState createState() =>
+      _DetailProtectingServiceScreenState();
+}
+
+class _DetailProtectingServiceScreenState
+    extends State<DetailProtectingServiceScreen>
+    implements CustomerDetailStorageView {
+  CustomerDetailStoragePresenter presenter;
 
   Widget _buildOptionBox(
       {@required BuildContext context,
       @required Size deviceSize,
       @required String price,
       @required String imagePath,
+      @required String value,
       @required String size}) {
     return Row(
       children: [
@@ -113,13 +126,15 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                   context: context,
                   width: 16,
                 ),
-                Image.asset('assets/images/sub.png'),
+                GestureDetector(
+                    onTap: () => onClickChangeQuantity(value, false),
+                    child: Image.asset('assets/images/sub.png')),
                 CustomSizedBox(
                   context: context,
                   width: 8,
                 ),
                 CustomText(
-                  text: '1',
+                  text: presenter.model.quantities[value].toString(),
                   color: CustomColor.purple,
                   context: context,
                   fontSize: 24,
@@ -129,13 +144,40 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                   context: context,
                   width: 8,
                 ),
-                Image.asset('assets/images/plus.png'),
+                GestureDetector(
+                  onTap: () => onClickChangeQuantity(value, true),
+                  child: Image.asset('assets/images/plus.png'),
+                ),
               ],
             )
           ],
         )
       ],
     );
+  }
+
+  @override
+  void updateQuantity(Map<String, int> value, double totalPrice) {
+    setState(() {
+      presenter.model.quantities = value;
+      presenter.model.totalPrice = totalPrice;
+    });
+  }
+
+  @override
+  void onClickChangeQuantity(String value, bool isIncrease) {
+    presenter.onHandleChangeQuantity(value, isIncrease);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    presenter = CustomerDetailStoragePresenter(
+        // priceFrom: widget.data.priceFrom, priceTo: widget.data.priceTo);
+        priceFrom: 12000,
+        priceTo: 20000);
+    presenter.view = this;
   }
 
   @override
@@ -163,8 +205,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                 child: Container(
                   width: deviceSize.width,
                   height: deviceSize.height / 4.8,
-                  child: Image.asset('assets/images/storage1.png',
-                      fit: BoxFit.cover),
+                  child: Image.network(widget.data.picture, fit: BoxFit.cover),
                 ),
               ),
               CustomSizedBox(
@@ -175,7 +216,9 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomText(
-                      text: data['name'],
+                      text: widget.data.name == null
+                          ? 'Storage'
+                          : widget.data.name,
                       color: CustomColor.black,
                       context: context,
                       fontWeight: FontWeight.bold,
@@ -187,7 +230,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                 height: 8,
               ),
               CustomText(
-                text: data['address'],
+                text: widget.data.address,
                 color: CustomColor.black[2],
                 context: context,
                 fontSize: 14,
@@ -198,7 +241,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                 height: 8,
               ),
               RatingBarIndicator(
-                rating: data['rating'] * 1.0,
+                rating: widget.data.rating * 1.0,
                 itemBuilder: (context, index) => Icon(
                   Icons.star,
                   color: Color(0xFFFFCC1F),
@@ -233,20 +276,22 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                 height: 40,
               ),
               _buildOptionBox(
+                  value: 'amountSmallBox',
                   context: context,
                   size: '0.5m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '400.000 VND',
+                  price: '${widget.data.priceFrom} VND',
                   imagePath: 'assets/images/smallBox.png'),
               CustomSizedBox(
                 context: context,
                 height: 40,
               ),
               _buildOptionBox(
+                  value: 'amountBigBox',
                   context: context,
                   size: '1m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '750.000 VND',
+                  price: '${widget.data.priceFrom} VND',
                   imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,
@@ -266,13 +311,13 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                     width: 32,
                     height: 32,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () => onClickChangeQuantity('months', false),
                       child: Image.asset('assets/images/sub.png',
                           fit: BoxFit.cover),
                     ),
                   ),
                   CustomText(
-                    text: '1',
+                    text: presenter.model.quantities['months'].toString(),
                     color: CustomColor.purple,
                     context: context,
                     fontSize: 24,
@@ -282,7 +327,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                     width: 32,
                     height: 32,
                     child: TextButton(
-                        onPressed: () {},
+                        onPressed: () => onClickChangeQuantity('months', true),
                         child: Image.asset('assets/images/plus.png',
                             fit: BoxFit.cover)),
                   ),
@@ -306,7 +351,7 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                     width: 8,
                   ),
                   CustomText(
-                      text: '750,000 VND',
+                      text: '${presenter.model.totalPrice} VND',
                       color: CustomColor.purple,
                       context: context,
                       fontWeight: FontWeight.bold,
@@ -325,12 +370,12 @@ class DetailProtectingServiceScreen extends StatelessWidget {
                       color: CustomColor.lightBlue),
                   child: TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BillProtectingService(
-                                      data: data,
-                                    )));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => BillProtectingService(
+                        //               data: data,
+                        //             )));
                       },
                       child: Image.asset('assets/images/paypal.png'))),
               CustomSizedBox(
