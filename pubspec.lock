@@ -83,6 +83,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_braintree:
+    dependency: "direct dev"
+    description:
+      name: flutter_braintree
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   flutter_rating_bar:
     dependency: "direct dev"
     description:
@@ -95,13 +102,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  http:
-    dependency: "direct dev"
-    description:
-      name: http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.13.3"
   http_parser:
     dependency: transitive
     description:
@@ -158,13 +158,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.1"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.11.0"
   percent_indicator:
     dependency: "direct dev"
     description:

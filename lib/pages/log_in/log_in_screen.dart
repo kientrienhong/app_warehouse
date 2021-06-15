@@ -146,17 +146,23 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
   @override
   void onClickSignUp(String email, String password) async {
     try {
-      User user = await loginPresenter.handleSignUp(email, password);
-      if (_model.user.role == UserRole.customer) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (_) => CustomerBottomNavigation(
-                      user: user,
-                    )));
-      } else {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => OwnerBottomNavigation()));
+      User user = Provider.of<User>(context, listen: false);
+
+      final result = await loginPresenter.handleSignUp(email, password);
+
+      if (result != null) {
+        user.setUser(user: result);
+        if (_model.user.role == UserRole.customer) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => CustomerBottomNavigation(
+                        user: user,
+                      )));
+        } else {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => OwnerBottomNavigation()));
+        }
       }
     } catch (e) {
       loginPresenter.view.updateViewErrorMsg(e.toString());

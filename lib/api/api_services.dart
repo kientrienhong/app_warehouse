@@ -25,7 +25,7 @@ class ApiServices {
                 'Accept': 'application/json',
               }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception('Unathorized');
     }
   }
 }

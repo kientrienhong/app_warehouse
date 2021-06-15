@@ -10,7 +10,7 @@ class LoginModel {
     _isDisableLogin = true;
     _errorMsg = '';
     _isLoading = false;
-    _user = User();
+    _user = User.empty();
   }
   get user => this._user;
 
