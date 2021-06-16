@@ -1,36 +1,42 @@
+import 'package:flutter/cupertino.dart';
+
 enum UserRole { owner, customer }
 
-class User {
-  final String name;
-  final String email;
-  final String phone;
-  final String address;
-  final UserRole role;
-  final String jwtToken;
+class User with ChangeNotifier {
+  String name;
+  String email;
+  String phone;
+  String address;
+  UserRole role;
+  String jwtToken;
 
-  User(
-      {this.name,
-      this.email,
-      this.address,
-      this.jwtToken,
-      this.phone,
-      this.role});
+  User.empty() {
+    name = '';
+    email = '';
+    phone = '';
+    address = '';
+    role = null;
+    jwtToken = '';
+  }
 
-  User copyWith({
-    String name,
-    String email,
-    String phone,
-    String address,
-    UserRole role,
-    String jwtToken,
-  }) {
-    return User(
-        address: address,
-        email: email,
-        jwtToken: jwtToken,
-        name: name,
-        phone: phone,
-        role: role);
+  User({User user}) {
+    name = user.name;
+    email = user.email;
+    phone = user.phone;
+    address = user.address;
+    role = user.role;
+    jwtToken = user.jwtToken;
+    notifyListeners();
+  }
+
+  void setUser({User user}) {
+    name = user.name;
+    email = user.email;
+    phone = user.phone;
+    address = user.address;
+    role = user.role;
+    jwtToken = user.jwtToken;
+    notifyListeners();
   }
 
   User.fromJson(Map<String, dynamic> json)

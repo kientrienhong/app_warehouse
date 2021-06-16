@@ -35,29 +35,24 @@ class _CustomerBottomNavigationState extends State<CustomerBottomNavigation> {
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
 
-    return Provider<User>(
-      create: (_) => widget.user,
-      child: Scaffold(
-        // drawerScrimColor: Color.fromARGB(51, 51, 51, 5),
-        resizeToAvoidBottomInset: true,
-        // resizeToAvoidBottomPadding: false,
-        body: Stack(
-          children: [
-            IndexedStack(
-              index: _index,
-              children: [
-                CustomerHomeScreen(),
-                HistoryBookingScreen(),
-                ProfileScreen()
-              ],
-            ),
-            CustomBottomNavigation(
-              deviceSize: deviceSize,
-              index: _index,
-              tapTab: _tapTab,
-            )
-          ],
-        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _index,
+            children: [
+              CustomerHomeScreen(),
+              HistoryBookingScreen(),
+              ProfileScreen()
+            ],
+          ),
+          CustomBottomNavigation(
+            deviceSize: deviceSize,
+            index: _index,
+            tapTab: _tapTab,
+          )
+        ],
       ),
     );
   }

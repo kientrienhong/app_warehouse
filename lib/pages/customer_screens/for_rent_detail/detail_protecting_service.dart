@@ -3,10 +3,12 @@ import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
 import 'package:app_warehouse/models/entity/storage.dart';
+import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/presenters/customer_detail_storage_presenter.dart';
 import 'package:app_warehouse/views/customer_detail_storage_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailProtectingServiceScreen extends StatefulWidget {
   final Storage data;
@@ -369,7 +371,23 @@ class _DetailProtectingServiceScreenState
                       borderRadius: BorderRadius.circular(8),
                       color: CustomColor.lightBlue),
                   child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        // var request = BraintreeDropInRequest(
+                        //     tokenizationKey:
+                        //         'sandbox_hcbwcftd_82nh8ydcnw387pdk',
+                        //     collectDeviceData: true,
+                        //     paypalRequest: BraintreePayPalRequest(
+                        //         amount: presenter.model.totalPrice.toString(),
+                        //         displayName:
+                        //             Provider.of<User>(context, listen: false)
+                        //                 .name));
+
+                        // BraintreeDropInResult result =
+                        //     await BraintreeDropIn.start(request);
+                        // if (result != null) {
+                        //   print(result.paymentMethodNonce.description);
+                        //   print(result.paymentMethodNonce.nonce);
+                        // }
                         // Navigator.push(
                         //     context,
                         //     MaterialPageRoute(
