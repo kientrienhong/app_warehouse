@@ -41,6 +41,7 @@ dev_dependencies:
   provider: ^5.0.0
   dio: ^4.0.0
   flutter_braintree: ^1.2.1
+  image_picker: ^0.8.0+3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

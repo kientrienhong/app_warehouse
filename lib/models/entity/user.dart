@@ -45,5 +45,5 @@ class User with ChangeNotifier {
         jwtToken = json['idToken'],
         address = 'address',
         phone = '077777777',
-        role = UserRole.customer;
+        role = UserRole.owner;
 }
