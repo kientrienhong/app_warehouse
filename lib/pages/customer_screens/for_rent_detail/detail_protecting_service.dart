@@ -2,6 +2,7 @@ import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/common/info_call.dart';
 import 'package:app_warehouse/models/entity/storage.dart';
 import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/presenters/customer_detail_storage_presenter.dart';
@@ -273,6 +274,16 @@ class _DetailProtectingServiceScreenState
                   textAlign: TextAlign.justify,
                   maxLines: 7,
                   fontSize: 14),
+              CustomSizedBox(
+                context: context,
+                height: 24,
+              ),
+              InfoCall(
+                avatar: 'assets/images/avatar.png',
+                deviceSize: deviceSize,
+                name: 'Clarren Jessica',
+                phone: '077777777',
+              ),
               CustomSizedBox(
                 context: context,
                 height: 40,

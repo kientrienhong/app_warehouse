@@ -6,5 +6,5 @@ abstract class LoginView {
 
   // handle events
   void onChangeInput();
-  void onClickSignUp(String email, String password);
+  void onClickSignIn(String email, String password);
 }

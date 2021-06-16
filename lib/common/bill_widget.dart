@@ -4,6 +4,7 @@ import 'package:app_warehouse/common/box_info_bill_widget.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/common/info_call.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -43,34 +44,11 @@ class BillWidget extends StatelessWidget {
           context: context,
           height: 24,
         ),
-        Container(
-          height: deviceSize.height / 8,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: CustomColor.purple)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AvatarWidget(
-                  deviceSize: deviceSize,
-                  isHome: false,
-                  name: 'Clarren Jessica',
-                  imageUrl: 'assets/images/avatar.png',
-                  role: 'Owner'),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  height: deviceSize.height / 16,
-                  width: deviceSize.height / 16,
-                  color: CustomColor.green,
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Image.asset('assets/images/call.png')),
-                ),
-              ),
-            ],
-          ),
+        InfoCall(
+          avatar: 'assets/images/avatar.png',
+          deviceSize: deviceSize,
+          name: 'Clarren Jessica',
+          phone: '077777777',
         ),
         CustomSizedBox(
           context: context,
