@@ -1,16 +1,16 @@
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/models/entity/storage.dart';
 import 'package:app_warehouse/pages/customer_screens/for_rent_detail/detail_protecting_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 
 class StorageProtectingWidget extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Storage data;
   final Size deviceSize;
 
   StorageProtectingWidget({@required this.data, @required this.deviceSize});
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,7 +25,7 @@ class StorageProtectingWidget extends StatelessWidget {
       },
       child: Stack(children: [
         Container(
-          margin: const EdgeInsets.only(bottom: 24),
+          margin: const EdgeInsets.only(bottom: 40),
           height: deviceSize.height / 2.6,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -45,8 +45,8 @@ class StorageProtectingWidget extends StatelessWidget {
                 child: Container(
                     width: deviceSize.width,
                     height: deviceSize.height / 5.2,
-                    child: Image.asset(
-                      data['imagePath'],
+                    child: Image.network(
+                      data.picture,
                       fit: BoxFit.cover,
                     )),
               ),
@@ -57,7 +57,7 @@ class StorageProtectingWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: CustomText(
-                  text: data['name'],
+                  text: data.name == null ? 'Storage' : data.name,
                   color: CustomColor.black,
                   textAlign: TextAlign.start,
                   context: context,
@@ -73,7 +73,7 @@ class StorageProtectingWidget extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 16),
                   child: CustomText(
-                      text: data['address'],
+                      text: data.address,
                       color: CustomColor.black[2],
                       context: context,
                       maxLines: 2,
@@ -89,7 +89,7 @@ class StorageProtectingWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RatingBarIndicator(
-                      rating: data['rating'] * 1.0,
+                      rating: data.rating * 1.0,
                       itemBuilder: (context, index) => Icon(
                         Icons.star,
                         color: Color(0xFFFFCC1F),
@@ -99,8 +99,8 @@ class StorageProtectingWidget extends StatelessWidget {
                       direction: Axis.horizontal,
                     ),
                     CustomText(
-                      text: 'Protecting service',
-                      color: CustomColor.black,
+                      text: '${data.priceFrom} -  ${data.priceTo} VND',
+                      color: CustomColor.purple,
                       context: context,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

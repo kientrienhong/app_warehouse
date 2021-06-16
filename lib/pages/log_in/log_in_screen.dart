@@ -4,11 +4,16 @@ import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/models/entity/user.dart';
+import 'package:app_warehouse/models/login_model.dart';
 import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
 import 'package:app_warehouse/pages/forgot_password/forgot_password.dart';
 import 'package:app_warehouse/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import 'package:app_warehouse/pages/sign_up/sign_up_screen.dart';
+import 'package:app_warehouse/presenters/login_presenters.dart';
+import 'package:app_warehouse/views/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LogInScreen extends StatelessWidget {
   @override
@@ -54,45 +59,47 @@ class LogInScreen extends StatelessWidget {
                         context: context,
                         height: 56,
                       ),
-                      Expanded(child: FormLogIn(deviceSize))
-                    ],
-                  ),
-                ),
-                Positioned(
-                    bottom: 24,
-                    child: Container(
-                      width: deviceSize.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomText(
-                              text: 'Haven\'t had account yet?',
-                              color: CustomColor.black,
-                              context: context,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
-                          CustomSizedBox(
-                            context: context,
-                            width: 4,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUpScreen()),
-                              );
-                            },
-                            child: CustomText(
-                                text: 'Sign up',
-                                color: CustomColor.purple,
+                      Expanded(child: FormLogIn(deviceSize)),
+                      Container(
+                        width: deviceSize.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                                text: 'Haven\'t had account yet?',
+                                color: CustomColor.black,
                                 context: context,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14),
-                          )
-                        ],
+                            CustomSizedBox(
+                              context: context,
+                              width: 8,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpScreen()),
+                                );
+                              },
+                              child: CustomText(
+                                  text: 'Sign up',
+                                  color: CustomColor.purple,
+                                  context: context,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14),
+                            )
+                          ],
+                        ),
                       ),
-                    )),
+                      CustomSizedBox(
+                        context: context,
+                        height: 8,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -102,14 +109,17 @@ class LogInScreen extends StatelessWidget {
 
 class FormLogIn extends StatefulWidget {
   final Size deviceSize;
-
   FormLogIn(this.deviceSize);
 
   @override
   _FormLogInState createState() => _FormLogInState();
 }
 
-class _FormLogInState extends State<FormLogIn> {
+class _FormLogInState extends State<FormLogIn> implements LoginView {
+  LoginPresenter loginPresenter;
+
+  LoginModel _model;
+
   final _focusNodeEmail = FocusNode();
   final _focusNodePassword = FocusNode();
   final _controllerEmail = TextEditingController();
@@ -119,12 +129,81 @@ class _FormLogInState extends State<FormLogIn> {
   String get _password => _controllerPassword.text;
 
   @override
+  void initState() {
+    super.initState();
+    loginPresenter = LoginPresenter();
+    loginPresenter.setView(this);
+    _model = loginPresenter.model;
+    _controllerEmail.addListener(onChangeInput);
+    _controllerPassword.addListener(onChangeInput);
+  }
+
+  @override
+  void onChangeInput() {
+    loginPresenter.handleOnChangeInput(_email, _password);
+  }
+
+  @override
+  void onClickSignUp(String email, String password) async {
+    try {
+      User user = Provider.of<User>(context, listen: false);
+
+      final result = await loginPresenter.handleSignUp(email, password);
+
+      if (result != null) {
+        user.setUser(user: result);
+        if (_model.user.role == UserRole.customer) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => CustomerBottomNavigation(
+                        user: user,
+                      )));
+        } else {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => OwnerBottomNavigation()));
+        }
+      }
+    } catch (e) {
+      loginPresenter.view.updateViewErrorMsg(e.toString());
+    }
+  }
+
+  @override
+  updateLoading() {
+    if (mounted)
+      setState(() {
+        _model.isLoading = !_model.isLoading;
+      });
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _focusNodeEmail.dispose();
     _focusNodePassword.dispose();
     _controllerEmail.dispose();
     _controllerPassword.dispose();
+  }
+
+  @override
+  void updateViewStatusButton(String email, String password) {
+    if (email.isNotEmpty && password.isNotEmpty) {
+      setState(() {
+        _model.isDisableLogin = false;
+      });
+    } else {
+      setState(() {
+        _model.isDisableLogin = true;
+      });
+    }
+  }
+
+  @override
+  void updateViewErrorMsg(String error) {
+    setState(() {
+      _model.errorMsg = error;
+    });
   }
 
   Widget _buildButton(
@@ -198,6 +277,22 @@ class _FormLogInState extends State<FormLogIn> {
             context: context,
             height: 10,
           ),
+          if (_model.errorMsg.isNotEmpty)
+            Container(
+              width: double.infinity,
+              child: CustomText(
+                text: _model.errorMsg,
+                color: CustomColor.red,
+                context: context,
+                textAlign: TextAlign.center,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          CustomSizedBox(
+            context: context,
+            height: 16,
+          ),
           _buildButton(
               color: Color(0xFFE16259),
               text: 'Continue with Google',
@@ -216,25 +311,16 @@ class _FormLogInState extends State<FormLogIn> {
           ),
           CustomButton(
               height: 32,
+              isLoading: _model.isLoading,
               text: 'Sign in',
               width: double.infinity,
               textColor: CustomColor.white,
-              onPressFunction: () {
-                if (_email == 'owner') {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OwnerBottomNavigation()),
-                  );
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CustomerBottomNavigation()),
-                  );
-                }
-              },
-              buttonColor: CustomColor.purple,
+              onPressFunction: _model.isDisableLogin == false
+                  ? () => onClickSignUp(_email, _password)
+                  : null,
+              buttonColor: _model.isDisableLogin == false
+                  ? CustomColor.purple
+                  : CustomColor.black[3],
               borderRadius: 4),
         ],
       ),

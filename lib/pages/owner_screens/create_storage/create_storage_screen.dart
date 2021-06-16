@@ -1,13 +1,18 @@
 import 'package:app_warehouse/common/box_input_price.dart';
+import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_button.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class CreateStorageScreen extends StatefulWidget {
+  final Map<String, dynamic> data;
+  CreateStorageScreen({@required this.data});
+
   @override
   _CreateStorageScreenState createState() => _CreateStorageScreenState();
 }
@@ -120,6 +125,29 @@ class _CreateStorageScreenState extends State<CreateStorageScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ListView(
         children: [
+          if (widget.data != null)
+            CustomAppBar(
+              isHome: false,
+            ),
+          if (widget.data != null)
+            if (widget.data['statusChecking'] == StatusCheckingStorage.Reject)
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                CustomText(
+                  text: 'Reason',
+                  color: CustomColor.red,
+                  context: context,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                CustomSizedBox(context: context, height: 16),
+                CustomText(
+                  text: 'You must provide enough paperworkers',
+                  color: CustomColor.red,
+                  context: context,
+                  fontSize: 16,
+                ),
+                CustomSizedBox(context: context, height: 16),
+              ]),
           CustomSizedBox(context: context, height: 16),
           CustomText(
             text: 'Storage Infomation',
