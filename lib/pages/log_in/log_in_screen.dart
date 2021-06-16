@@ -306,11 +306,6 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
               color: Color(0xFF1877F2),
               text: 'Continue with Facebook',
               imageUrl: 'assets/images/facebook.png'),
-          InfoCall(
-              deviceSize: widget.deviceSize,
-              phone: '777777777',
-              avatar: 'assets/images/avatar.png',
-              name: 'Classica Jessica'),
           CustomSizedBox(
             context: context,
             height: 16,
