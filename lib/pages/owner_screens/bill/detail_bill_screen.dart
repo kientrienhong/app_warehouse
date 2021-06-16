@@ -4,6 +4,7 @@ import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/common/info_call.dart';
 import 'package:app_warehouse/pages/owner_screens/bill/bill_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -196,35 +197,6 @@ class DetailBillScreen extends StatelessWidget {
             CustomSizedBox(
               context: context,
               height: 24,
-            ),
-            Container(
-              height: deviceSize.height / 8,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: CustomColor.purple)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AvatarWidget(
-                      deviceSize: deviceSize,
-                      isHome: false,
-                      name: 'Clarren Jessica',
-                      imageUrl: 'assets/images/avatar.png',
-                      role: 'Customer'),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      height: deviceSize.height / 16,
-                      width: deviceSize.height / 16,
-                      color: CustomColor.green,
-                      child: TextButton(
-                          onPressed: () {},
-                          child: Image.asset('assets/images/call.png')),
-                    ),
-                  ),
-                ],
-              ),
             ),
             CustomSizedBox(
               context: context,

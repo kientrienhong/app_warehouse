@@ -4,6 +4,7 @@ import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/common/info_call.dart';
 import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/models/login_model.dart';
 import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
@@ -144,7 +145,7 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
   }
 
   @override
-  void onClickSignUp(String email, String password) async {
+  void onClickSignIn(String email, String password) async {
     try {
       User user = Provider.of<User>(context, listen: false);
 
@@ -305,6 +306,11 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
               color: Color(0xFF1877F2),
               text: 'Continue with Facebook',
               imageUrl: 'assets/images/facebook.png'),
+          InfoCall(
+              deviceSize: widget.deviceSize,
+              phone: '777777777',
+              avatar: 'assets/images/avatar.png',
+              name: 'Classica Jessica'),
           CustomSizedBox(
             context: context,
             height: 16,
@@ -316,7 +322,7 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
               width: double.infinity,
               textColor: CustomColor.white,
               onPressFunction: _model.isDisableLogin == false
-                  ? () => onClickSignUp(_email, _password)
+                  ? () => onClickSignIn(_email, _password)
                   : null,
               buttonColor: _model.isDisableLogin == false
                   ? CustomColor.purple
