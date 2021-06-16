@@ -27,41 +27,16 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   CreateStoragePresenter presenter;
   var picker;
 
-  void _showPicker(context, String typeList) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        onClickAddGalleryImage(typeList);
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      onClickAddCameraImage(typeList);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
   @override
   void updateStatusButton(bool isAgree) {
     setState(() {
       presenter.model.isAgree = isAgree;
     });
+  }
+
+  @override
+  void onClickDeleteGalleryImage(String typeList, int index) {
+    presenter.onHanldeDeleteImage(typeList, index);
   }
 
   @override
@@ -72,10 +47,11 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   }
 
   @override
-  void onClickAddCameraImage(String typeList) async {
+  void onClickEditGalleryImage(String typeList, int index) async {
     PickedFile image =
-        await picker.getImage(source: ImageSource.camera, imageQuality: 50);
-    if (image != null) presenter.onHandleAddImage(typeList, File(image.path));
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    if (image != null)
+      presenter.onHandleEditImage(typeList, File(image.path), index);
   }
 
   @override
@@ -112,9 +88,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
       @required Size deviceSize,
       @required String typeList}) {
     return Container(
-      height: listFile.length >= 3
-          ? deviceSize.height / 2.7
-          : deviceSize.height / 5.4,
+      height: deviceSize.height / 5.4,
       child: GridView.builder(
           physics: ScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -123,11 +97,11 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               childAspectRatio: 1,
               mainAxisSpacing: 8),
           itemCount:
-              listFile.length == 6 ? listFile.length : listFile.length + 1,
+              listFile.length == 3 ? listFile.length : listFile.length + 1,
           itemBuilder: (BuildContext context, int index) {
             if (index == listFile.length) {
               return GestureDetector(
-                onTap: () => _showPicker(context, typeList),
+                onTap: () => onClickAddGalleryImage(typeList),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: DottedBorder(
@@ -149,9 +123,13 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               );
             }
 
-            return Image.file(
-              listFile[index],
-              fit: BoxFit.cover,
+            return GestureDetector(
+              onLongPress: () => onClickDeleteGalleryImage(typeList, index),
+              onTap: () => onClickEditGalleryImage(typeList, index),
+              child: Image.file(
+                listFile[index],
+                fit: BoxFit.cover,
+              ),
             );
           }),
     );

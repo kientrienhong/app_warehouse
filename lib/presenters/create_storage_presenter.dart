@@ -19,7 +19,20 @@ class CreateStoragePresenter {
   void onHandleAddImage(String typeList, File image) {
     List<File> listImage = [...model.allImage[typeList]];
     listImage.add(image);
+    view.updateGridView(typeList, listImage);
+  }
 
-    view.updateView(typeList, listImage);
+  void onHandleEditImage(String typeList, File image, int index) {
+    List<File> listImage = [...model.allImage[typeList]];
+    listImage[index] = image;
+
+    view.updateGridView(typeList, listImage);
+  }
+
+  void onHanldeDeleteImage(String typeList, int index) {
+    List<File> listImage = [...model.allImage[typeList]];
+    listImage.removeAt(index);
+
+    view.updateGridView(typeList, listImage);
   }
 }
