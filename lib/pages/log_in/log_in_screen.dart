@@ -149,7 +149,7 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
     try {
       User user = Provider.of<User>(context, listen: false);
 
-      final result = await loginPresenter.handleSignUp(email, password);
+      final result = await loginPresenter.handleSignIn(email, password);
 
       if (result != null) {
         user.setUser(user: result);

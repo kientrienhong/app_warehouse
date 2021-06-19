@@ -14,11 +14,13 @@ class CustomOutLineInput extends StatefulWidget {
   final TextInputType textInputType;
   final TextEditingController controller;
   StatusTypeInput statusTypeInput;
+  final Function validator;
   final bool isDisable;
   final bool isSecure;
   CustomOutLineInput(
       {this.statusTypeInput: StatusTypeInput.VALID,
       this.controller,
+      this.validator,
       this.backgroundColorLabel: CustomColor.white,
       this.textInputType: TextInputType.text,
       @required this.isDisable,
@@ -111,6 +113,7 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
                 child: Center(
                   child: TextFormField(
                     obscureText: widget.isSecure,
+                    validator: widget.validator,
                     keyboardType: widget.textInputType,
                     style: TextStyle(color: colorLabel, fontSize: 16),
                     enabled: !widget.isDisable,

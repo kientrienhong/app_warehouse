@@ -198,10 +198,15 @@ class DetailBillScreen extends StatelessWidget {
               context: context,
               height: 24,
             ),
+            InfoCall(
+                deviceSize: deviceSize,
+                phone: '07777777',
+                avatar: 'assets/images/avatar.png',
+                name: 'Clarent Jessica'),
             CustomSizedBox(
               context: context,
-              height: 24,
-            )
+              height: 36,
+            ),
           ],
         ),
       ),

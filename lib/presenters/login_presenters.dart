@@ -25,11 +25,12 @@ class LoginPresenter {
     _view.updateViewStatusButton(email, password);
   }
 
-  Future<User> handleSignUp(String email, String password) async {
+  Future<User> handleSignIn(String email, String password) async {
     _view.updateLoading();
     try {
       var response = await ApiServices.logIn(email, password);
-      _model.user = User.fromJson(json.decode(response.data));
+      response = json.encode(response.data);
+      _model.user = User.fromJson(json.decode(response));
       return _model.user;
     } catch (e) {
       print(e.toString());

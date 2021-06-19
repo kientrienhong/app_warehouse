@@ -1,9 +1,9 @@
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_owner_bottm_navigation.dart';
-import 'package:app_warehouse/pages/customer_screens/profile/profile_screen.dart';
 import 'package:app_warehouse/pages/owner_screens/bill/bill_screen.dart';
 import 'package:app_warehouse/pages/owner_screens/create_storage/create_storage_screen.dart';
 import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
+import 'package:app_warehouse/pages/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class OwnerBottomNavigation extends StatefulWidget {

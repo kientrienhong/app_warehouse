@@ -28,4 +28,19 @@ class ApiServices {
       throw Exception('Unathorized');
     }
   }
+
+  static Future<dynamic> updateInfo(
+      String name, String address, String phone, String jwt) {
+    try {
+      return Dio().put('https://localhost:44318/api/v1/users/updateprofile',
+          data: {'name': name, 'address': address, 'phone': phone},
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
 }

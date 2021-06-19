@@ -1,5 +1,7 @@
 import 'package:app_warehouse/common/avatar_widget.dart';
+import 'package:app_warehouse/models/entity/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
@@ -7,8 +9,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context, listen: false);
     final deviceSize = MediaQuery.of(context).size;
-
+    String role = user.role == UserRole.customer ? 'Customer' : 'Owner';
     return PreferredSize(
       preferredSize: Size(double.infinity, 80),
       child: Container(
@@ -25,9 +28,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? AvatarWidget(
                       deviceSize: deviceSize,
                       isHome: isHome,
-                      name: 'Clarren Jessica',
+                      name: user.name,
                       imageUrl: 'assets/images/avatar.png',
-                      role: 'Customer')
+                      role: role)
                   : GestureDetector(
                       onTap: () => {Navigator.of(context).pop()},
                       child: Padding(

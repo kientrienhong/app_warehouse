@@ -213,16 +213,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               deviceSize: deviceSize,
               controller: _controllerAddress,
               nextNode: _focusAmountShelves,
-              // nextNode: _focusNodeSize,
               labelText: 'Address'),
-          // CustomOutLineInput(
-          //     focusNode: _focusNodeSize,
-          //     isDisable: false,
-          //     deviceSize: deviceSize,
-          //     controller: _controllerSize,
-          //     nextNode: _focusNodeSize,
-          //     textInputType: TextInputType.number,
-          //     labelText: 'Size'),
           CustomText(
             text: 'Gallery',
             color: CustomColor.black,
