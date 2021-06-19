@@ -43,4 +43,23 @@ class ApiServices {
       throw Exception('Log in failed');
     }
   }
+
+  static Future<dynamic> changePassword(
+      String password, String oldPassword, String confirmPassword, String jwt) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/users/changepassword',
+          data: {
+            'oldPassword': oldPassword,
+            'newPassword': password,
+            'confirmPassword': confirmPassword
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
 }
