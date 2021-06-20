@@ -5,9 +5,14 @@ import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/pages/log_in/log_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   HttpOverrides.global = MyHttpOverrides();
+  await Firebase.initializeApp();
+
   runApp(ChangeNotifierProvider<User>(
       create: (_) => User.empty(), child: MyApp()));
 }

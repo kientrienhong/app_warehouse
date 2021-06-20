@@ -22,6 +22,7 @@ class HomePresenter {
       List<dynamic> result = response.data['data'];
       List<Storage> listStorage =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
+      print(listStorage);
       return listStorage;
     } catch (e) {
       print(e.toString());

@@ -9,7 +9,7 @@ class User with ChangeNotifier {
   String address;
   UserRole role;
   String jwtToken;
-
+  String avatar;
   User.empty() {
     name = '';
     email = '';
@@ -17,6 +17,7 @@ class User with ChangeNotifier {
     address = '';
     role = UserRole.customer;
     jwtToken = '';
+    avatar = '';
   }
 
   User(
@@ -25,6 +26,7 @@ class User with ChangeNotifier {
       String phone,
       String address,
       UserRole role,
+      String avatar,
       String jwtToken}) {
     this.name = name;
     this.email = email;
@@ -32,22 +34,24 @@ class User with ChangeNotifier {
     this.address = address;
     this.jwtToken = jwtToken;
     this.role = role;
+    this.avatar = avatar;
   }
 
-  User.copyWith({
-    String name,
-    String email,
-    String phone,
-    String address,
-    UserRole role,
-    String jwtToken,
-  }) {
+  User.copyWith(
+      {String name,
+      String email,
+      String phone,
+      String address,
+      UserRole role,
+      String jwtToken,
+      String avatar}) {
     name = name;
     email = email;
     phone = phone;
     address = address;
     role = role;
     jwtToken = jwtToken;
+    avatar = avatar;
   }
 
   void setUser({User user}) {
@@ -57,23 +61,25 @@ class User with ChangeNotifier {
     address = user.address ?? this.address;
     role = user.role ?? this.role;
     jwtToken = user.jwtToken ?? this.jwtToken;
+    avatar = user.avatar ?? this.avatar;
     notifyListeners();
   }
 
-  User copyWith({
-    String name,
-    String email,
-    String phone,
-    String address,
-    UserRole role,
-    String jwtToken,
-  }) {
+  User copyWith(
+      {String name,
+      String email,
+      String phone,
+      String address,
+      UserRole role,
+      String jwtToken,
+      String avatar}) {
     return User(
         address: address ?? this.address,
         email: email ?? this.email,
         jwtToken: jwtToken ?? this.jwtToken,
         name: name ?? this.name,
         phone: phone ?? this.phone,
+        avatar: avatar ?? this.avatar,
         role: role ?? this.role);
   }
 
@@ -82,11 +88,11 @@ class User with ChangeNotifier {
     UserRole userRole =
         roleString == 'Owner' ? UserRole.owner : UserRole.customer;
     return User(
-        address: 'address',
-        email: 'email',
+        address: json['address'],
+        email: json['email'],
         jwtToken: json['idToken'],
         name: json['fullName'],
-        phone: '0777777',
+        phone: json['phone'],
         role: userRole);
   }
 }

@@ -62,4 +62,20 @@ class ApiServices {
       throw Exception('Log in failed');
     }
   }
+
+  static Future<dynamic> signUp(String role, String email, String password,
+      String confirmPassword, String name, String phone, String address) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/users/signup', data: {
+        "email": email,
+        "password": password,
+        "name": name,
+        "address": address,
+        "phone": phone,
+        "roleName": role
+      });
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
 }
