@@ -4,7 +4,6 @@ import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/common/info_call.dart';
 import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/models/login_model.dart';
 import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';

@@ -2,9 +2,11 @@ import 'package:app_warehouse/common/avatar_widget.dart';
 import 'package:app_warehouse/models/entity/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
+
   CustomAppBar({this.isHome});
 
   @override
@@ -39,6 +41,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
             ),
+            if (user.role == UserRole.owner)
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 8),
+                child: GestureDetector(
+                    onTap: () async {
+                      String barcodeScanRes =
+                          await FlutterBarcodeScanner.scanBarcode(
+                              '#8099FF', 'Cancel', false, ScanMode.DEFAULT);
+                      if (barcodeScanRes != '-1') {
+                        // Navigator to detail storage
+                      }
+                    },
+                    child: Image.asset('assets/images/scan.png')),
+              )
           ],
         ),
       ),

@@ -4,7 +4,6 @@ import 'package:app_warehouse/pages/customer_screens/home/home_screen.dart';
 import 'package:app_warehouse/common/custom_bottom_navigation.dart';
 import 'package:app_warehouse/pages/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CustomerBottomNavigation extends StatefulWidget {
   final User user;

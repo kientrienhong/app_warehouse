@@ -1,4 +1,5 @@
 import 'package:app_warehouse/common/custom_color.dart';
+import 'package:app_warehouse/common/custom_dialog.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
 import 'package:app_warehouse/models/entity/user.dart';
@@ -46,15 +47,10 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
         context: context,
         builder: (_) {
-          return AlertDialog(
-            title: CustomText(
-              text: 'Log out',
-              color: Colors.black,
-              context: context,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-            actions: [
+          return CustomDialog(
+            content: 'Are you sure?',
+            title: 'Log out',
+            listAction: [
               TextButton(
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
@@ -69,7 +65,8 @@ class ProfileScreen extends StatelessWidget {
                     text: 'Log out',
                     color: Colors.red,
                     context: context,
-                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   )),
               TextButton(
                   onPressed: () {
@@ -79,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                     text: 'Cancel',
                     color: CustomColor.black,
                     context: context,
-                    fontSize: 12,
+                    fontSize: 16,
                   ))
             ],
           );

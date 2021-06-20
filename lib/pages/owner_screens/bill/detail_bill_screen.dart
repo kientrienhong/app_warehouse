@@ -1,4 +1,3 @@
-import 'package:app_warehouse/common/avatar_widget.dart';
 import 'package:app_warehouse/common/box_info_bill_widget.dart';
 import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_color.dart';

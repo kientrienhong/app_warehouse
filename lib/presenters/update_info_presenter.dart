@@ -72,10 +72,11 @@ class UpdateInfoPresenter {
       } else {
         _view.updateLoading();
         _view.updateMsg(invalidMsg, true);
+        return null;
       }
     } catch (e) {
       view.updateLoading();
-      print(e.toString());
+
       throw Exception('Update failed');
     }
   }

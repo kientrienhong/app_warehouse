@@ -1,4 +1,5 @@
 import 'package:app_warehouse/common/custom_color.dart';
+import 'package:app_warehouse/common/custom_dialog.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
 import 'package:app_warehouse/pages/owner_screens/create_storage/create_storage_screen.dart';
@@ -15,6 +16,38 @@ class OwnerStorage extends StatelessWidget {
 
   Color colorStatusChecking;
   String statusChecking;
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return CustomDialog(
+              title: 'Delete Storage',
+              content: 'Are you sure?',
+              listAction: [
+                TextButton(
+                    onPressed: () {},
+                    child: CustomText(
+                      text: 'Delete',
+                      color: Colors.red,
+                      context: context,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: CustomText(
+                      text: 'Cancel',
+                      color: CustomColor.black,
+                      context: context,
+                      fontSize: 16,
+                    ))
+              ]);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (data['statusChecking']) {
@@ -131,19 +164,25 @@ class OwnerStorage extends StatelessWidget {
                       itemSize: 18,
                       direction: Axis.horizontal,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => Scaffold(
-                                        backgroundColor: CustomColor.white,
-                                        body: CreateStorageScreen(
-                                          data: data,
-                                        ),
-                                      )));
-                        },
-                        child: Image.asset('assets/images/edit.png'))
+                    Row(children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => Scaffold(
+                                          backgroundColor: CustomColor.white,
+                                          body: CreateStorageScreen(
+                                            data: data,
+                                          ),
+                                        )));
+                          },
+                          child: Image.asset('assets/images/edit.png')),
+                      CustomSizedBox(context: context, width: 16),
+                      GestureDetector(
+                          onTap: () => _showDialog(context),
+                          child: Image.asset('assets/images/delete.png')),
+                    ])
                   ],
                 ),
               )
