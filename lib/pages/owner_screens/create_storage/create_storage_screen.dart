@@ -5,14 +5,17 @@ import 'package:app_warehouse/common/custom_app_bar.dart';
 import 'package:app_warehouse/common/custom_button.dart';
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_input.dart';
+import 'package:app_warehouse/common/custom_msg_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
 import 'package:app_warehouse/presenters/create_storage_presenter.dart';
 import 'package:app_warehouse/views/create_storage_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class CreateStorageScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -40,9 +43,32 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   }
 
   @override
+  void onClickCreateStorage(String name, String address, String description,
+      String amountShelves, String priceSmallBox, String priceBigBox) async {
+    User user = Provider.of<User>(context, listen: false);
+    await presenter.onHandleAddStorage(name, address, description,
+        amountShelves, user, priceSmallBox, priceBigBox);
+  }
+
+  @override
   void updateGridView(String typeList, List<File> listFile) {
     setState(() {
       presenter.model.allImage[typeList] = listFile;
+    });
+  }
+
+  @override
+  void updateLoading() {
+    setState(() {
+      presenter.model.isLoading = !presenter.model.isLoading;
+    });
+  }
+
+  @override
+  void updateMsg(String msg, bool isError) {
+    setState(() {
+      presenter.model.msg = msg;
+      presenter.model.isError = isError;
     });
   }
 
@@ -63,25 +89,25 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   }
 
   final _focusNodeLargeBox = FocusNode();
-  // final _focusNodeSize = FocusNode();
+  final _focusNodeDescription = FocusNode();
   final _focusName = FocusNode();
   final _focusAddress = FocusNode();
   final _focusPriceSmallBox = FocusNode();
   final _focusAmountShelves = FocusNode();
 
   final _controllerPriceLargeBox = TextEditingController();
-  // final _controllerSize = TextEditingController();
+  final _controllerDescription = TextEditingController();
   final _controllerName = TextEditingController();
   final _controllerAddress = TextEditingController();
   final _controllerPriceSmallBox = TextEditingController();
   final _controllerAmountShelves = TextEditingController();
 
-  double get _largeBoxPrice => double.parse(_controllerPriceLargeBox.text);
-  // String get _size => _controllerSize.text;
+  String get _priceLargeBox => _controllerPriceLargeBox.text;
+  String get _description => _controllerDescription.text;
   String get _name => _controllerName.text;
   String get _address => _controllerAddress.text;
-  int get _amountShelves => int.parse(_controllerAmountShelves.text);
-  double get _priceSmallBox => double.parse(_controllerPriceSmallBox.text);
+  String get _amountShelves => _controllerAmountShelves.text;
+  String get _priceSmallBox => _controllerPriceSmallBox.text;
 
   _buildGridView(
       {@required List<File> listFile,
@@ -147,14 +173,14 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   void dispose() {
     super.dispose();
     _focusNodeLargeBox.dispose();
-    // _focusNodeSize.dispose();
+    _focusNodeDescription.dispose();
     _focusName.dispose();
     _focusPriceSmallBox.dispose();
     _focusAddress.dispose();
     _focusAmountShelves.dispose();
 
     _controllerPriceLargeBox.dispose();
-    // _controllerSize.dispose();
+    _controllerDescription.dispose();
     _controllerName.dispose();
     _controllerAddress.dispose();
     _controllerPriceSmallBox.dispose();
@@ -212,8 +238,15 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               isDisable: false,
               deviceSize: deviceSize,
               controller: _controllerAddress,
-              nextNode: _focusAmountShelves,
+              nextNode: _focusNodeDescription,
               labelText: 'Address'),
+          CustomOutLineInput(
+              focusNode: _focusNodeDescription,
+              isDisable: false,
+              deviceSize: deviceSize,
+              controller: _controllerDescription,
+              nextNode: _focusAmountShelves,
+              labelText: 'Description'),
           CustomText(
             text: 'Gallery',
             color: CustomColor.black,
@@ -331,14 +364,24 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
             context: context,
             height: 16,
           ),
+          CustomMsgInput(
+              msg: presenter.model.msg,
+              isError: presenter.model.isError,
+              maxLines: 6),
           CustomButton(
+              isLoading: presenter.model.isLoading,
               height: 32,
               text: 'Submit',
               width: double.infinity,
               textColor: presenter.model.isAgree == true
                   ? CustomColor.green
                   : CustomColor.black,
-              onPressFunction: presenter.model.isAgree == true ? () {} : null,
+              onPressFunction: presenter.model.isAgree == true
+                  ? () {
+                      onClickCreateStorage(_name, _address, _description,
+                          _amountShelves, _priceSmallBox, _priceLargeBox);
+                    }
+                  : null,
               buttonColor: presenter.model.isAgree == true
                   ? CustomColor.lightBlue
                   : CustomColor.black[3],

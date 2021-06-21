@@ -59,26 +59,22 @@ class UpdateInfoPresenter {
       if (invalidMsg.isEmpty) {
         var uploadFileString =
             await FirebaseStorageHelper.uploadAvatar(file, task, user.email);
-        if (uploadFileString != '') {
-          var response = await ApiServices.updateInfo(
-              user.name, user.address, user.phone, jwt, uploadFileString);
-          response = json.encode(response.data);
-          Map<String, dynamic> result = json.decode(response);
-          User newUser = User(
-              address: result['address'],
-              email: result['email'],
-              jwtToken: jwt,
-              avatar: result['avatarUrl'],
-              name: result['name'],
-              phone: result['phone'],
-              role: UserRole.owner);
-          _view.updateUser(user);
-          view.updateLoading();
-          _view.updateMsg('Update sucessful', false);
-          return newUser;
-        }
-
-        return null;
+        var response = await ApiServices.updateInfo(
+            user.name, user.address, user.phone, jwt, uploadFileString);
+        response = json.encode(response.data);
+        Map<String, dynamic> result = json.decode(response);
+        User newUser = User(
+            address: result['address'],
+            email: result['email'],
+            jwtToken: jwt,
+            avatar: result['avatarUrl'],
+            name: result['name'],
+            phone: result['phone'],
+            role: UserRole.owner);
+        _view.updateUser(user);
+        view.updateLoading();
+        _view.updateMsg('Update sucessful', false);
+        return newUser;
       } else {
         _view.updateLoading();
         _view.updateMsg(invalidMsg, true);

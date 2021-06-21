@@ -17,4 +17,10 @@ class Validator {
 
     return null;
   }
+
+  static bool isNumeric(String string) {
+    final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$');
+
+    return numericRegex.hasMatch(string);
+  }
 }
