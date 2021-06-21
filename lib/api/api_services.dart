@@ -30,10 +30,15 @@ class ApiServices {
   }
 
   static Future<dynamic> updateInfo(
-      String name, String address, String phone, String jwt) {
+      String name, String address, String phone, String jwt, String imageUrl) {
     try {
       return Dio().put('https://localhost:44318/api/v1/users/updateprofile',
-          data: {'name': name, 'address': address, 'phone': phone},
+          data: {
+            'name': name,
+            'address': address,
+            'phone': phone,
+            'avatarUrl': imageUrl
+          },
           options: Options(headers: {
             'Authorization': 'bearer ' + jwt,
             'Content-Type': "application/json",

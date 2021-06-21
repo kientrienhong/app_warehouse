@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
             ),
-            if (user.role == UserRole.owner)
+            if (user.role == UserRole.owner && isHome == true)
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 8),
                 child: GestureDetector(

@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_warehouse/api/api_services.dart';
+import 'package:app_warehouse/helpers/firebase_storage_helper.dart';
 import 'package:app_warehouse/helpers/validator.dart';
 import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/models/update_info_model.dart';
 import 'package:app_warehouse/views/update_info_view.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UpdateInfoPresenter {
   UpdateInfoModel _model;
@@ -49,26 +51,34 @@ class UpdateInfoPresenter {
     return result;
   }
 
-  Future<User> onHandleUpdaetInfo(User user, String jwt, File file) async {
+  Future<User> onHandleUpdaetInfo(
+      User user, String jwt, File file, UploadTask task) async {
     try {
       view.updateLoading();
       String invalidMsg = validate(user);
       if (invalidMsg.isEmpty) {
-        var response = await ApiServices.updateInfo(
-            user.name, user.address, user.phone, jwt);
-        response = json.encode(response.data);
-        Map<String, dynamic> result = json.decode(response);
-        User newUser = User(
-            address: result['address'],
-            email: result['email'],
-            jwtToken: jwt,
-            name: result['name'],
-            phone: result['phone'],
-            role: UserRole.owner);
-        _view.updateUser(user);
-        view.updateLoading();
-        _view.updateMsg('Update sucessful', false);
-        return newUser;
+        var uploadFileString =
+            await FirebaseStorageHelper.uploadAvatar(file, task, user.email);
+        if (uploadFileString != '') {
+          var response = await ApiServices.updateInfo(
+              user.name, user.address, user.phone, jwt, uploadFileString);
+          response = json.encode(response.data);
+          Map<String, dynamic> result = json.decode(response);
+          User newUser = User(
+              address: result['address'],
+              email: result['email'],
+              jwtToken: jwt,
+              avatar: result['avatarUrl'],
+              name: result['name'],
+              phone: result['phone'],
+              role: UserRole.owner);
+          _view.updateUser(user);
+          view.updateLoading();
+          _view.updateMsg('Update sucessful', false);
+          return newUser;
+        }
+
+        return null;
       } else {
         _view.updateLoading();
         _view.updateMsg(invalidMsg, true);

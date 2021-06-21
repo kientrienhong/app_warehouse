@@ -12,6 +12,7 @@ import 'package:app_warehouse/views/update_info_view.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UpdateInfoScreen extends StatelessWidget {
   @override
@@ -67,6 +68,7 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
   FocusNode _emailFocusNode;
   FocusNode _addressFocusNode;
   FocusNode _phoneFocusNode;
+  UploadTask task;
 
   UpdateInfoPresenter presenter;
   User currentUser;
@@ -100,10 +102,10 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
   }
 
   @override
-  void onClickUpdateInfo(File file, User user) async {
+  void onClickUpdateInfo(File file, User user, UploadTask task) async {
     User currentUser = Provider.of(context, listen: false);
     User newUser =
-        await presenter.onHandleUpdaetInfo(user, user.jwtToken, file);
+        await presenter.onHandleUpdaetInfo(user, user.jwtToken, file, task);
     currentUser.setUser(user: newUser);
   }
 
@@ -283,7 +285,7 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
                 User user = User(
                     address: address, email: email, phone: phone, name: name);
                 presenter.onHandleUpdaetInfo(
-                    user, currentUser.jwtToken, _image);
+                    user, currentUser.jwtToken, _image, task);
                 currentUser.setUser(user: user);
               } catch (e) {}
             },

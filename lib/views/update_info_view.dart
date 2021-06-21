@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_warehouse/models/entity/user.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 abstract class UpdateInfoView {
   // update view
@@ -13,7 +14,7 @@ abstract class UpdateInfoView {
   void updateMsg(String msg, bool isError);
 
   //click update info
-  void onClickUpdateInfo(File file, User user);
+  void onClickUpdateInfo(File file, User user, UploadTask task);
 
   void onClickGalleryInfo();
 }
