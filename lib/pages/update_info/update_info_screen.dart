@@ -7,12 +7,15 @@ import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
 import 'package:app_warehouse/models/entity/user.dart';
+import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
+import 'package:app_warehouse/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import 'package:app_warehouse/presenters/update_info_presenter.dart';
 import 'package:app_warehouse/views/update_info_view.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 class UpdateInfoScreen extends StatelessWidget {
   @override
@@ -81,9 +84,10 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
 
   @override
   void updateUser(User user) {
-    setState(() {
-      currentUser = user;
-    });
+    if (mounted)
+      setState(() {
+        currentUser.setUser(user: user);
+      });
   }
 
   @override
@@ -104,8 +108,8 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
   @override
   void onClickUpdateInfo(File file, User user, UploadTask task) async {
     User currentUser = Provider.of(context, listen: false);
-    User newUser =
-        await presenter.onHandleUpdaetInfo(user, user.jwtToken, file, task);
+    User newUser = await presenter.onHandleUpdaetInfo(
+        user, currentUser.jwtToken, file, task);
     currentUser.setUser(user: newUser);
   }
 
@@ -179,6 +183,8 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
 
   @override
   Widget build(BuildContext context) {
+    var nowParam = DateFormat('yyyyddMMHHmm').format(DateTime.now());
+
     final deviceSize = MediaQuery.of(context).size;
 
     return Column(
@@ -194,7 +200,8 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
                   height: deviceSize.width / 4,
                   child: _image != null
                       ? Image.file(_image)
-                      : Image.asset('assets/images/avatar.png')),
+                      : Image.network(
+                          '${Provider.of<User>(context, listen: false).avatar}#$nowParam')),
             ),
             Positioned(
               bottom: 0,
@@ -275,7 +282,7 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
             text: 'Done',
             width: double.infinity,
             textColor: CustomColor.green,
-            onPressFunction: () {
+            onPressFunction: () async {
               try {
                 User currentUser = Provider.of<User>(context, listen: false);
                 String name = _nameController.text;
@@ -284,10 +291,23 @@ class _UpdateInfoFormState extends State<UpdateInfoForm>
                 String address = _addressController.text;
                 User user = User(
                     address: address, email: email, phone: phone, name: name);
-                presenter.onHandleUpdaetInfo(
-                    user, currentUser.jwtToken, _image, task);
-                currentUser.setUser(user: user);
-              } catch (e) {}
+                // await presenter.onHandleUpdaetInfo(
+                //     user, currentUser.jwtToken, _image, task);
+                onClickUpdateInfo(_image, user, task);
+                // if (currentUser.role == UserRole.customer) {
+                //   Navigator.pushReplacement(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (_) => CustomerBottomNavigation()));
+                // } else {
+                //   Navigator.pushReplacement(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (_) => OwnerBottomNavigation()));
+                // }
+              } catch (e) {
+                print(e.toString());
+              }
             },
             buttonColor: CustomColor.lightBlue,
             borderRadius: 8),

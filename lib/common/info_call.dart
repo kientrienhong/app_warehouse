@@ -26,12 +26,12 @@ class InfoCall extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AvatarWidget(
-              deviceSize: deviceSize,
-              isHome: false,
-              name: name,
-              imageUrl: avatar,
-              role: 'Customer'),
+          // AvatarWidget(
+          //     deviceSize: deviceSize,
+          //     isHome: false,
+          //     name: name,
+          //     imageUrl: avatar,
+          //     role: 'Customer'),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(

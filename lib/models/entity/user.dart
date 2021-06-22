@@ -88,6 +88,7 @@ class User with ChangeNotifier {
     UserRole userRole =
         roleString == 'Owner' ? UserRole.owner : UserRole.customer;
     return User(
+        avatar: json['avatar'],
         address: json['address'],
         email: json['email'],
         jwtToken: json['idToken'],

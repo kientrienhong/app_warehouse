@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
@@ -20,7 +22,6 @@ class AvatarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final subTitle = isHome == true ? 'Hi' : role;
-
     return Container(
       height: 48,
       width: deviceSize.width / 2.2,
@@ -31,9 +32,14 @@ class AvatarWidget extends StatelessWidget {
             child: Container(
               height: 48,
               width: 48,
-              child: Image.asset(
-                imageUrl,
+              // child: Image.network(
+              //   imageUrl,
+              //   fit: BoxFit.cover,
+              // ),
+              child: Image(
+                image: NetworkImage(imageUrl),
                 fit: BoxFit.cover,
+                key: ValueKey(new Random().nextInt(100)),
               ),
             ),
           ),

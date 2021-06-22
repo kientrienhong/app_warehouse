@@ -6,9 +6,8 @@ import 'package:app_warehouse/pages/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class CustomerBottomNavigation extends StatefulWidget {
-  final User user;
 
-  CustomerBottomNavigation({this.user});
+  CustomerBottomNavigation();
 
   @override
   _CustomerBottomNavigationState createState() =>

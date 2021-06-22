@@ -22,9 +22,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    // _pagingController.addPageRequestListener((pageKey) {
+    //   _fetchPage(pageKey);
+    // });
     super.initState();
   }
 

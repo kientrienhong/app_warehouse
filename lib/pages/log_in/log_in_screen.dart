@@ -153,12 +153,8 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
       if (result != null) {
         user.setUser(user: result);
         if (_model.user.role == UserRole.customer) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => CustomerBottomNavigation(
-                        user: user,
-                      )));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => CustomerBottomNavigation()));
         } else {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => OwnerBottomNavigation()));

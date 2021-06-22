@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_dialog.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
@@ -8,6 +10,7 @@ import 'package:app_warehouse/pages/log_in/log_in_screen.dart';
 import 'package:app_warehouse/pages/update_info/update_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatelessWidget {
   Widget _buildMenu(
@@ -85,6 +88,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    imageCache.clear();
+    var nowParam = DateFormat('yyyyddMMHHmm').format(DateTime.now());
+
     final deviceSize = MediaQuery.of(context).size;
     return Consumer<User>(
         builder: (context, value, child) => Container(
@@ -102,9 +108,18 @@ class ProfileScreen extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(deviceSize.width / 8),
                       child: Container(
-                          width: deviceSize.width / 4,
-                          height: deviceSize.width / 4,
-                          child: Image.asset('assets/images/avatar.png')),
+                        width: deviceSize.width / 4,
+                        height: deviceSize.width / 4,
+                        child: Image(
+                          image: NetworkImage(value.avatar + '#' + nowParam),
+                          fit: BoxFit.cover,
+                          key: ValueKey(new Random().nextInt(100)),
+                        ),
+                        // child: FadeInImage.memoryNetwork(
+                        //   placeholder: kTransparentImage,
+                        //   image: value.avatar,
+                        // ),
+                      ),
                     ),
                     CustomSizedBox(
                       context: context,

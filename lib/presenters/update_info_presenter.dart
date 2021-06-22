@@ -8,6 +8,8 @@ import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/models/update_info_model.dart';
 import 'package:app_warehouse/views/update_info_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class UpdateInfoPresenter {
   UpdateInfoModel _model;
@@ -61,6 +63,7 @@ class UpdateInfoPresenter {
             await FirebaseStorageHelper.uploadAvatar(file, task, user.email);
         var response = await ApiServices.updateInfo(
             user.name, user.address, user.phone, jwt, uploadFileString);
+        imageCache.clear();
         response = json.encode(response.data);
         Map<String, dynamic> result = json.decode(response);
         User newUser = User(
