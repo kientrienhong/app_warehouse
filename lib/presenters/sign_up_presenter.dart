@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app_warehouse/api/api_services.dart';
+import 'package:app_warehouse/helpers/firebase_storage_helper.dart';
 import 'package:app_warehouse/helpers/validator.dart';
 import 'package:app_warehouse/models/sign_up_model.dart';
 import 'package:app_warehouse/views/sign_up_view.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class SignUpPresenter {
   SignUpView _view;
@@ -69,6 +72,7 @@ class SignUpPresenter {
 
   Future<bool> onHandleSignUp(String role, String email, String password,
       String confirmPassword, String name, String phone, String address) async {
+    UploadTask task;
     _view.updateLoading();
     try {
       String validateMsg = validate(
@@ -77,9 +81,12 @@ class SignUpPresenter {
         _view.updateMsg(validateMsg, true);
         return false;
       }
-
-      var response = await ApiServices.signUp(
-          role, email, password, confirmPassword, name, phone, address);
+      File file =
+          await FirebaseStorageHelper.urlToFile('assets/images/profile.png');
+      final responseUrl =
+          await FirebaseStorageHelper.uploadAvatar(file, task, email);
+      var response = await ApiServices.signUp(role, email, password,
+          confirmPassword, name, phone, address, responseUrl);
       // print(response);
       response = json.encode(response.data);
       Map<String, dynamic> result = json.decode(response);
@@ -87,7 +94,7 @@ class SignUpPresenter {
         _view.updateMsg(result['error']['message'], true);
         return false;
       } else {
-        _view.updateMsg('Change sucessfull', false);
+        _view.updateMsg('Sign up sucessfull', false);
         return true;
       }
     } catch (e) {

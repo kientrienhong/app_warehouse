@@ -364,10 +364,17 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
             context: context,
             height: 16,
           ),
-          CustomMsgInput(
-              msg: presenter.model.msg,
-              isError: presenter.model.isError,
-              maxLines: 6),
+          Container(
+            width: deviceSize.width,
+            child: Row(
+              children: [
+                CustomMsgInput(
+                    msg: presenter.model.msg,
+                    isError: presenter.model.isError,
+                    maxLines: 6)
+              ],
+            ),
+          ),
           CustomButton(
               isLoading: presenter.model.isLoading,
               height: 32,
