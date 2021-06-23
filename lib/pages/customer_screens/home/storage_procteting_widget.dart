@@ -46,7 +46,7 @@ class StorageProtectingWidget extends StatelessWidget {
                     width: deviceSize.width,
                     height: deviceSize.height / 5.2,
                     child: Image.network(
-                      data.picture,
+                      data.picture[0]['imageUrl'],
                       fit: BoxFit.cover,
                     )),
               ),
@@ -89,7 +89,7 @@ class StorageProtectingWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RatingBarIndicator(
-                      rating: data.rating * 1.0,
+                      rating: data.rating == null ? 0 * 1.0 : data.rating * 1.0,
                       itemBuilder: (context, index) => Icon(
                         Icons.star,
                         color: Color(0xFFFFCC1F),

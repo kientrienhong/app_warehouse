@@ -8,6 +8,7 @@ import 'package:app_warehouse/presenters/customer_detail_storage_presenter.dart'
 import 'package:app_warehouse/views/customer_detail_storage_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class DetailProtectingServiceScreen extends StatefulWidget {
   final Storage data;
@@ -157,6 +158,20 @@ class _DetailProtectingServiceScreenState
     );
   }
 
+  List<Widget> _buildListImageWidget(
+      List<dynamic> listImages, Size deviceSize) {
+    return listImages.where((element) => element['type'] == 0).map((element) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: deviceSize.width,
+          height: deviceSize.height / 4.8,
+          child: Image.network(element['imageUrl'], fit: BoxFit.cover),
+        ),
+      );
+    }).toList();
+  }
+
   @override
   void updateQuantity(Map<String, int> value, double totalPrice) {
     setState(() {
@@ -174,17 +189,13 @@ class _DetailProtectingServiceScreenState
   void initState() {
     super.initState();
     presenter = CustomerDetailStoragePresenter(
-        // priceFrom: widget.data.priceFrom, priceTo: widget.data.priceTo);
-        priceFrom: 12000,
-        priceTo: 20000);
+        priceFrom: widget.data.priceFrom, priceTo: widget.data.priceTo);
     presenter.view = this;
   }
 
   @override
   Widget build(BuildContext context) {
     final Size deviceSize = MediaQuery.of(context).size;
-    final String description =
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -200,14 +211,21 @@ class _DetailProtectingServiceScreenState
                 context: context,
                 height: 24,
               ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  width: deviceSize.width,
-                  height: deviceSize.height / 4.8,
-                  child: Image.network(widget.data.picture, fit: BoxFit.cover),
-                ),
-              ),
+              CarouselSlider(
+                  items: _buildListImageWidget(widget.data.picture, deviceSize),
+                  options: CarouselOptions(
+                    height: deviceSize.height / 4.8,
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 0.8,
+                    initialPage: 0,
+                    reverse: false,
+                    // autoPlay: true,
+                    // autoPlayInterval: Duration(seconds: 3),
+                    // autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    // autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    scrollDirection: Axis.horizontal,
+                  )),
               CustomSizedBox(
                 context: context,
                 height: 16,
@@ -216,13 +234,11 @@ class _DetailProtectingServiceScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomText(
-                      text: widget.data.name == null
-                          ? 'Storage'
-                          : widget.data.name,
+                      text: widget.data.name,
                       color: CustomColor.black,
                       context: context,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16),
+                      fontSize: 24),
                 ],
               ),
               CustomSizedBox(
@@ -241,7 +257,8 @@ class _DetailProtectingServiceScreenState
                 height: 8,
               ),
               RatingBarIndicator(
-                rating: widget.data.rating * 1.0,
+                rating:
+                    widget.data.rating == null ? 0 : widget.data.rating * 1.0,
                 itemBuilder: (context, index) => Icon(
                   Icons.star,
                   color: Color(0xFFFFCC1F),
@@ -259,13 +276,13 @@ class _DetailProtectingServiceScreenState
                   color: CustomColor.black,
                   context: context,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16),
+                  fontSize: 24),
               CustomSizedBox(
                 context: context,
                 height: 8,
               ),
               CustomText(
-                  text: description,
+                  text: widget.data.description,
                   color: CustomColor.black[2],
                   context: context,
                   textAlign: TextAlign.justify,
@@ -278,8 +295,8 @@ class _DetailProtectingServiceScreenState
               InfoCall(
                 avatar: 'assets/images/avatar.png',
                 deviceSize: deviceSize,
-                name: 'Clarren Jessica',
-                phone: '077777777',
+                name: widget.data.ownerName,
+                phone: widget.data.ownerPhone,
               ),
               CustomSizedBox(
                 context: context,
@@ -301,7 +318,7 @@ class _DetailProtectingServiceScreenState
                   context: context,
                   size: '1m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '${widget.data.priceFrom} VND',
+                  price: '${widget.data.priceTo} VND',
                   imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,
@@ -316,7 +333,7 @@ class _DetailProtectingServiceScreenState
                       color: CustomColor.black,
                       context: context,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16),
+                      fontSize: 24),
                   Container(
                     width: 32,
                     height: 32,
@@ -353,7 +370,7 @@ class _DetailProtectingServiceScreenState
                     text: 'Price: ',
                     color: CustomColor.black,
                     context: context,
-                    fontSize: 16,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   CustomSizedBox(

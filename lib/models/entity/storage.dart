@@ -4,14 +4,15 @@ enum StorageStatus { pending, reject, approved }
 
 class Storage {
   final int id;
-  final String ownerId;
+  final int ownerId;
   final String address;
   final int rating;
-  final String picture;
+  final List<dynamic> picture;
   final String name;
   final String description;
   final int status;
   final String ownerName;
+  final String ownerPhone;
   final double priceFrom;
   final double priceTo;
   Storage(
@@ -19,6 +20,7 @@ class Storage {
       this.address,
       this.description,
       this.name,
+      this.ownerPhone,
       this.ownerId,
       this.ownerName,
       this.picture,
@@ -35,24 +37,25 @@ class Storage {
     String picture,
     String name,
     String description,
+    String ownerPhone,
     StorageStatus status,
     String ownerName,
     int priceFrom,
     int priceTo,
   }) {
     return Storage(
-      id: id ?? this.id,
-      ownerId: ownerId ?? this.ownerId,
-      address: address ?? this.address,
-      rating: rating ?? this.rating,
-      picture: picture ?? this.picture,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      status: status ?? this.status,
-      ownerName: ownerName ?? this.ownerName,
-      priceFrom: priceFrom ?? this.priceFrom,
-      priceTo: priceTo ?? this.priceTo,
-    );
+        id: id ?? this.id,
+        ownerId: ownerId ?? this.ownerId,
+        address: address ?? this.address,
+        rating: rating ?? this.rating,
+        picture: picture ?? this.picture,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        status: status ?? this.status,
+        ownerName: ownerName ?? this.ownerName,
+        priceFrom: priceFrom ?? this.priceFrom,
+        priceTo: priceTo ?? this.priceTo,
+        ownerPhone: ownerPhone ?? this.ownerPhone);
   }
 
   Map<String, dynamic> toMap() {
@@ -68,17 +71,19 @@ class Storage {
       'ownerName': ownerName,
       'priceFrom': priceFrom,
       'priceTo': priceTo,
+      'ownerPhone': ownerPhone
     };
   }
 
   factory Storage.fromMap(Map<String, dynamic> map) {
     return Storage(
       id: map['id']?.toInt(),
-      ownerId: map['ownerId'],
+      ownerId: map['ownerId'].toInt(),
       address: map['address'],
       rating: map['rating']?.toInt(),
-      picture: map['picture'],
+      picture: map['images'],
       name: map['name'],
+      ownerPhone: map['ownerPhone'],
       description: map['description'],
       status: map['status']?.toInt(),
       ownerName: map['ownerName'],
@@ -111,6 +116,7 @@ class Storage {
         other.description == description &&
         other.status == status &&
         other.ownerName == ownerName &&
+        other.ownerPhone == ownerPhone &&
         other.priceFrom == priceFrom &&
         other.priceTo == priceTo;
   }
@@ -122,6 +128,7 @@ class Storage {
         address.hashCode ^
         rating.hashCode ^
         picture.hashCode ^
+        ownerPhone.hashCode ^
         name.hashCode ^
         description.hashCode ^
         status.hashCode ^
