@@ -5,6 +5,8 @@ import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/models/entity/storage.dart';
 import 'package:app_warehouse/models/entity/user.dart';
 import 'package:app_warehouse/pages/customer_screens/home/storage_procteting_widget.dart';
+import 'package:app_warehouse/presenters/home_presenter.dart';
+import 'package:app_warehouse/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -14,25 +16,46 @@ class CustomerHomeScreen extends StatefulWidget {
   _CustomerHomeScreenState createState() => _CustomerHomeScreenState();
 }
 
-class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+class _CustomerHomeScreenState extends State<CustomerHomeScreen>
+    implements HomeView {
   static const _pageSize = 10;
-
-  final PagingController<int, Storage> _pagingController =
+  HomePresenter presenter;
+  PagingController<int, Storage> _pagingController =
       PagingController(firstPageKey: 0);
+  TextEditingController _searchController;
+  @override
+  void onClickSearch(String search) {
+    presenter.onClickSearch(search);
+  }
+
+  @override
+  void updateSearch() async {
+    _pagingController.refresh();
+  }
 
   @override
   void initState() {
+    presenter = HomePresenter();
+    presenter.view = this;
+    _searchController = TextEditingController();
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _pagingController.dispose();
+    _searchController.dispose();
+  }
+
   Future<void> _fetchPage(int pageKey) async {
     try {
       User user = Provider.of<User>(context, listen: false);
-      final response =
-          await ApiServices.loadListStorage(pageKey, _pageSize, user.jwtToken);
+      final response = await ApiServices.loadListStorage(
+          pageKey, _pageSize, user.jwtToken, presenter.model.searchAddress);
       List<dynamic> result = response.data['data'];
       List<Storage> newItems =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
@@ -69,14 +92,19 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                 width: deviceSize.width - 48,
                 height: 40,
                 child: TextFormField(
+                  controller: _searchController,
+                  textInputAction: TextInputAction.done,
+                  //its about this part
+                  onFieldSubmitted: (String value) {
+                    onClickSearch(_searchController.text);
+                  },
                   decoration: InputDecoration(
-                      prefixIcon: ImageIcon(
-                        AssetImage('assets/images/search.png'),
-                        color: CustomColor.black,
-                      ),
-                      suffixIcon: ImageIcon(
-                        AssetImage('assets/images/filter.png'),
-                        color: CustomColor.black,
+                      suffixIcon: GestureDetector(
+                        onTap: () => onClickSearch(_searchController.text),
+                        child: ImageIcon(
+                          AssetImage('assets/images/search.png'),
+                          color: CustomColor.black,
+                        ),
                       ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -107,11 +135,5 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 }

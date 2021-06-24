@@ -1,4 +1,6 @@
 abstract class HomeView {
   // update view
-  void updateLoading();
+  void updateSearch();
+  //handle search
+  void onClickSearch(String search);
 }

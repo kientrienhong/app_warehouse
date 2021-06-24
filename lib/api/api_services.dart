@@ -15,15 +15,16 @@ class ApiServices {
     }
   }
 
-  static Future<dynamic> loadListStorage(int page, int size, String jwt) {
+  static Future<dynamic> loadListStorage(
+      int page, int size, String jwt, String address) {
     try {
-      return Dio()
-          .get('https://localhost:44318/api/v1/storages?page=$page&size=$size',
-              options: Options(headers: {
-                'Authorization': 'bearer ' + jwt,
-                'Content-Type': "application/json",
-                'Accept': 'application/json',
-              }));
+      return Dio().get(
+          'https://localhost:44318/api/v1/storages?Address=$address&page=$page&size=$size',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
     } catch (e) {
       throw Exception('Unathorized');
     }
