@@ -8,8 +8,9 @@ import 'package:app_warehouse/common/custom_input.dart';
 import 'package:app_warehouse/common/custom_msg_input.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/models/entity/storage.dart';
 import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
+import 'package:app_warehouse/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import 'package:app_warehouse/presenters/create_storage_presenter.dart';
 import 'package:app_warehouse/views/create_storage_view.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class CreateStorageScreen extends StatefulWidget {
-  final Map<String, dynamic> data;
+  final Storage data;
   CreateStorageScreen({@required this.data});
 
   @override
@@ -51,7 +52,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   }
 
   @override
-  void updateGridView(String typeList, List<File> listFile) {
+  void updateGridView(String typeList, List<dynamic> listFile) {
     setState(() {
       presenter.model.allImage[typeList] = listFile;
     });
@@ -88,6 +89,23 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
     if (image != null) presenter.onHandleAddImage(typeList, File(image.path));
   }
 
+  @override
+  void onClickEditStorage(int id, String name, String address,
+      String description, String priceSmallBox, String priceBigBox) async {
+    try {
+      User user = Provider.of(context, listen: false);
+      await presenter.onHandleEditStorage(
+          id, name, address, description, user, priceSmallBox, priceBigBox);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => OwnerBottomNavigation()),
+          (route) => false);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   final _focusNodeLargeBox = FocusNode();
   final _focusNodeDescription = FocusNode();
   final _focusName = FocusNode();
@@ -110,7 +128,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   String get _priceSmallBox => _controllerPriceSmallBox.text;
 
   _buildGridView(
-      {@required List<File> listFile,
+      {@required List<dynamic> listFile,
       @required Size deviceSize,
       @required String typeList}) {
     return Container(
@@ -149,6 +167,17 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               );
             }
 
+            if (listFile[index] is String) {
+              return GestureDetector(
+                onLongPress: () => onClickDeleteGalleryImage(typeList, index),
+                onTap: () => onClickEditGalleryImage(typeList, index),
+                child: Image.network(
+                  listFile[index],
+                  fit: BoxFit.cover,
+                ),
+              );
+            }
+
             return GestureDetector(
               onLongPress: () => onClickDeleteGalleryImage(typeList, index),
               onTap: () => onClickEditGalleryImage(typeList, index),
@@ -167,6 +196,14 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
     presenter = CreateStoragePresenter();
     presenter.view = this;
     picker = ImagePicker();
+    if (widget.data != null) {
+      _controllerPriceLargeBox.text = widget.data.priceTo.toString();
+      _controllerDescription.text = widget.data.description;
+      _controllerName.text = widget.data.name;
+      _controllerAddress.text = widget.data.address;
+      _controllerPriceSmallBox.text = widget.data.priceFrom.toString();
+      presenter.updateExistData(widget.data.picture);
+    }
   }
 
   @override
@@ -198,25 +235,25 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
             CustomAppBar(
               isHome: false,
             ),
-          if (widget.data != null)
-            if (widget.data['statusChecking'] == StatusCheckingStorage.Reject)
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                CustomText(
-                  text: 'Reason',
-                  color: CustomColor.red,
-                  context: context,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                CustomSizedBox(context: context, height: 16),
-                CustomText(
-                  text: 'You must provide enough paperworkers',
-                  color: CustomColor.red,
-                  context: context,
-                  fontSize: 16,
-                ),
-                CustomSizedBox(context: context, height: 16),
-              ]),
+          // if (widget.data != null)
+          //   if (widget.data['statusChecking'] == StatusCheckingStorage.Reject)
+          //     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          //       CustomText(
+          //         text: 'Reason',
+          //         color: CustomColor.red,
+          //         context: context,
+          //         fontSize: 24,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //       CustomSizedBox(context: context, height: 16),
+          //       CustomText(
+          //         text: 'You must provide enough paperworkers',
+          //         color: CustomColor.red,
+          //         context: context,
+          //         fontSize: 16,
+          //       ),
+          //       CustomSizedBox(context: context, height: 16),
+          //     ]),
           CustomSizedBox(context: context, height: 16),
           CustomText(
             text: 'Storage Infomation',
@@ -384,10 +421,15 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
                   ? CustomColor.green
                   : CustomColor.black,
               onPressFunction: presenter.model.isAgree == true
-                  ? () {
-                      onClickCreateStorage(_name, _address, _description,
-                          _amountShelves, _priceSmallBox, _priceLargeBox);
-                    }
+                  ? widget.data == null
+                      ? () {
+                          onClickCreateStorage(_name, _address, _description,
+                              _amountShelves, _priceSmallBox, _priceLargeBox);
+                        }
+                      : () {
+                          onClickEditStorage(widget.data.id, _name, _address,
+                              _description, _priceSmallBox, _priceLargeBox);
+                        }
                   : null,
               buttonColor: presenter.model.isAgree == true
                   ? CustomColor.lightBlue

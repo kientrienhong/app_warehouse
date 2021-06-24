@@ -32,7 +32,7 @@ class FirebaseStorageHelper {
   }
 
   static Future<List<String>> uploadImage(
-      String type, List<File> image, UploadTask task, String email) async {
+      String type, List<dynamic> image, UploadTask task, String email) async {
     int index = 0;
 
     return Future.wait(image.map((element) async {

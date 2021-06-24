@@ -22,22 +22,20 @@ class CreateStoragePresenter {
   }
 
   void onHandleAddImage(String typeList, File image) {
-    List<File> listImage = [...model.allImage[typeList]];
+    List<dynamic> listImage = [...model.allImage[typeList]];
     listImage.add(image);
     view.updateGridView(typeList, listImage);
   }
 
   void onHandleEditImage(String typeList, File image, int index) {
-    List<File> listImage = [...model.allImage[typeList]];
+    List<dynamic> listImage = [...model.allImage[typeList]];
     listImage[index] = image;
-
     view.updateGridView(typeList, listImage);
   }
 
   void onHanldeDeleteImage(String typeList, int index) {
-    List<File> listImage = [...model.allImage[typeList]];
+    List<dynamic> listImage = [...model.allImage[typeList]];
     listImage.removeAt(index);
-
     view.updateGridView(typeList, listImage);
   }
 
@@ -61,7 +59,7 @@ class CreateStoragePresenter {
       invalidMsg.add('Name');
     }
 
-    if (amountShelves.isEmpty) {
+    if (amountShelves != null) if (amountShelves.isEmpty) {
       invalidMsg.add('Amount Shelves');
     }
 
@@ -77,7 +75,7 @@ class CreateStoragePresenter {
       result = invalidMsg.join(', ');
       result += ' must be filled\n';
     }
-    if (amountShelves.isNotEmpty) {
+    if (amountShelves != null) if (amountShelves.isNotEmpty) {
       if (Validator.isNumeric(amountShelves) == false) {
         result += 'Please enter valid amount shelves\n';
       }
@@ -106,18 +104,45 @@ class CreateStoragePresenter {
   }
 
   Future<List<String>> uploadImage(
-      String type, List<File> image, String email) async {
+      String type, List<dynamic> image, String email) async {
     UploadTask task;
     return FirebaseStorageHelper.uploadImage(type, image, task, email);
   }
 
+  void updateExistData(List<dynamic> listImage) {
+    listImage.forEach((element) {
+      if (element['type'] == 0) {
+        _model.allImage['imageStorage'].add(element['imageUrl']);
+      } else {
+        _model.allImage['paperStorage'].add(element['imageUrl']);
+      }
+    });
+  }
+
   Future<List<Map<String, dynamic>>> formatData(String email) async {
-    List<String> listImageStorage =
-        await uploadImage('storage', _model.allImage['imageStorage'], email);
+    List<String> listImageStorage = await uploadImage(
+        'storage',
+        _model.allImage['imageStorage'].where((e) => e is File).toList(),
+        email);
     List<String> listPaperStorage = await uploadImage(
-        'paperworker', _model.allImage['paperStorage'], email);
+        'paperworker',
+        _model.allImage['paperStorage'].where((e) => e is File).toList(),
+        email);
 
     List<Map<String, dynamic>> listResult = [];
+
+    _model.allImage['imageStorage'].forEach((e) {
+      if (e is String) {
+        listResult.add({"imageUrl": e, 'type': 0});
+      }
+    });
+
+    _model.allImage['paperStorage'].forEach((e) {
+      if (e is String) {
+        listResult.add({"imageUrl": e, 'type': 1});
+      }
+    });
+
     listImageStorage.forEach((element) {
       listResult.add({"imageUrl": element, 'type': 0});
     });
@@ -126,6 +151,49 @@ class CreateStoragePresenter {
     });
 
     return listResult;
+  }
+
+  Future<bool> onHandleEditStorage(
+      int id,
+      String name,
+      String address,
+      String description,
+      User user,
+      String priceSmallBox,
+      String priceBigBox) async {
+    _view.updateLoading();
+    try {
+      String validateMsg = validate(
+          name, address, description, null, priceSmallBox, priceBigBox);
+      if (validateMsg != '') {
+        _view.updateMsg(validateMsg, true);
+        return false;
+      }
+
+      List<Map<String, dynamic>> responseUploadImage =
+          await formatData(user.email);
+      var response = await ApiServices.updateStorage(
+          id,
+          name,
+          address,
+          description,
+          double.parse(priceSmallBox),
+          double.parse(priceBigBox),
+          responseUploadImage,
+          user.jwtToken);
+      if (response.data == 'Update success') {
+        _view.updateMsg(response.data, false);
+        return true;
+      } else {
+        _view.updateMsg(response.data['error']['message'], true);
+        return false;
+      }
+    } catch (e) {
+      _view.updateMsg('Upload failed', true);
+      throw Exception(e);
+    } finally {
+      _view.updateLoading();
+    }
   }
 
   Future<bool> onHandleAddStorage(

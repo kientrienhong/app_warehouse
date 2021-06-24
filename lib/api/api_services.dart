@@ -121,4 +121,48 @@ class ApiServices {
       throw Exception('Log in failed');
     }
   }
+
+  static Future<dynamic> updateStorage(
+      int idStorage,
+      String name,
+      String address,
+      String description,
+      double smallBoxPrice,
+      double bigBoxPrice,
+      List<Map<String, dynamic>> images,
+      String jwt) {
+    try {
+      return Dio().put(
+          'https://localhost:44318/api/v1/storages/${idStorage.toString()}',
+          data: {
+            "name": name,
+            "address": address,
+            "description": description,
+            // "smallBoxPrice": smallBoxPrice,
+            // "bigBoxPrice": bigBoxPrice,
+            "images": images
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
+
+  static Future<dynamic> deleteStorage(int idStorage, String jwt) {
+    try {
+      return Dio().delete(
+          'https://localhost:44318/api/v1/storages/${idStorage.toString()}',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
 }
