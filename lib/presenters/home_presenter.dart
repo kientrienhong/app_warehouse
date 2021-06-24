@@ -34,7 +34,6 @@ class HomePresenter {
 
   void onClickSearch(String search) {
     _model.searchAddress = search;
-    print(_model.searchAddress);
     view.updateSearch();
   }
 }

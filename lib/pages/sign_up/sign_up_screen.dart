@@ -186,7 +186,7 @@ class _SignUpFormState extends State<SignUpForm> implements SignUpView {
             labelText: 'Email',
             isDisable: false,
             focusNode: _focusNodeEmail,
-            nextNode: _focusName,
+            nextNode: _focusAddress,
             controller: _controllerEmail,
           ),
           CustomOutLineInput(
@@ -202,6 +202,7 @@ class _SignUpFormState extends State<SignUpForm> implements SignUpView {
             labelText: 'Phone',
             isDisable: false,
             focusNode: _focusPhone,
+            nextNode: _focusNodePassword,
             controller: _controllerPhone,
             textInputType: TextInputType.number,
           ),
