@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class CreateStorageModel {
   Map<String, List<dynamic>> _allImage;
   bool _isAgree;

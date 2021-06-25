@@ -102,6 +102,9 @@ class ApiServices {
       int bigBoxPrice,
       List<Map<String, dynamic>> images,
       String jwt) {
+    print(smallBoxPrice);
+    print(bigBoxPrice);
+
     try {
       return Dio().post('https://localhost:44318/api/v1/storages',
           data: {
@@ -139,8 +142,8 @@ class ApiServices {
             "name": name,
             "address": address,
             "description": description,
-            // "smallBoxPrice": smallBoxPrice,
-            // "bigBoxPrice": bigBoxPrice,
+            "priceFrom": smallBoxPrice,
+            "priceTo": bigBoxPrice,
             "images": images
           },
           options: Options(headers: {

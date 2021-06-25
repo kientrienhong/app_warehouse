@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_warehouse/api/api_services.dart';
+import 'package:app_warehouse/api/firebase_services.dart';
 import 'package:app_warehouse/helpers/firebase_storage_helper.dart';
 import 'package:app_warehouse/helpers/validator.dart';
 import 'package:app_warehouse/models/create_storage_model.dart';
@@ -23,13 +24,13 @@ class CreateStoragePresenter {
 
   void onHandleAddImage(String typeList, File image) {
     List<dynamic> listImage = [...model.allImage[typeList]];
-    listImage.add(image);
+    listImage.add({'file': image, 'id': null});
     view.updateGridView(typeList, listImage);
   }
 
   void onHandleEditImage(String typeList, File image, int index) {
     List<dynamic> listImage = [...model.allImage[typeList]];
-    listImage[index] = image;
+    listImage[index] = {'file': image, 'id': listImage[index]['id']};
     view.updateGridView(typeList, listImage);
   }
 
@@ -103,57 +104,109 @@ class CreateStoragePresenter {
     return result;
   }
 
-  Future<List<String>> uploadImage(
-      String type, List<dynamic> image, String email) async {
+  Future<List<Map>> uploadImage(
+      String type, List<dynamic> image, String email, int idStorage) async {
     UploadTask task;
-    return FirebaseStorageHelper.uploadImage(type, image, task, email);
+    return FirebaseStorageHelper.uploadImage(
+        type, image, task, email, idStorage);
   }
 
   void updateExistData(List<dynamic> listImage) {
     listImage.forEach((element) {
       if (element['type'] == 0) {
-        _model.allImage['imageStorage'].add(element['imageUrl']);
+        _model.allImage['imageStorage'].add(element);
       } else {
-        _model.allImage['paperStorage'].add(element['imageUrl']);
+        _model.allImage['paperStorage'].add(element);
       }
     });
   }
 
-  Future<List<Map<String, dynamic>>> formatData(String email) async {
-    List<String> listImageStorage = await uploadImage(
-        'storage',
-        _model.allImage['imageStorage'].where((e) => e is File).toList(),
-        email);
-    List<String> listPaperStorage = await uploadImage(
+  Future<List<Map<String, dynamic>>> formatDataCreate(
+      String email, int storageId, List<dynamic> reponseImages) async {
+    List<Map> listImageStorage = await uploadImage(
+        'imageStorage',
+        _model.allImage['imageStorage']
+            .where((e) => e['file'] != null)
+            .toList(),
+        email,
+        storageId);
+    List<Map> listPaperStorage = await uploadImage(
         'paperworker',
-        _model.allImage['paperStorage'].where((e) => e is File).toList(),
-        email);
+        _model.allImage['paperStorage']
+            .where((e) => e['file'] != null)
+            .toList(),
+        email,
+        storageId);
+    List<Map<String, dynamic>> listResult = [];
+    int index = 0;
+    int indexResponseImages = 0;
+    _model.allImage['imageStorage'].forEach((e) {
+      if (e['imageUrl'] == null && listImageStorage.length > 0) {
+        Map image = listImageStorage[index];
+
+        listResult.add({
+          "imageUrl": image['imageUrl'],
+          'type': 0,
+          'id': reponseImages[indexResponseImages++]['id'],
+          'storageId': storageId
+        });
+        if (listResult.last['id'] == null) listResult.last.remove('id');
+        if (listResult.last['storageId'] == null)
+          listResult.last.remove('storageId');
+        index++;
+      } else {
+        listResult.add(e);
+      }
+    });
+    index = 0;
+    _model.allImage['paperStorage'].forEach((e) {
+      if (e['imageUrl'] == null && listPaperStorage.length > 0) {
+        Map image = listPaperStorage[index];
+
+        listResult.add({
+          "imageUrl": image['imageUrl'],
+          'type': 1,
+          'id': reponseImages[indexResponseImages++]['id'],
+          'storageId': storageId
+        });
+        if (listResult.last['id'] == null) listResult.last.remove('id');
+        if (listResult.last['storageId'] == null)
+          listResult.last.remove('storageId');
+        index++;
+      } else {
+        listResult.add(e);
+      }
+    });
+    return listResult;
+  }
+
+  Future<List<Map<String, dynamic>>> formatData(
+      String email, int storageId) async {
+    List<Map> listImageStorage = await uploadImage(
+        'imageStorage', _model.allImage['imageStorage'], email, storageId);
+    print('listImageStorage');
+
+    print(listImageStorage);
+    List<Map> listPaperStorage = await uploadImage(
+        'paperworker', _model.allImage['paperStorage'], email, storageId);
+    print('listPaperStorage');
+
+    print(listPaperStorage);
 
     List<Map<String, dynamic>> listResult = [];
-
-    _model.allImage['imageStorage'].forEach((e) {
-      if (e is String) {
-        listResult.add({"imageUrl": e, 'type': 0});
-      }
-    });
-
-    _model.allImage['paperStorage'].forEach((e) {
-      if (e is String) {
-        listResult.add({"imageUrl": e, 'type': 1});
-      }
-    });
-
     listImageStorage.forEach((element) {
-      listResult.add({"imageUrl": element, 'type': 0});
+      if (element['id'] == null) element.remove('id');
+      listResult.add(element);
     });
     listPaperStorage.forEach((element) {
-      listResult.add({"imageUrl": element, 'type': 1});
+      if (element['id'] == null) element.remove('id');
+      listResult.add(element);
     });
-
     return listResult;
   }
 
   Future<bool> onHandleEditStorage(
+      int storageId,
       int id,
       String name,
       String address,
@@ -171,7 +224,9 @@ class CreateStoragePresenter {
       }
 
       List<Map<String, dynamic>> responseUploadImage =
-          await formatData(user.email);
+          await formatData(user.email, storageId);
+      print('responseUploadImage');
+      print(responseUploadImage);
       var response = await ApiServices.updateStorage(
           id,
           name,
@@ -213,22 +268,46 @@ class CreateStoragePresenter {
         return false;
       }
 
-      List<Map<String, dynamic>> responseUploadImage =
-          await formatData(user.email);
-      var response = await ApiServices.addStorage(
+      List<Map<String, dynamic>> tempListImage = [];
+      _model.allImage['imageStorage'].forEach((element) {
+        tempListImage.add({'imageUrl': null, 'type': 0});
+      });
+
+      _model.allImage['paperStorage'].forEach((element) {
+        tempListImage.add({'imageUrl': null, 'type': 1});
+      });
+
+      var responseCreate = await ApiServices.addStorage(
           name,
           address,
           description,
           int.parse(amountShelves),
           int.parse(priceSmallBox),
           int.parse(priceBigBox),
-          responseUploadImage,
+          tempListImage,
           user.jwtToken);
-      if (response.data == 'Create Successful!') {
-        _view.updateMsg(response.data, false);
-        return true;
+      if (responseCreate.data['error'] == null) {
+        int storageId = responseCreate.data['id'];
+        print(responseCreate);
+        List<Map<String, dynamic>> responseUploadImage = await formatDataCreate(
+            user.email, storageId, responseCreate.data['images']);
+        var reponseUpdate = await ApiServices.updateStorage(
+            storageId,
+            name,
+            address,
+            description,
+            double.parse(priceSmallBox),
+            double.parse(priceBigBox),
+            responseUploadImage,
+            user.jwtToken);
+        if (reponseUpdate.data == 'Update success') {
+          _view.updateMsg('Create sucessfully', false);
+          return true;
+        } else {
+          _view.updateMsg(reponseUpdate.data['error']['message'], true);
+          return false;
+        }
       } else {
-        _view.updateMsg(response.data['error']['message'], true);
         return false;
       }
     } catch (e) {

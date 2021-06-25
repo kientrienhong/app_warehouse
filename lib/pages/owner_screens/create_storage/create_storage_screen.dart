@@ -30,7 +30,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
     implements CreateStorageView {
   CreateStoragePresenter presenter;
   var picker;
-
+  // List<file>
   @override
   void updateStatusButton(bool isAgree) {
     setState(() {
@@ -94,8 +94,8 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
       String description, String priceSmallBox, String priceBigBox) async {
     try {
       User user = Provider.of(context, listen: false);
-      await presenter.onHandleEditStorage(
-          id, name, address, description, user, priceSmallBox, priceBigBox);
+      await presenter.onHandleEditStorage(widget.data.id, id, name, address,
+          description, user, priceSmallBox, priceBigBox);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -104,6 +104,57 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Widget _buildShelves(Size deviceSize) {
+    if (widget.data == null) {
+      return Column(
+        children: [
+          CustomSizedBox(context: context, height: 16),
+          Container(
+            width: deviceSize.width / 2,
+            height: deviceSize.width / 2,
+            child: Image.asset(
+              'assets/images/shelf.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+          CustomSizedBox(context: context, height: 16),
+          Container(
+            width: double.infinity,
+            child: CustomText(
+              text: '2880 x 1100 x 4000mm',
+              color: CustomColor.black,
+              context: context,
+              textAlign: TextAlign.center,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          CustomSizedBox(context: context, height: 16),
+          Row(
+            children: [
+              Container(
+                width: deviceSize.width / 3 - 12,
+              ),
+              Container(
+                width: deviceSize.width / 3,
+                child: CustomOutLineInput(
+                  isDisable: false,
+                  focusNode: _focusAmountShelves,
+                  deviceSize: deviceSize,
+                  labelText: 'Amount',
+                  controller: _controllerAmountShelves,
+                  nextNode: _focusPriceSmallBox,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    return Container();
   }
 
   final _focusNodeLargeBox = FocusNode();
@@ -167,12 +218,12 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               );
             }
 
-            if (listFile[index] is String) {
+            if (listFile[index]['imageUrl'] != null) {
               return GestureDetector(
                 onLongPress: () => onClickDeleteGalleryImage(typeList, index),
                 onTap: () => onClickEditGalleryImage(typeList, index),
                 child: Image.network(
-                  listFile[index],
+                  listFile[index]['imageUrl'],
                   fit: BoxFit.cover,
                 ),
               );
@@ -182,7 +233,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               onLongPress: () => onClickDeleteGalleryImage(typeList, index),
               onTap: () => onClickEditGalleryImage(typeList, index),
               child: Image.file(
-                listFile[index],
+                listFile[index]['file'],
                 fit: BoxFit.cover,
               ),
             );
@@ -319,46 +370,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
-          CustomSizedBox(context: context, height: 16),
-          Container(
-            width: deviceSize.width / 2,
-            height: deviceSize.width / 2,
-            child: Image.asset(
-              'assets/images/shelf.png',
-              fit: BoxFit.contain,
-            ),
-          ),
-          CustomSizedBox(context: context, height: 16),
-          Container(
-            width: double.infinity,
-            child: CustomText(
-              text: '2880 x 1100 x 4000mm',
-              color: CustomColor.black,
-              context: context,
-              textAlign: TextAlign.center,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          CustomSizedBox(context: context, height: 16),
-          Row(
-            children: [
-              Container(
-                width: deviceSize.width / 3 - 12,
-              ),
-              Container(
-                width: deviceSize.width / 3,
-                child: CustomOutLineInput(
-                  isDisable: false,
-                  focusNode: _focusAmountShelves,
-                  deviceSize: deviceSize,
-                  labelText: 'Amount',
-                  controller: _controllerAmountShelves,
-                  nextNode: _focusPriceSmallBox,
-                ),
-              ),
-            ],
-          ),
+          _buildShelves(deviceSize),
           CustomSizedBox(context: context, height: 16),
           BoxInputPrice(
               deviceSize: deviceSize,
