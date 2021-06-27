@@ -2,14 +2,14 @@ import 'package:app_warehouse/common/custom_color.dart';
 import 'package:app_warehouse/common/custom_dialog.dart';
 import 'package:app_warehouse/common/custom_sizebox.dart';
 import 'package:app_warehouse/common/custom_text.dart';
+import 'package:app_warehouse/models/entity/storage.dart';
 import 'package:app_warehouse/pages/owner_screens/create_storage/create_storage_screen.dart';
 import 'package:app_warehouse/pages/owner_screens/detail_storage/owner_detail_storage.dart';
-import 'package:app_warehouse/pages/owner_screens/home_screen/owner_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class OwnerStorage extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Storage data;
   final Size deviceSize;
 
   OwnerStorage({@required this.data, @required this.deviceSize});
@@ -26,7 +26,9 @@ class OwnerStorage extends StatelessWidget {
               content: 'Are you sure?',
               listAction: [
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+
+                    },
                     child: CustomText(
                       text: 'Delete',
                       color: Colors.red,
@@ -50,14 +52,14 @@ class OwnerStorage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (data['statusChecking']) {
-      case StatusCheckingStorage.Approved:
+    switch (data.status) {
+      case 0:
         {
           colorStatusChecking = CustomColor.green;
           statusChecking = 'Approved';
           break;
         }
-      case StatusCheckingStorage.Pending:
+      case 1:
         {
           colorStatusChecking = CustomColor.orange;
           statusChecking = 'Pending';
@@ -73,7 +75,7 @@ class OwnerStorage extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (data['statusChecking'] == StatusCheckingStorage.Approved) {
+        if (data.status == 0) {
           Navigator.push(
               context, MaterialPageRoute(builder: (_) => OwnerDetailStorage()));
         }
@@ -100,8 +102,8 @@ class OwnerStorage extends StatelessWidget {
                 child: Container(
                     width: deviceSize.width,
                     height: deviceSize.height / 5.2,
-                    child: Image.asset(
-                      data['imagePath'],
+                    child: Image.network(
+                      data.picture[0]['imageUrl'],
                       fit: BoxFit.cover,
                     )),
               ),
@@ -115,7 +117,7 @@ class OwnerStorage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                      text: data['name'],
+                      text: data.name,
                       color: CustomColor.black,
                       context: context,
                       fontSize: 16,
@@ -139,7 +141,7 @@ class OwnerStorage extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 16),
                   child: CustomText(
-                      text: data['address'],
+                      text: data.address,
                       color: CustomColor.black[2],
                       context: context,
                       maxLines: 2,
@@ -155,7 +157,7 @@ class OwnerStorage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RatingBarIndicator(
-                      rating: data['rating'] * 1.0,
+                      rating: data.rating == null ? 0 : data.rating * 1.0,
                       itemBuilder: (context, index) => Icon(
                         Icons.star,
                         color: Color(0xFFFFCC1F),

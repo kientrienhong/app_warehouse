@@ -49,6 +49,7 @@ dev_dependencies:
   path_provider: ^2.0.2
   transparent_image: ^2.0.0
   intl: ^0.17.0
+  network_to_file_image: ^3.0.0
 
   # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

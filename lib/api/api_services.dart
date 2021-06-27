@@ -15,15 +15,16 @@ class ApiServices {
     }
   }
 
-  static Future<dynamic> loadListStorage(int page, int size, String jwt) {
+  static Future<dynamic> loadListStorage(
+      int page, int size, String jwt, String address) {
     try {
-      return Dio()
-          .get('https://localhost:44318/api/v1/storages?page=$page&size=$size',
-              options: Options(headers: {
-                'Authorization': 'bearer ' + jwt,
-                'Content-Type': "application/json",
-                'Accept': 'application/json',
-              }));
+      return Dio().get(
+          'https://localhost:44318/api/v1/storages?Address=$address&page=$page&size=$size',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
     } catch (e) {
       throw Exception('Unathorized');
     }
@@ -101,6 +102,9 @@ class ApiServices {
       int bigBoxPrice,
       List<Map<String, dynamic>> images,
       String jwt) {
+    print(smallBoxPrice);
+    print(bigBoxPrice);
+
     try {
       return Dio().post('https://localhost:44318/api/v1/storages',
           data: {
@@ -112,6 +116,50 @@ class ApiServices {
             "bigBoxPrice": bigBoxPrice,
             "images": images
           },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
+
+  static Future<dynamic> updateStorage(
+      int idStorage,
+      String name,
+      String address,
+      String description,
+      double smallBoxPrice,
+      double bigBoxPrice,
+      List<Map<String, dynamic>> images,
+      String jwt) {
+    try {
+      return Dio().put(
+          'https://localhost:44318/api/v1/storages/${idStorage.toString()}',
+          data: {
+            "name": name,
+            "address": address,
+            "description": description,
+            "priceFrom": smallBoxPrice,
+            "priceTo": bigBoxPrice,
+            "images": images
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
+
+  static Future<dynamic> deleteStorage(int idStorage, String jwt) {
+    try {
+      return Dio().delete(
+          'https://localhost:44318/api/v1/storages/${idStorage.toString()}',
           options: Options(headers: {
             'Authorization': 'bearer ' + jwt,
             'Content-Type': "application/json",

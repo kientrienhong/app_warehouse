@@ -16,9 +16,11 @@ class HomePresenter {
 
   set view(value) => this._view = value;
 
-  Future<List<Storage>> loadList(int page, int size, String jwt) async {
+  Future<List<Storage>> loadList(
+      int page, int size, String jwt, String address) async {
     try {
-      var response = await ApiServices.loadListStorage(page, size, jwt);
+      var response =
+          await ApiServices.loadListStorage(page, size, jwt, address);
       List<dynamic> result = response.data['data'];
       List<Storage> listStorage =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
@@ -28,5 +30,10 @@ class HomePresenter {
       print(e.toString());
       return null;
     }
+  }
+
+  void onClickSearch(String search) {
+    _model.searchAddress = search;
+    view.updateSearch();
   }
 }

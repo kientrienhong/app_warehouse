@@ -1,7 +1,5 @@
-import 'dart:io';
-
 class CreateStorageModel {
-  Map<String, List<File>> _allImage;
+  Map<String, List<dynamic>> _allImage;
   bool _isAgree;
   bool _isLoading;
   bool _isError;
@@ -30,8 +28,8 @@ class CreateStorageModel {
     _isError = false;
     _msg = '';
     _allImage = {
-      'imageStorage': <File>[],
-      'paperStorage': <File>[],
+      'imageStorage': <dynamic>[],
+      'paperStorage': <dynamic>[],
     };
     _isAgree = false;
   }
