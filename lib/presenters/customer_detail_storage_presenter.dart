@@ -1,5 +1,5 @@
-import 'package:app_warehouse/models/customer_detail_storage_model.dart';
-import 'package:app_warehouse/views/customer_detail_storage_view.dart';
+import '/models/customer_detail_storage_model.dart';
+import '/views/customer_detail_storage_view.dart';
 
 class CustomerDetailStoragePresenter {
   CustomerDetailStorageModel _model;

@@ -1,4 +1,4 @@
-import 'package:app_warehouse/common/custom_color.dart';
+import '/common/custom_color.dart';
 import 'package:flutter/material.dart';
 
 class CircleBackground extends StatelessWidget {

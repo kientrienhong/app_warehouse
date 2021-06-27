@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:app_warehouse/api/api_services.dart';
-import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/models/login_model.dart';
-import 'package:app_warehouse/views/login_view.dart';
+import '/api/api_services.dart';
+import '/models/entity/user.dart';
+import '/models/login_model.dart';
+import '/views/login_view.dart';
 
 class LoginPresenter {
   LoginModel _model;

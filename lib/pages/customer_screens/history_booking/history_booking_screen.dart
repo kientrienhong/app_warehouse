@@ -1,4 +1,4 @@
-import 'package:app_warehouse/common/bill_widget.dart';
+import '/common/bill_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 

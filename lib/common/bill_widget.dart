@@ -1,9 +1,9 @@
-import 'package:app_warehouse/common/bill_info_widget.dart';
-import 'package:app_warehouse/common/box_info_bill_widget.dart';
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/common/info_call.dart';
+import '/common/bill_info_widget.dart';
+import '/common/box_info_bill_widget.dart';
+import '/common/custom_color.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/common/info_call.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 

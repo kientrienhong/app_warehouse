@@ -36,9 +36,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:314145748372:android:f558e2bb89ee538a830b81",
+        "mobilesdk_app_id": "1:314145748372:android:b312664264c8ea6c830b81",
         "android_client_info": {
-          "package_name": "com.example.firebase_upload_example"
+          "package_name": "com.example.appwarehouse"
         }
       },
       "oauth_client": [

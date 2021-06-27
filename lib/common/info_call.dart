@@ -1,5 +1,5 @@
-import 'package:app_warehouse/common/avatar_widget.dart';
-import 'package:app_warehouse/common/custom_color.dart';
+import '/common/avatar_widget.dart';
+import '/common/custom_color.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

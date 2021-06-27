@@ -1,4 +1,4 @@
-import 'package:app_warehouse/models/entity/user.dart';
+import '/models/entity/user.dart';
 
 class LoginModel {
   bool _isDisableLogin;

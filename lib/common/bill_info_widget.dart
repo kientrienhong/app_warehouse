@@ -1,6 +1,6 @@
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
+import '/common/custom_color.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class BillInfoWidget extends StatelessWidget {

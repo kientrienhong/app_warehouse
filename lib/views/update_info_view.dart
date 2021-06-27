@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app_warehouse/models/entity/user.dart';
+import '/models/entity/user.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 abstract class UpdateInfoView {

@@ -1,4 +1,4 @@
-import 'package:app_warehouse/api/firebase_services.dart';
+import '/api/firebase_services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as FirebaseStorage;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';

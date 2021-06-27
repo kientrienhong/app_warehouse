@@ -1,7 +1,7 @@
-import 'package:app_warehouse/api/api_services.dart';
-import 'package:app_warehouse/models/entity/storage.dart';
-import 'package:app_warehouse/models/home_model.dart';
-import 'package:app_warehouse/views/home_view.dart';
+import '/api/api_services.dart';
+import '/models/entity/storage.dart';
+import '/models/home_model.dart';
+import '/views/home_view.dart';
 
 class HomePresenter {
   HomeModel _model;

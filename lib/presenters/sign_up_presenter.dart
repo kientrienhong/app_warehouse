@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:app_warehouse/api/api_services.dart';
-import 'package:app_warehouse/helpers/firebase_storage_helper.dart';
-import 'package:app_warehouse/helpers/validator.dart';
-import 'package:app_warehouse/models/sign_up_model.dart';
-import 'package:app_warehouse/views/sign_up_view.dart';
+import '/api/api_services.dart';
+import '/helpers/firebase_storage_helper.dart';
+import '/helpers/validator.dart';
+import '/models/sign_up_model.dart';
+import '/views/sign_up_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class SignUpPresenter {
