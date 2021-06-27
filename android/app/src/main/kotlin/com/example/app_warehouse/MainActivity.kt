@@ -1,4 +1,4 @@
-package com.example.app_warehouse
+package com.example.appwarehouse
 
 import io.flutter.embedding.android.FlutterActivity
 

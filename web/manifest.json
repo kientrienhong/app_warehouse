@@ -1,6 +1,6 @@
 {
-    "name": "app_warehouse",
-    "short_name": "app_warehouse",
+    "name": "appwarehouse",
+    "short_name": "appwarehouse",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
