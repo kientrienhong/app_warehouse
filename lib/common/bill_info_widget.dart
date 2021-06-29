@@ -75,6 +75,7 @@ class BillInfoWidget extends StatelessWidget {
                 text: data.address,
                 color: CustomColor.black,
                 context: context,
+                textAlign: TextAlign.right,
                 maxLines: 2,
                 fontSize: 14,
               ),
