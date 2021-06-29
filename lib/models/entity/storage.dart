@@ -15,6 +15,7 @@ class Storage {
   final String ownerPhone;
   final double priceFrom;
   final double priceTo;
+  String ownerAvatar;
   Storage(
       {this.id,
       this.address,
@@ -27,6 +28,7 @@ class Storage {
       this.priceFrom,
       this.priceTo,
       this.rating,
+      this.ownerAvatar,
       this.status});
 
   Storage copyWith({
@@ -38,6 +40,7 @@ class Storage {
     String name,
     String description,
     String ownerPhone,
+    String ownerAvatar,
     StorageStatus status,
     String ownerName,
     int priceFrom,
@@ -46,6 +49,7 @@ class Storage {
     return Storage(
         id: id ?? this.id,
         ownerId: ownerId ?? this.ownerId,
+        ownerAvatar: ownerAvatar ?? this.ownerAvatar,
         address: address ?? this.address,
         rating: rating ?? this.rating,
         picture: picture ?? this.picture,
@@ -71,7 +75,8 @@ class Storage {
       'ownerName': ownerName,
       'priceFrom': priceFrom,
       'priceTo': priceTo,
-      'ownerPhone': ownerPhone
+      'ownerPhone': ownerPhone,
+      "ownerAvatar": ownerAvatar
     };
   }
 
@@ -87,6 +92,7 @@ class Storage {
       description: map['description'],
       status: map['status']?.toInt(),
       ownerName: map['ownerName'],
+      ownerAvatar: map['ownerAvatar'],
       priceFrom: map['priceFrom']?.toDouble(),
       priceTo: map['priceTo']?.toDouble(),
     );
@@ -113,6 +119,7 @@ class Storage {
         other.rating == rating &&
         other.picture == picture &&
         other.name == name &&
+        other.ownerAvatar == ownerAvatar &&
         other.description == description &&
         other.status == status &&
         other.ownerName == ownerName &&
@@ -131,6 +138,7 @@ class Storage {
         ownerPhone.hashCode ^
         name.hashCode ^
         description.hashCode ^
+        ownerAvatar.hashCode ^
         status.hashCode ^
         ownerName.hashCode ^
         priceFrom.hashCode ^

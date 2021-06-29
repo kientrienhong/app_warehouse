@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:app_warehouse/api/api_services.dart';
-import 'package:app_warehouse/api/firebase_services.dart';
-import 'package:app_warehouse/helpers/firebase_storage_helper.dart';
-import 'package:app_warehouse/helpers/validator.dart';
-import 'package:app_warehouse/models/create_storage_model.dart';
-import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/views/create_storage_view.dart';
+import '/api/api_services.dart';
+import '/api/firebase_services.dart';
+import '/helpers/firebase_storage_helper.dart';
+import '/helpers/validator.dart';
+import '/models/create_storage_model.dart';
+import '/models/entity/user.dart';
+import '/views/create_storage_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class CreateStoragePresenter {

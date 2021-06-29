@@ -1,13 +1,13 @@
-import 'package:app_warehouse/common/circle_background.dart';
-import 'package:app_warehouse/common/custom_app_bar.dart';
-import 'package:app_warehouse/common/custom_button.dart';
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_input.dart';
-import 'package:app_warehouse/common/custom_msg_input.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/presenters/sign_up_presenter.dart';
-import 'package:app_warehouse/views/sign_up_view.dart';
+import '/common/circle_background.dart';
+import '/common/custom_app_bar.dart';
+import '/common/custom_button.dart';
+import '/common/custom_color.dart';
+import '/common/custom_input.dart';
+import '/common/custom_msg_input.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/presenters/sign_up_presenter.dart';
+import '/views/sign_up_view.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatelessWidget {

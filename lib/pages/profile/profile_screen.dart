@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_dialog.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/pages/change_password/change_password_screen.dart';
-import 'package:app_warehouse/pages/log_in/log_in_screen.dart';
-import 'package:app_warehouse/pages/update_info/update_info_screen.dart';
+import '/common/custom_color.dart';
+import '/common/custom_dialog.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/models/entity/user.dart';
+import '/pages/change_password/change_password_screen.dart';
+import '/pages/log_in/log_in_screen.dart';
+import '/pages/update_info/update_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

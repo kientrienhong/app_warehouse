@@ -1,12 +1,10 @@
-import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/pages/customer_screens/history_booking/history_booking_screen.dart';
-import 'package:app_warehouse/pages/customer_screens/home/home_screen.dart';
-import 'package:app_warehouse/common/custom_bottom_navigation.dart';
-import 'package:app_warehouse/pages/profile/profile_screen.dart';
+import '/pages/customer_screens/history_booking/history_booking_screen.dart';
+import '/pages/customer_screens/home/home_screen.dart';
+import '/common/custom_bottom_navigation.dart';
+import '/pages/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class CustomerBottomNavigation extends StatefulWidget {
-
   CustomerBottomNavigation();
 
   @override

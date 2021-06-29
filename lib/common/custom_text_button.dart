@@ -1,4 +1,4 @@
-import 'package:app_warehouse/common/custom_text.dart';
+import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextButton extends TextButton {

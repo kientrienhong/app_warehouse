@@ -1,16 +1,16 @@
 import 'dart:io';
 
-import 'package:app_warehouse/common/custom_app_bar.dart';
-import 'package:app_warehouse/common/custom_button.dart';
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_input.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
-import 'package:app_warehouse/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
-import 'package:app_warehouse/presenters/update_info_presenter.dart';
-import 'package:app_warehouse/views/update_info_view.dart';
+import '/common/custom_app_bar.dart';
+import '/common/custom_button.dart';
+import '/common/custom_color.dart';
+import '/common/custom_input.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/models/entity/user.dart';
+import '/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
+import '/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
+import '/presenters/update_info_presenter.dart';
+import '/views/update_info_view.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';

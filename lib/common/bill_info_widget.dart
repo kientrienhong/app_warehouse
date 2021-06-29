@@ -1,10 +1,12 @@
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
+import 'package:appwarehouse/models/entity/order.dart';
+
+import '/common/custom_color.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class BillInfoWidget extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Order data;
 
   BillInfoWidget({this.data});
 
@@ -24,7 +26,7 @@ class BillInfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
             CustomText(
-              text: '#001101',
+              text: '#${data.id}',
               color: CustomColor.black,
               context: context,
               fontSize: 16,
@@ -46,7 +48,7 @@ class BillInfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
             CustomText(
-              text: data['name'],
+              text: data.name,
               color: CustomColor.black,
               context: context,
               fontSize: 16,
@@ -70,9 +72,10 @@ class BillInfoWidget extends StatelessWidget {
             Container(
               width: deviceSize.width / 2.2,
               child: CustomText(
-                text: data['address'],
+                text: data.address,
                 color: CustomColor.black,
                 context: context,
+                textAlign: TextAlign.right,
                 maxLines: 2,
                 fontSize: 14,
               ),
@@ -93,7 +96,7 @@ class BillInfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
             CustomText(
-              text: '1',
+              text: data.month.toString(),
               color: CustomColor.purple,
               context: context,
               fontSize: 24,
@@ -115,7 +118,7 @@ class BillInfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
             CustomText(
-              text: '1.000.000 VND',
+              text: '${data.total} VND',
               color: CustomColor.purple,
               context: context,
               fontSize: 24,

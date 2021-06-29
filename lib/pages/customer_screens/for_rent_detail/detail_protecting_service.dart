@@ -1,14 +1,21 @@
-import 'package:app_warehouse/common/custom_app_bar.dart';
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/common/info_call.dart';
-import 'package:app_warehouse/models/entity/storage.dart';
-import 'package:app_warehouse/presenters/customer_detail_storage_presenter.dart';
-import 'package:app_warehouse/views/customer_detail_storage_view.dart';
+import 'package:appwarehouse/common/custom_msg_input.dart';
+import 'package:appwarehouse/models/entity/order.dart';
+import 'package:appwarehouse/pages/customer_screens/for_rent_detail/bill_protecting_service.dart';
+
+import '/common/custom_app_bar.dart';
+import '/common/custom_color.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/common/info_call.dart';
+import '/models/entity/storage.dart';
+import '/models/entity/user.dart';
+import '/presenters/customer_detail_storage_presenter.dart';
+import '/views/customer_detail_storage_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_braintree/flutter_braintree.dart';
+import 'package:provider/provider.dart';
 
 class DetailProtectingServiceScreen extends StatefulWidget {
   final Storage data;
@@ -173,6 +180,67 @@ class _DetailProtectingServiceScreenState
   }
 
   @override
+  void onClickPayment(int idStorage) async {
+    if (presenter.model.totalPrice == 0) {
+      updateMsg(true, 'Please book something');
+      return;
+    }
+    User user = Provider.of<User>(context, listen: false);
+    var request = BraintreeDropInRequest(
+        tokenizationKey: 'sandbox_x62jjpjk_n5rdrcwx7kv3ppb7',
+        collectDeviceData: true,
+        paypalRequest: BraintreePayPalRequest(
+            currencyCode: 'VND',
+            amount: presenter.model.totalPrice.toString(),
+            displayName: user.name));
+
+    BraintreeDropInResult result = await BraintreeDropIn.start(request);
+    if (result != null) {
+      var response = await presenter.checkOut(idStorage, user.jwtToken);
+      if (response != null) {
+        Order order = Order(
+          id: response['id'],
+          total: presenter.model.totalPrice,
+          ownerAvatar: widget.data.ownerAvatar,
+          address: widget.data.address,
+          bigBoxPrice: widget.data.priceTo,
+          bigBoxQuantity: presenter.model.quantities['amountBigBox'],
+          month: presenter.model.quantities['months'],
+          name: widget.data.name,
+          ownerName: widget.data.ownerName,
+          ownerPhone: widget.data.ownerPhone,
+          smallBoxPrice: widget.data.priceFrom,
+          smallBoxQuantity: presenter.model.quantities['amountSmallBox'],
+          status: response['status'],
+        );
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (ctx) => BillProtectingService(
+                      data: order,
+                    )));
+      }
+    } else {
+      updateMsg(true, 'Paid fail');
+    }
+  }
+
+  @override
+  void updateMsg(bool isError, String msg) {
+    setState(() {
+      presenter.model.isError = isError;
+      presenter.model.msg = msg;
+    });
+  }
+
+  @override
+  void updateLoading() {
+    setState(() {
+      presenter.model.isLoading = !presenter.model.isLoading;
+    });
+  }
+
+  @override
   void updateQuantity(Map<String, int> value, double totalPrice) {
     setState(() {
       presenter.model.quantities = value;
@@ -293,10 +361,11 @@ class _DetailProtectingServiceScreenState
                 height: 24,
               ),
               InfoCall(
-                avatar: 'assets/images/avatar.png',
+                avatar: widget.data.ownerAvatar,
                 deviceSize: deviceSize,
                 name: widget.data.ownerName,
                 phone: widget.data.ownerPhone,
+                role: 'Owner',
               ),
               CustomSizedBox(
                 context: context,
@@ -387,7 +456,18 @@ class _DetailProtectingServiceScreenState
               ),
               CustomSizedBox(
                 context: context,
-                height: 32,
+                height: 16,
+              ),
+              if (presenter.model.msg.length > 0)
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  CustomMsgInput(
+                      msg: presenter.model.msg,
+                      isError: presenter.model.isError,
+                      maxLines: 1),
+                ]),
+              CustomSizedBox(
+                context: context,
+                height: 16,
               ),
               Container(
                   height: 40,
@@ -396,31 +476,28 @@ class _DetailProtectingServiceScreenState
                       borderRadius: BorderRadius.circular(8),
                       color: CustomColor.lightBlue),
                   child: TextButton(
-                      onPressed: () async {
-                        // var request = BraintreeDropInRequest(
-                        //     tokenizationKey:
-                        //         'sandbox_hcbwcftd_82nh8ydcnw387pdk',
-                        //     collectDeviceData: true,
-                        //     paypalRequest: BraintreePayPalRequest(
-                        //         amount: presenter.model.totalPrice.toString(),
-                        //         displayName:
-                        //             Provider.of<User>(context, listen: false)
-                        //                 .name));
+                      onPressed: presenter.model.isLoading == false
+                          ? () async {
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => BillProtectingService(
+                              //               data: data,
+                              //             )));
 
-                        // BraintreeDropInResult result =
-                        //     await BraintreeDropIn.start(request);
-                        // if (result != null) {
-                        //   print(result.paymentMethodNonce.description);
-                        //   print(result.paymentMethodNonce.nonce);
-                        // }
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => BillProtectingService(
-                        //               data: data,
-                        //             )));
-                      },
-                      child: Image.asset('assets/images/paypal.png'))),
+                              onClickPayment(widget.data.id);
+                            }
+                          : () {},
+                      child: presenter.model.isLoading == false
+                          ? Image.asset('assets/images/paypal.png')
+                          : SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ))),
               CustomSizedBox(
                 context: context,
                 height: 16,

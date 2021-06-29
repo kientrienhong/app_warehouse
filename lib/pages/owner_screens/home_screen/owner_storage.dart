@@ -1,10 +1,10 @@
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_dialog.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/models/entity/storage.dart';
-import 'package:app_warehouse/pages/owner_screens/create_storage/create_storage_screen.dart';
-import 'package:app_warehouse/pages/owner_screens/detail_storage/owner_detail_storage.dart';
+import '/common/custom_color.dart';
+import '/common/custom_dialog.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/models/entity/storage.dart';
+import '/pages/owner_screens/create_storage/create_storage_screen.dart';
+import '/pages/owner_screens/detail_storage/owner_detail_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -26,9 +26,7 @@ class OwnerStorage extends StatelessWidget {
               content: 'Are you sure?',
               listAction: [
                 TextButton(
-                    onPressed: () {
-
-                    },
+                    onPressed: () {},
                     child: CustomText(
                       text: 'Delete',
                       color: Colors.red,

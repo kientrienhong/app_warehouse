@@ -1,6 +1,6 @@
-import 'package:app_warehouse/api/api_services.dart';
-import 'package:app_warehouse/models/change_password_model.dart';
-import 'package:app_warehouse/views/change_password_view.dart';
+import '/api/api_services.dart';
+import '/models/change_password_model.dart';
+import '/views/change_password_view.dart';
 
 class ChangePasswordPresenter {
   ChangePasswordView _view;

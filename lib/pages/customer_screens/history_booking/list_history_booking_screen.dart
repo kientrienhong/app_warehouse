@@ -1,7 +1,7 @@
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/pages/owner_screens/bill/bill_screen.dart';
+import '/common/custom_color.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/pages/owner_screens/bill/bill_screen.dart';
 import 'package:flutter/material.dart';
 
 class ListHistoryBookingScreen extends StatelessWidget {

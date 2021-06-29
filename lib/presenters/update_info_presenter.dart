@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:app_warehouse/api/api_services.dart';
-import 'package:app_warehouse/helpers/firebase_storage_helper.dart';
-import 'package:app_warehouse/helpers/validator.dart';
-import 'package:app_warehouse/models/entity/user.dart';
-import 'package:app_warehouse/models/update_info_model.dart';
-import 'package:app_warehouse/views/update_info_view.dart';
+import '/api/api_services.dart';
+import '/helpers/firebase_storage_helper.dart';
+import '/helpers/validator.dart';
+import '/models/entity/user.dart';
+import '/models/update_info_model.dart';
+import '/views/update_info_view.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

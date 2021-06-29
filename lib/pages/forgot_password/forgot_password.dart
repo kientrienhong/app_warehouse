@@ -1,11 +1,11 @@
-import 'package:app_warehouse/common/circle_background.dart';
-import 'package:app_warehouse/common/custom_app_bar.dart';
-import 'package:app_warehouse/common/custom_button.dart';
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_input.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/pages/log_in/log_in_screen.dart';
+import '/common/circle_background.dart';
+import '/common/custom_app_bar.dart';
+import '/common/custom_button.dart';
+import '/common/custom_color.dart';
+import '/common/custom_input.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/pages/log_in/log_in_screen.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {

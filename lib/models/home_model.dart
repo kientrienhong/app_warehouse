@@ -1,4 +1,4 @@
-import 'package:app_warehouse/models/entity/storage.dart';
+import '/models/entity/storage.dart';
 
 class HomeModel {
   List<Storage> _listStorage;

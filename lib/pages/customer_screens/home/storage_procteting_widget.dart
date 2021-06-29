@@ -1,8 +1,8 @@
-import 'package:app_warehouse/common/custom_color.dart';
-import 'package:app_warehouse/common/custom_sizebox.dart';
-import 'package:app_warehouse/common/custom_text.dart';
-import 'package:app_warehouse/models/entity/storage.dart';
-import 'package:app_warehouse/pages/customer_screens/for_rent_detail/detail_protecting_service.dart';
+import '/common/custom_color.dart';
+import '/common/custom_sizebox.dart';
+import '/common/custom_text.dart';
+import '/models/entity/storage.dart';
+import '/pages/customer_screens/for_rent_detail/detail_protecting_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 
