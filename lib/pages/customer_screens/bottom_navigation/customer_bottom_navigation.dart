@@ -1,3 +1,5 @@
+import 'package:appwarehouse/pages/customer_screens/history_booking/list_history_booking_screen.dart';
+
 import '/pages/customer_screens/history_booking/history_booking_screen.dart';
 import '/pages/customer_screens/home/home_screen.dart';
 import '/common/custom_bottom_navigation.dart';
@@ -39,7 +41,7 @@ class _CustomerBottomNavigationState extends State<CustomerBottomNavigation> {
             index: _index,
             children: [
               CustomerHomeScreen(),
-              HistoryBookingScreen(),
+              ListHistoryBookingScreen(),
               ProfileScreen()
             ],
           ),

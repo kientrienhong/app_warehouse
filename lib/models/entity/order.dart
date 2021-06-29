@@ -13,9 +13,11 @@ class Order {
   final String ownerPhone;
   final String ownerName;
   final String ownerAvatar;
+  final String expiredDate;
   final int status;
   Order({
     this.id,
+    this.expiredDate,
     this.name,
     this.address,
     this.total,
@@ -36,6 +38,7 @@ class Order {
     String address,
     double total,
     int month,
+    String expiredDate,
     int smallBoxQuantity,
     double smallBoxPrice,
     int bigBoxQuantity,
@@ -46,6 +49,7 @@ class Order {
     int status,
   }) {
     return Order(
+      expiredDate: expiredDate ?? this.expiredDate,
       id: id ?? this.id,
       name: name ?? this.name,
       address: address ?? this.address,
@@ -66,6 +70,7 @@ class Order {
     return {
       'id': id,
       'name': name,
+      'expiredDate': expiredDate,
       'address': address,
       'total': total,
       'month': month,
@@ -85,13 +90,14 @@ class Order {
       id: map['id']?.toInt(),
       name: map['name'],
       address: map['address'],
-      total: map['total']?.toInt(),
+      total: map['total']?.toDouble(),
       month: map['month']?.toInt(),
       smallBoxQuantity: map['smallBoxQuantity']?.toInt(),
       smallBoxPrice: map['smallBoxPrice']?.toDouble(),
       bigBoxQuantity: map['bigBoxQuantity']?.toInt(),
       bigBoxPrice: map['bigBoxPrice']?.toDouble(),
       ownerPhone: map['ownerPhone'],
+      expiredDate: map['expiredDate'],
       ownerName: map['ownerName'],
       ownerAvatar: map['ownerAvatar'],
       status: map['status']?.toInt(),
@@ -115,6 +121,7 @@ class Order {
         other.id == id &&
         other.name == name &&
         other.address == address &&
+        other.expiredDate == expiredDate &&
         other.total == total &&
         other.month == month &&
         other.smallBoxQuantity == smallBoxQuantity &&
@@ -134,6 +141,7 @@ class Order {
         address.hashCode ^
         total.hashCode ^
         month.hashCode ^
+        expiredDate.hashCode ^
         smallBoxQuantity.hashCode ^
         smallBoxPrice.hashCode ^
         bigBoxQuantity.hashCode ^
