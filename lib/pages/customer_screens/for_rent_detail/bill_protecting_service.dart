@@ -1,4 +1,4 @@
-import 'package:appwarehouse/models/entity/order.dart';
+import '/models/entity/order.dart';
 
 import '/common/bill_widget.dart';
 import '/common/custom_app_bar.dart';

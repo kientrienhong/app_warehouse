@@ -1,6 +1,6 @@
-import 'package:appwarehouse/common/custom_msg_input.dart';
-import 'package:appwarehouse/models/entity/order.dart';
-import 'package:appwarehouse/pages/customer_screens/for_rent_detail/bill_protecting_service.dart';
+import '/common/custom_msg_input.dart';
+import '/models/entity/order.dart';
+import '/pages/customer_screens/for_rent_detail/bill_protecting_service.dart';
 
 import '/common/custom_app_bar.dart';
 import '/common/custom_color.dart';

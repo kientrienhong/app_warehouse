@@ -1,4 +1,4 @@
-import 'package:appwarehouse/api/api_services.dart';
+import '/api/api_services.dart';
 
 import '/models/customer_detail_storage_model.dart';
 import '/views/customer_detail_storage_view.dart';
