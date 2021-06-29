@@ -1,3 +1,5 @@
+import 'package:appwarehouse/models/entity/order.dart';
+
 import '/common/bill_info_widget.dart';
 import '/common/box_info_bill_widget.dart';
 import '/common/custom_color.dart';
@@ -8,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class BillWidget extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Order data;
 
   BillWidget({this.data});
 
@@ -27,8 +29,9 @@ class BillWidget extends StatelessWidget {
         ),
         BoxInfoBillWidget(
             deviceSize: deviceSize,
-            price: '400.000 VND',
+            price: '${data.smallBoxPrice} VND',
             imagePath: 'assets/images/smallBox.png',
+            amount: data.smallBoxQuantity,
             size: '0.5m x 1m x 2m'),
         CustomSizedBox(
           context: context,
@@ -36,25 +39,27 @@ class BillWidget extends StatelessWidget {
         ),
         BoxInfoBillWidget(
             deviceSize: deviceSize,
-            price: '750.000 VND',
+            price: '${data.bigBoxPrice} VND',
             imagePath: 'assets/images/largeBox.png',
+            amount: data.bigBoxQuantity,
             size: '1m x 1m x 2m'),
         CustomSizedBox(
           context: context,
           height: 24,
         ),
         InfoCall(
-          avatar: 'assets/images/avatar.png',
+          role: 'Owner',
+          avatar: data.ownerAvatar,
           deviceSize: deviceSize,
-          name: 'Clarren Jessica',
-          phone: '077777777',
+          name: data.ownerName,
+          phone: data.ownerPhone,
         ),
         CustomSizedBox(
           context: context,
           height: 24,
         ),
         QrImage(
-          data: 'test',
+          data: data.id.toString(),
           size: 88.0,
           version: 2,
         ),

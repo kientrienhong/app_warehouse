@@ -3,6 +3,21 @@ class CustomerDetailStorageModel {
   double _totalPrice;
   double _priceFrom;
   double _priceTo;
+  bool _isLoading;
+  bool _isError;
+  String _msg;
+  bool get isError => this._isError;
+
+  set isError(bool value) => this._isError = value;
+
+  get msg => this._msg;
+
+  set msg(value) => this._msg = value;
+
+  get isLoading => this._isLoading;
+
+  set isLoading(value) => this._isLoading = value;
+
   get priceFrom => this._priceFrom;
 
   get priceTo => this._priceTo;
@@ -24,5 +39,8 @@ class CustomerDetailStorageModel {
       'amountSmallBox': 0,
     };
     _totalPrice = 0.0;
+    _isLoading = false;
+    _msg = '';
+    _isError = false;
   }
 }

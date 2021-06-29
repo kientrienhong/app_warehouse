@@ -1,3 +1,5 @@
+import 'package:appwarehouse/models/entity/order.dart';
+
 import '/common/bill_widget.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_color.dart';
@@ -7,7 +9,7 @@ import '/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dar
 import 'package:flutter/material.dart';
 
 class BillProtectingService extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Order data;
 
   BillProtectingService({this.data});
 

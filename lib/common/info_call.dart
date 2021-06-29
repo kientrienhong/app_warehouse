@@ -8,10 +8,11 @@ class InfoCall extends StatelessWidget {
   final String phone;
   final String avatar;
   final String name;
-
+  final String role;
   InfoCall(
       {@required this.deviceSize,
       @required this.phone,
+      @required this.role,
       @required this.avatar,
       @required this.name});
 
@@ -26,12 +27,12 @@ class InfoCall extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // AvatarWidget(
-          //     deviceSize: deviceSize,
-          //     isHome: false,
-          //     name: name,
-          //     imageUrl: avatar,
-          //     role: 'Customer'),
+          AvatarWidget(
+              deviceSize: deviceSize,
+              isHome: false,
+              name: name,
+              imageUrl: avatar,
+              role: role),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(

@@ -44,27 +44,27 @@ class HistoryBookingScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Container(
               height: deviceSize.height * 1.4,
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: deviceSize.height * 1.4,
-                  viewportFraction: 1.0,
-                  enlargeCenterPage: false,
-                  // autoPlay: false,
-                ),
-                items: mockUpData.map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 40, horizontal: 20),
-                        child: BillWidget(
-                          data: i,
-                        ),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+              // child: CarouselSlider(
+              //   options: CarouselOptions(
+              //     height: deviceSize.height * 1.4,
+              //     viewportFraction: 1.0,
+              //     enlargeCenterPage: false,
+              //     // autoPlay: false,
+              //   ),
+              //   items: mockUpData.map((i) {
+              //     return Builder(
+              //       builder: (BuildContext context) {
+              //         return Padding(
+              //           padding: const EdgeInsets.symmetric(
+              //               vertical: 40, horizontal: 20),
+              //           child: BillWidget(
+              //             data: i,
+              //           ),
+              //         );
+              //       },
+              //     );
+              //   }).toList(),
+              // ),
             ),
           )),
     );

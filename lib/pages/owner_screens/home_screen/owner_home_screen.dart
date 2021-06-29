@@ -1,3 +1,7 @@
+import 'package:appwarehouse/common/custom_button.dart';
+import 'package:appwarehouse/common/custom_color.dart';
+import 'package:appwarehouse/common/custom_text.dart';
+
 import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_sizebox.dart';
@@ -39,6 +43,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   void updateSearch() {}
 
   Future<void> _fetchPage(int pageKey) async {
+    print('test');
     try {
       User user = Provider.of<User>(context, listen: false);
       final response = await ApiServices.loadListStorage(
@@ -73,25 +78,43 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
             context: context,
             height: 24,
           ),
-          // ListView.builder(
-          //   shrinkWrap: true,
-          //   physics: ScrollPhysics(),
-          //   itemBuilder: (_, index) {
-          //     return OwnerStorage(
-          //         data: mockUpData[index], deviceSize: deviceSize);
-          //   },
-          //   itemCount: mockUpData.length,
-          // ),
           Container(
             height: deviceSize.height / 1.5,
-            child: PagedListView<int, Storage>(
-              shrinkWrap: true,
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<Storage>(
-                  itemBuilder: (context, item, index) =>
-                      OwnerStorage(data: item, deviceSize: deviceSize)),
+            child: RefreshIndicator(
+              onRefresh: () => Future.sync(() => _pagingController.refresh()),
+              child: PagedListView<int, Storage>(
+                shrinkWrap: true,
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<Storage>(
+                    itemBuilder: (context, item, index) =>
+                        OwnerStorage(data: item, deviceSize: deviceSize)),
+              ),
             ),
           ),
+          // : Column(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //         CustomText(
+          //             text: 'Not have storage yet!',
+          //             color: CustomColor.black[3],
+          //             context: context,
+          //             fontSize: 24),
+          //         CustomSizedBox(
+          //           context: context,
+          //           height: 16,
+          //         ),
+          //         CustomButton(
+          //             height: 32,
+          //             text: 'Refresh',
+          //             width: double.infinity,
+          //             isLoading: false,
+          //             textColor: CustomColor.white,
+          //             onPressFunction: () {
+          //               Future.sync(() => _pagingController.refresh());
+          //             },
+          //             buttonColor: CustomColor.purple,
+          //             borderRadius: 4)
+          //       ]),
           CustomSizedBox(
             context: context,
             height: 72,

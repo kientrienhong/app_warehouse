@@ -1,4 +1,3 @@
-import '/models/entity/user.dart';
 import '/pages/customer_screens/history_booking/history_booking_screen.dart';
 import '/pages/customer_screens/home/home_screen.dart';
 import '/common/custom_bottom_navigation.dart';

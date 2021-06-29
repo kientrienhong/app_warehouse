@@ -102,9 +102,6 @@ class ApiServices {
       int bigBoxPrice,
       List<Map<String, dynamic>> images,
       String jwt) {
-    print(smallBoxPrice);
-    print(bigBoxPrice);
-
     try {
       return Dio().post('https://localhost:44318/api/v1/storages',
           data: {
@@ -119,7 +116,7 @@ class ApiServices {
           options: Options(headers: {
             'Authorization': 'bearer ' + jwt,
             'Content-Type': "application/json",
-            'Accept': 'application/json',
+            // 'Accept': 'application/json',
           }));
     } catch (e) {
       throw Exception('Log in failed');
@@ -167,6 +164,36 @@ class ApiServices {
           }));
     } catch (e) {
       throw Exception('Log in failed');
+    }
+  }
+
+  static Future<dynamic> payment(
+      double totalPrice,
+      int months,
+      int smallBoxQuantity,
+      int bigBoxQuantity,
+      double smallBoxPrice,
+      double bigBoxPrice,
+      int idStorage,
+      String jwt) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/orders',
+          data: {
+            "storageId": idStorage,
+            "total": totalPrice,
+            "months": months,
+            "smallBoxQuantity": smallBoxQuantity,
+            "smallBoxPrice": smallBoxPrice,
+            "bigBoxQuantity": bigBoxQuantity,
+            "bigBoxPrice": bigBoxPrice
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Payment in failed');
     }
   }
 }
