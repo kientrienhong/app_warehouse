@@ -7,8 +7,6 @@ import '/common/custom_input.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import '/models/entity/user.dart';
-import '/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
-import '/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import '/presenters/update_info_presenter.dart';
 import '/views/update_info_view.dart';
 import 'package:flutter/material.dart';

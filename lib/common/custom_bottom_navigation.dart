@@ -46,17 +46,17 @@ class CustomBottomNavigation extends StatelessWidget {
                       icon: ImageIcon(
                         AssetImage('assets/images/home.png'),
                       ),
-                      label: ''),
+                      label: 'Home'),
                   BottomNavigationBarItem(
                       icon: ImageIcon(
                         AssetImage('assets/images/document.png'),
                       ),
-                      label: ''),
+                      label: 'History'),
                   BottomNavigationBarItem(
                       icon: ImageIcon(
                         AssetImage('assets/images/profile.png'),
                       ),
-                      label: ''),
+                      label: 'Profile'),
                 ],
               ),
             ),

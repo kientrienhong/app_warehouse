@@ -42,6 +42,7 @@ class BillProtectingService extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     color: CustomColor.lightBlue),
                 child: CustomTextButton(
+                    isLoading: false,
                     text: 'Done',
                     textColor: CustomColor.green,
                     context: context,

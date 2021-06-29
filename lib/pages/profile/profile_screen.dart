@@ -105,21 +105,66 @@ class ProfileScreen extends StatelessWidget {
                       context: context,
                       height: 48,
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(deviceSize.width / 8),
-                      child: Container(
-                        width: deviceSize.width / 4,
-                        height: deviceSize.width / 4,
-                        child: Image(
-                          image: NetworkImage(value.avatar + '#' + nowParam),
-                          fit: BoxFit.cover,
-                          key: ValueKey(new Random().nextInt(100)),
-                        ),
-                        // child: FadeInImage.memoryNetwork(
-                        //   placeholder: kTransparentImage,
-                        //   image: value.avatar,
-                        // ),
-                      ),
+                    // ClipRRect(
+                    //   borderRadius: BorderRadius.circular(deviceSize.width / 8),
+                    //   child: Container(
+                    //     width: deviceSize.width / 4,
+                    //     height: deviceSize.width / 4,
+                    // child: Image(
+                    //   image: NetworkImage(value.avatar + '#' + nowParam),
+                    //   fit: BoxFit.cover,
+                    //   key: ValueKey(new Random().nextInt(100)),
+                    // ),
+                    //   ),
+                    // ),
+                    Container(
+                      width: deviceSize.width / 4,
+                      height: deviceSize.width / 4,
+                      child: Stack(children: [
+                        ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(deviceSize.width / 8),
+                            child: Container(
+                              width: deviceSize.width / 4,
+                              height: deviceSize.width / 4,
+                              child: Image(
+                                image:
+                                    NetworkImage(value.avatar + '#' + nowParam),
+                                fit: BoxFit.cover,
+                                key: ValueKey(new Random().nextInt(100)),
+                              ),
+                            )),
+                        Positioned(
+                          bottom: 0,
+                          right: 2,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      (UpdateInfoScreen()),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                  color: CustomColor.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 14,
+                                        offset: Offset(0, 6),
+                                        color: Colors.black.withOpacity(0.06))
+                                  ],
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                  child: Image.asset('assets/images/edit.png')),
+                            ),
+                          ),
+                        )
+                      ]),
                     ),
                     CustomSizedBox(
                       context: context,
@@ -144,22 +189,6 @@ class ProfileScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    (UpdateInfoScreen()),
-                              ),
-                            );
-                          },
-                          child: _buildMenu(
-                              context: context,
-                              deviceSize: deviceSize,
-                              image: 'assets/images/document.png',
-                              name: 'Change infomation'),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
                                     (ChangePasswordScreen()),
                               ),
                             );
@@ -170,15 +199,6 @@ class ProfileScreen extends StatelessWidget {
                               deviceSize: deviceSize,
                               name: 'Change password'),
                         ),
-                      ],
-                    ),
-                    CustomSizedBox(
-                      context: context,
-                      height: 48,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
                         GestureDetector(
                           onTap: () => _showDialog(context),
                           child: _buildMenu(

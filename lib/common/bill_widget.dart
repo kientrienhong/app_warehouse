@@ -23,30 +23,34 @@ class BillWidget extends StatelessWidget {
         BillInfoWidget(
           data: data,
         ),
-        CustomSizedBox(
-          context: context,
-          height: 40,
-        ),
-        BoxInfoBillWidget(
-            deviceSize: deviceSize,
-            price: '${data.smallBoxPrice} VND',
-            imagePath: 'assets/images/smallBox.png',
-            amount: data.smallBoxQuantity,
-            size: '0.5m x 1m x 2m'),
+        if (data.smallBoxQuantity > 0)
+          CustomSizedBox(
+            context: context,
+            height: 40,
+          ),
+        if (data.smallBoxQuantity > 0)
+          BoxInfoBillWidget(
+              deviceSize: deviceSize,
+              price: '${data.smallBoxPrice} VND',
+              imagePath: 'assets/images/smallBox.png',
+              amount: data.smallBoxQuantity,
+              size: '0.5m x 1m x 2m'),
         CustomSizedBox(
           context: context,
           height: 32,
         ),
-        BoxInfoBillWidget(
-            deviceSize: deviceSize,
-            price: '${data.bigBoxPrice} VND',
-            imagePath: 'assets/images/largeBox.png',
-            amount: data.bigBoxQuantity,
-            size: '1m x 1m x 2m'),
-        CustomSizedBox(
-          context: context,
-          height: 24,
-        ),
+        if (data.bigBoxQuantity > 0)
+          BoxInfoBillWidget(
+              deviceSize: deviceSize,
+              price: '${data.bigBoxPrice} VND',
+              imagePath: 'assets/images/largeBox.png',
+              amount: data.bigBoxQuantity,
+              size: '1m x 1m x 2m'),
+        if (data.bigBoxQuantity > 0)
+          CustomSizedBox(
+            context: context,
+            height: 24,
+          ),
         InfoCall(
           role: 'Owner',
           avatar: data.ownerAvatar,
