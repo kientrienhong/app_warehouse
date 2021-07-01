@@ -35,5 +35,16 @@ class HomePresenter {
     view.updateSearch();
   }
 
-  void deleteStorage(String jwt, int idStorage) async {}
+  Future<bool> deleteStorage(String jwt, int idStorage) async {
+    try {
+      var response = await ApiServices.deleteStorage(idStorage, jwt);
+      if (response.data == 'Deleted') {
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -81,8 +81,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
                 shrinkWrap: true,
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<Storage>(
-                    itemBuilder: (context, item, index) =>
-                        OwnerStorage(data: item, deviceSize: deviceSize)),
+                    itemBuilder: (context, item, index) => OwnerStorage(
+                          data: item,
+                          deviceSize: deviceSize,
+                          pageController: _pagingController,
+                          presenter: presenter,
+                        )),
               ),
             ),
           ),

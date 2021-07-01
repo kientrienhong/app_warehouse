@@ -1,3 +1,7 @@
+import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/presenters/home_presenter.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '/common/custom_color.dart';
 import '/common/custom_dialog.dart';
 import '/common/custom_sizebox.dart';
@@ -7,12 +11,18 @@ import '/pages/owner_screens/create_storage/create_storage_screen.dart';
 import '/pages/owner_screens/detail_storage/owner_detail_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class OwnerStorage extends StatelessWidget {
   final Storage data;
   final Size deviceSize;
-
-  OwnerStorage({@required this.data, @required this.deviceSize});
+  final HomePresenter presenter;
+  final PagingController pageController;
+  OwnerStorage(
+      {@required this.data,
+      @required this.deviceSize,
+      @required this.pageController,
+      @required this.presenter});
 
   Color colorStatusChecking;
   String statusChecking;
@@ -26,7 +36,15 @@ class OwnerStorage extends StatelessWidget {
               content: 'Are you sure?',
               listAction: [
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      User user = Provider.of<User>(context, listen: false);
+                      bool result =
+                          await presenter.deleteStorage(user.jwtToken, data.id);
+                      if (result == true) {
+                        Navigator.of(context).pop();
+                        pageController.refresh();
+                      }
+                    },
                     child: CustomText(
                       text: 'Delete',
                       color: Colors.red,
