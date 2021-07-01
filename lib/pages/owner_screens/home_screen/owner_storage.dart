@@ -51,13 +51,13 @@ class OwnerStorage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (data.status) {
-      case 0:
+      case 1:
         {
           colorStatusChecking = CustomColor.green;
           statusChecking = 'Approved';
           break;
         }
-      case 1:
+      case 0:
         {
           colorStatusChecking = CustomColor.orange;
           statusChecking = 'Pending';
@@ -73,9 +73,13 @@ class OwnerStorage extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (data.status == 0) {
+        if (data.status == 1) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => OwnerDetailStorage()));
+              context,
+              MaterialPageRoute(
+                  builder: (_) => OwnerDetailStorage(
+                        data: data,
+                      )));
         }
       },
       child: Stack(children: [

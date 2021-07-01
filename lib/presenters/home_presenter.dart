@@ -24,10 +24,8 @@ class HomePresenter {
       List<dynamic> result = response.data['data'];
       List<Storage> listStorage =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
-      print(listStorage);
       return listStorage;
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -36,4 +34,6 @@ class HomePresenter {
     _model.searchAddress = search;
     view.updateSearch();
   }
+
+  void deleteStorage(String jwt, int idStorage) async {}
 }
