@@ -1,3 +1,5 @@
+import 'package:appwarehouse/models/entity/shelf.dart';
+
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
@@ -7,19 +9,19 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class StatusShelf extends StatelessWidget {
   final Size deviceSize;
-  final Map<String, dynamic> data;
+  final Shelf data;
   StatusShelf({@required this.deviceSize, @required this.data});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => ShelfDetailScreen(
-                      data: data,
-                    )));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (_) => ShelfDetailScreen(
+        //               data: data,
+        //             )));
       },
       child: Container(
         height: deviceSize.height / 18,
@@ -30,13 +32,13 @@ class StatusShelf extends StatelessWidget {
           children: [
             Container(
               height: deviceSize.height / 18,
-              width: deviceSize.width / 5,
+              width: deviceSize.width / 4.4,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   color: CustomColor.lightBlue),
               child: Center(
                 child: CustomText(
-                  text: data['name'],
+                  text: 'Shelf - ' + data.id.toString(),
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16,
@@ -52,16 +54,16 @@ class StatusShelf extends StatelessWidget {
                 text: 'Used',
                 color: CustomColor.black[2],
                 context: context,
-                fontSize: 12),
+                fontSize: 16),
             CustomSizedBox(
               context: context,
               width: 4,
             ),
             new LinearPercentIndicator(
-              width: deviceSize.width / 2.4,
+              width: deviceSize.width / 2.7,
               lineHeight: 8,
               backgroundColor: CustomColor.lightBlue,
-              percent: data['percent'] / 100,
+              percent: data.usage.toDouble(),
               progressColor: CustomColor.purple,
             ),
             CustomSizedBox(
@@ -69,7 +71,7 @@ class StatusShelf extends StatelessWidget {
               width: 2,
             ),
             CustomText(
-                text: data['percent'].toString() + '%',
+                text: data.usage.toString() + '%',
                 color: CustomColor.black,
                 context: context,
                 fontWeight: FontWeight.bold,

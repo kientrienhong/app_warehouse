@@ -1,7 +1,3 @@
-import '/common/custom_button.dart';
-import '/common/custom_color.dart';
-import '/common/custom_text.dart';
-
 import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_sizebox.dart';
@@ -43,7 +39,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   void updateSearch() {}
 
   Future<void> _fetchPage(int pageKey) async {
-    print('test');
     try {
       User user = Provider.of<User>(context, listen: false);
       final response = await ApiServices.loadListStorage(

@@ -1,30 +1,46 @@
+import 'package:appwarehouse/api/api_services.dart';
+import 'package:appwarehouse/models/entity/order.dart';
+import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/presenters/list_history_booking_presenter.dart';
+import 'package:appwarehouse/views/list_history_booking_view.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import '/pages/owner_screens/bill/bill_screen.dart';
 import 'package:flutter/material.dart';
 
-class ListHistoryBookingScreen extends StatelessWidget {
+class ListHistoryBookingScreen extends StatefulWidget {
+  @override
+  State<ListHistoryBookingScreen> createState() =>
+      _ListHistoryBookingScreenState();
+}
+
+class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
+    implements ListHistoryBookingview {
+  ListHistoryBookingPresenter presenter;
   Widget _buildBillWidget(
-      {@required Map<String, dynamic> data,
+      {@required Order data,
       @required BuildContext context,
       @required Size deviceSize}) {
+    print(data);
     Color colorStatus;
     String status;
-    switch (data['status']) {
-      case StatusBill.CHECK_OUT:
+    switch (data.status) {
+      case 0:
         {
           colorStatus = CustomColor.green;
           status = 'Check out';
           break;
         }
-      case StatusBill.PAID:
+      case 1:
         {
           colorStatus = CustomColor.purple;
           status = 'Paid';
           break;
         }
-      case StatusBill.TIME_OUT:
+      case 2:
         {
           colorStatus = CustomColor.red;
           status = 'Time out';
@@ -75,7 +91,9 @@ class ListHistoryBookingScreen extends StatelessWidget {
                                 width: 48,
                                 height: 48,
                                 child: Image.asset(
-                                  data['avatarPath'],
+                                  data.ownerAvatar == null
+                                      ? 'asda'
+                                      : data.ownerAvatar,
                                   fit: BoxFit.cover,
                                 )),
                           ),
@@ -87,7 +105,9 @@ class ListHistoryBookingScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomText(
-                                text: data['customerName'],
+                                text: data.ownerName == null
+                                    ? 'Jessica'
+                                    : data.ownerName,
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -98,7 +118,7 @@ class ListHistoryBookingScreen extends StatelessWidget {
                                 height: 8,
                               ),
                               CustomText(
-                                text: data['orderId'],
+                                text: data.id.toString(),
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -109,7 +129,8 @@ class ListHistoryBookingScreen extends StatelessWidget {
                                 height: 8,
                               ),
                               CustomText(
-                                text: data['storageName'],
+                                text:
+                                    data.name == null ? 'Storage 1' : data.name,
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -120,7 +141,9 @@ class ListHistoryBookingScreen extends StatelessWidget {
                                 height: 8,
                               ),
                               CustomText(
-                                  text: 'Expired Date: ' + data['expiredDate'],
+                                  text: data.expiredDate == null
+                                      ? 'Not yet'
+                                      : data.expiredDate,
                                   color: CustomColor.black,
                                   context: context,
                                   fontSize: 14),
@@ -142,7 +165,7 @@ class ListHistoryBookingScreen extends StatelessWidget {
                       height: 56,
                     ),
                     CustomText(
-                      text: data['price'],
+                      text: data.total.toString(),
                       color: CustomColor.purple,
                       context: context,
                       fontSize: 16,
@@ -155,7 +178,41 @@ class ListHistoryBookingScreen extends StatelessWidget {
   }
 
   @override
+  updateLoading() {
+    setState(() {
+      presenter.model.isLoading = !presenter.model.isLoading;
+    });
+  }
+
+  @override
+  void fetchPage(int pageKey) async {
+    User user = Provider.of<User>(context, listen: false);
+    presenter.loadListHistoryBooking(pageKey, 10, user.jwtToken);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // presenter = ListHistoryBookingPresenter();
+    // presenter.view = this;
+    // presenter.model.pagingController.addPageRequestListener((pageKey) {
+    //   fetchPage(pageKey);
+    // });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    final deviceSize = MediaQuery.of(context).size;
+
+    return Container(
+      height: deviceSize.height,
+      // child: PagedListView<int, dynamic>(
+      //   shrinkWrap: true,
+      //   pagingController: presenter.model.pagingController,
+      //   builderDelegate: PagedChildBuilderDelegate<dynamic>(
+      //       itemBuilder: (context, item, index) => _buildBillWidget(
+      //           data: item, deviceSize: deviceSize, context: context)),
+      // ),
+    );
   }
 }

@@ -1,85 +1,44 @@
-import '/common/box_input_price.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
+import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/detail_storage/status_shelf.dart';
+import 'package:appwarehouse/presenters/owner_detail_storage_presenter.dart';
+import 'package:appwarehouse/views/owner_detail_storage_view.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '/common/custom_app_bar.dart';
 import '/common/custom_button.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
-import '/pages/owner_screens/detail_storage/status_shelf.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OwnerDetailStorage extends StatefulWidget {
+  final Storage data;
+
+  OwnerDetailStorage({this.data});
+
   @override
   _OwnerDetailStorageState createState() => _OwnerDetailStorageState();
 }
 
-class _OwnerDetailStorageState extends State<OwnerDetailStorage> {
-  TextEditingController _priceSmallBoxController;
-  TextEditingController _priceLargeBoxController;
-  double get _priceSmallBox => double.parse(_priceSmallBoxController.text);
-  double get _priceLargeBox => double.parse(_priceLargeBoxController.text);
-  FocusNode _priceSmallBoxFocusNode;
-  FocusNode _priceLargeBoxFocusNode;
-  List<Map<String, dynamic>> dataShelves;
+class _OwnerDetailStorageState extends State<OwnerDetailStorage>
+    implements OwnerDetailStorageView {
+  OwnerDetailStoragePresenter presenter;
   @override
   void initState() {
     super.initState();
-    _priceSmallBoxController = TextEditingController();
-    _priceLargeBoxController = TextEditingController();
-    _priceSmallBoxFocusNode = FocusNode();
-    _priceLargeBoxFocusNode = FocusNode();
-    dataShelves = [
-      {
-        'name': 'Shelf - 1',
-        'percent': 80,
-        'listBox': [
-          {
-            'orderId': 'R001',
-            'type': 'large',
-            'position': 'B1',
-            'timeRemain': '1 Month - 1 Week - 4 Days'
-          },
-          {
-            'orderId': 'R001',
-            'type': 'small',
-            'position': 'A4',
-            'timeRemain': '1 Month - 1 Week - 4 Days'
-          },
-          {
-            'orderId': 'R002',
-            'type': 'large',
-            'position': 'A1',
-            'timeRemain': '1 Week - 4 Days'
-          },
-          {
-            'orderId': 'R002',
-            'type': 'small',
-            'position': 'A3',
-            'timeRemain': '1 Week - 4 Days'
-          }
-        ]
-      },
-      {
-        'name': 'Shelf - 2',
-        'percent': 40,
-      },
-      {
-        'name': 'Shelf - 3',
-        'percent': 100,
-      },
-      {
-        'name': 'Shelf - 4',
-        'percent': 0,
-      },
-    ];
+    presenter = OwnerDetailStoragePresenter();
+    presenter.view = this;
+    presenter.model.pagingController.addPageRequestListener((pageKey) {
+      fetchPage(pageKey);
+    });
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _priceSmallBoxController.dispose();
-    _priceLargeBoxController.dispose();
-    _priceSmallBoxFocusNode.dispose();
-    _priceLargeBoxFocusNode.dispose();
+  fetchPage(int pageKey) {
+    User user = Provider.of<User>(context, listen: false);
+    presenter.loadListShelves(pageKey, 10, user.jwtToken, widget.data.id);
   }
 
   @override
@@ -93,45 +52,6 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage> {
           children: [
             CustomAppBar(
               isHome: false,
-            ),
-            CustomSizedBox(
-              context: context,
-              height: 24,
-            ),
-            CustomText(
-                text: 'Boxes',
-                color: CustomColor.black,
-                context: context,
-                fontWeight: FontWeight.bold,
-                fontSize: 24),
-            CustomSizedBox(
-              context: context,
-              height: 24,
-            ),
-            BoxInputPrice(
-              deviceSize: deviceSize,
-              context: context,
-              imagePath: 'assets/images/smallBox.png',
-              size: '0.5m x 1m x 1m',
-              controller: _priceSmallBoxController,
-              nodeCurrent: _priceSmallBoxFocusNode,
-              nextNode: _priceLargeBoxFocusNode,
-            ),
-            CustomSizedBox(
-              context: context,
-              height: 16,
-            ),
-            BoxInputPrice(
-              deviceSize: deviceSize,
-              context: context,
-              imagePath: 'assets/images/largeBox.png',
-              size: '1m x 1m x 1m',
-              controller: _priceLargeBoxController,
-              nodeCurrent: _priceLargeBoxFocusNode,
-            ),
-            CustomSizedBox(
-              context: context,
-              height: 24,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               CustomText(
@@ -152,15 +72,12 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage> {
               context: context,
               height: 8,
             ),
-            ListView.builder(
+            PagedListView<int, dynamic>(
               shrinkWrap: true,
-              itemBuilder: (_, index) {
-                return StatusShelf(
-                  deviceSize: deviceSize,
-                  data: dataShelves[index],
-                );
-              },
-              itemCount: dataShelves.length,
+              pagingController: presenter.model.pagingController,
+              builderDelegate: PagedChildBuilderDelegate<dynamic>(
+                  itemBuilder: (context, item, index) =>
+                      StatusShelf(data: item, deviceSize: deviceSize)),
             ),
             CustomSizedBox(
               context: context,

@@ -30,6 +30,35 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> loadListOrder(int page, int size, String jwt) {
+    try {
+      return Dio()
+          .get('https://localhost:44318/api/v1/orders?$page=1&size=$size',
+              options: Options(headers: {
+                'Authorization': 'bearer ' + jwt,
+                'Content-Type': "application/json",
+                'Accept': 'application/json',
+              }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<dynamic> loadShelves(
+      int page, int size, String jwt, int storageId) {
+    try {
+      return Dio().get(
+          'https://localhost:44318/api/v1/shelves?StorageId=$storageId&page=$page&size=$size',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<dynamic> updateInfo(
       String name, String address, String phone, String jwt, String imageUrl) {
     try {
