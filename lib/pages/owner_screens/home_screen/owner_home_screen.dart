@@ -1,3 +1,7 @@
+import 'package:appwarehouse/common/custom_button.dart';
+import 'package:appwarehouse/common/custom_color.dart';
+import 'package:appwarehouse/common/custom_text.dart';
+
 import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_sizebox.dart';
@@ -19,7 +23,7 @@ class OwnerHomeScreen extends StatefulWidget {
 
 class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   static const _pageSize = 10;
-  final PagingController<int, Storage> _pagingController =
+  PagingController<int, Storage> _pagingController =
       PagingController(firstPageKey: 0);
   HomePresenter presenter;
   @override
@@ -54,8 +58,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (error) {
-      print(error.toString());
-      _pagingController.error = error;
+      setState(() {});
     }
   }
 
@@ -73,47 +76,50 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
             context: context,
             height: 24,
           ),
-          Container(
-            height: deviceSize.height / 1.5,
-            child: RefreshIndicator(
-              onRefresh: () => Future.sync(() => _pagingController.refresh()),
-              child: PagedListView<int, Storage>(
-                shrinkWrap: true,
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<Storage>(
-                    itemBuilder: (context, item, index) => OwnerStorage(
-                          data: item,
-                          deviceSize: deviceSize,
-                          pageController: _pagingController,
-                          presenter: presenter,
-                        )),
-              ),
-            ),
-          ),
-          // : Column(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [
-          //         CustomText(
-          //             text: 'Not have storage yet!',
-          //             color: CustomColor.black[3],
-          //             context: context,
-          //             fontSize: 24),
-          //         CustomSizedBox(
-          //           context: context,
-          //           height: 16,
-          //         ),
-          //         CustomButton(
-          //             height: 32,
-          //             text: 'Refresh',
-          //             width: double.infinity,
-          //             isLoading: false,
-          //             textColor: CustomColor.white,
-          //             onPressFunction: () {
-          //               Future.sync(() => _pagingController.refresh());
-          //             },
-          //             buttonColor: CustomColor.purple,
-          //             borderRadius: 4)
-          //       ]),
+          _pagingController.itemList != null
+              ? Container(
+                  height: deviceSize.height / 1.5,
+                  child: RefreshIndicator(
+                    onRefresh: () =>
+                        Future.sync(() => _pagingController.refresh()),
+                    child: PagedListView<int, Storage>(
+                      shrinkWrap: true,
+                      pagingController: _pagingController,
+                      builderDelegate: PagedChildBuilderDelegate<Storage>(
+                          itemBuilder: (context, item, index) => OwnerStorage(
+                                data: item,
+                                deviceSize: deviceSize,
+                                pageController: _pagingController,
+                                presenter: presenter,
+                              )),
+                    ),
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      CustomText(
+                          text: 'Not have storage yet!',
+                          color: CustomColor.black[3],
+                          context: context,
+                          fontSize: 24),
+                      CustomSizedBox(
+                        context: context,
+                        height: 16,
+                      ),
+                      CustomButton(
+                          height: 32,
+                          text: 'Refresh',
+                          width: double.infinity,
+                          isLoading: false,
+                          textColor: CustomColor.white,
+                          onPressFunction: () async {
+                            await _fetchPage(0);
+                            setState(() {});
+                          },
+                          buttonColor: CustomColor.purple,
+                          borderRadius: 4),
+                    ]),
           CustomSizedBox(
             context: context,
             height: 72,
