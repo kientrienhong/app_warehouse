@@ -1,6 +1,5 @@
 import '/api/firebase_services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as FirebaseStorage;
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -30,9 +29,6 @@ class FirebaseStorageHelper {
       listFile.add(ref.name);
     });
 
-    // result.prefixes.forEach((FirebaseStorage.Reference ref) {
-    //   print('Found directory: ${ref.name}');
-    // });
     return listFile;
   }
 
@@ -52,29 +48,38 @@ class FirebaseStorageHelper {
     return urlDownload;
   }
 
+  static Future<void> deleteFolder(int idStorage, String email) async {
+    FirebaseStorage.ListResult listImage = await FirebaseStorage
+        .FirebaseStorage.instance
+        .ref()
+        .child(email)
+        .child(idStorage.toString())
+        .child('paperworker')
+        .listAll();
+    listImage.items.forEach((FirebaseStorage.Reference ref) {
+      ref.delete();
+    });
+
+    listImage = await FirebaseStorage.FirebaseStorage.instance
+        .ref()
+        .child(email)
+        .child(idStorage.toString())
+        .child('imageStorage')
+        .listAll();
+    listImage.items.forEach((FirebaseStorage.Reference ref) {
+      ref.delete();
+    });
+  }
+
   static Future<List<Map<String, dynamic>>> uploadImage(
       String type,
       List<dynamic> image,
       FirebaseStorage.UploadTask task,
       String email,
       int storageId) async {
-    print('image');
-    print(image);
     int index = 0;
     int typeInt = type == 'imageStorage' ? 0 : 1;
-    List<String> existedFile = await listExample(email, storageId, type);
-    int exceed = existedFile.length - image.length;
-    if (exceed > 0) {
-      for (int i = existedFile.length - exceed; i < existedFile.length; i++) {
-        final firebaseStorageRef = FirebaseStorage.FirebaseStorage.instance
-            .ref()
-            .child(email)
-            .child(storageId.toString())
-            .child(type)
-            .child('${i.toString()}.png');
-        await firebaseStorageRef.delete();
-      }
-    }
+
     return Future.wait(image.map((element) async {
       if (element['file'] != null) {
         String destination =

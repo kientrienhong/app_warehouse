@@ -143,6 +143,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
                   isDisable: false,
                   focusNode: _focusAmountShelves,
                   deviceSize: deviceSize,
+                  textInputType: TextInputType.number,
                   labelText: 'Amount',
                   controller: _controllerAmountShelves,
                   nextNode: _focusPriceSmallBox,

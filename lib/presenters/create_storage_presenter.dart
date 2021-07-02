@@ -184,14 +184,8 @@ class CreateStoragePresenter {
       String email, int storageId) async {
     List<Map> listImageStorage = await uploadImage(
         'imageStorage', _model.allImage['imageStorage'], email, storageId);
-    print('listImageStorage');
-
-    print(listImageStorage);
     List<Map> listPaperStorage = await uploadImage(
         'paperworker', _model.allImage['paperStorage'], email, storageId);
-    print('listPaperStorage');
-
-    print(listPaperStorage);
 
     List<Map<String, dynamic>> listResult = [];
     listImageStorage.forEach((element) {

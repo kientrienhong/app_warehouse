@@ -1,3 +1,4 @@
+import 'package:appwarehouse/helpers/firebase_storage_helper.dart';
 import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/presenters/home_presenter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -41,6 +42,8 @@ class OwnerStorage extends StatelessWidget {
                       bool result =
                           await presenter.deleteStorage(user.jwtToken, data.id);
                       if (result == true) {
+                        await FirebaseStorageHelper.deleteFolder(
+                            data.id, user.email);
                         Navigator.of(context).pop();
                         pageController.refresh();
                       }
