@@ -72,13 +72,13 @@ class OwnerStorage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (data.status) {
-      case 1:
+      case 2:
         {
           colorStatusChecking = CustomColor.green;
           statusChecking = 'Approved';
           break;
         }
-      case 0:
+      case 1:
         {
           colorStatusChecking = CustomColor.orange;
           statusChecking = 'Pending';

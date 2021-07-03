@@ -34,6 +34,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
   }
 
   @override
+  Future<void> fetchPage(int pageKey, String address) {}
+
+  @override
   void initState() {
     presenter = HomePresenter();
     presenter.view = this;
@@ -59,6 +62,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
       List<dynamic> result = response.data['data'];
       List<Storage> newItems =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
+      print(newItems);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);

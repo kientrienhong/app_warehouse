@@ -3,4 +3,5 @@ abstract class HomeView {
   void updateSearch();
   //handle search
   void onClickSearch(String search);
+  Future<void> fetchPage(int pageKey, String address);
 }

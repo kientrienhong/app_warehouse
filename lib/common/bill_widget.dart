@@ -71,12 +71,13 @@ class BillWidget extends StatelessWidget {
           context: context,
           height: 8,
         ),
-        CustomText(
-          text: 'Expired date: 07/07/7777',
-          color: CustomColor.black[1],
-          context: context,
-          fontSize: 16,
-        ),
+        if (data.expiredDate != null)
+          CustomText(
+            text: 'Expired date: ${data.expiredDate.toString()}',
+            color: CustomColor.black[1],
+            context: context,
+            fontSize: 16,
+          ),
       ],
     );
   }

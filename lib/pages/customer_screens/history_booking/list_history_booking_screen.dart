@@ -24,7 +24,6 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
       {@required Order data,
       @required BuildContext context,
       @required Size deviceSize}) {
-    print(data);
     Color colorStatus;
     String status;
     switch (data.status) {
@@ -193,11 +192,11 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
   @override
   void initState() {
     super.initState();
-    // presenter = ListHistoryBookingPresenter();
-    // presenter.view = this;
-    // presenter.model.pagingController.addPageRequestListener((pageKey) {
-    //   fetchPage(pageKey);
-    // });
+    presenter = ListHistoryBookingPresenter();
+    presenter.view = this;
+    presenter.model.pagingController.addPageRequestListener((pageKey) {
+      fetchPage(pageKey);
+    });
   }
 
   @override
@@ -206,13 +205,13 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
 
     return Container(
       height: deviceSize.height,
-      // child: PagedListView<int, dynamic>(
-      //   shrinkWrap: true,
-      //   pagingController: presenter.model.pagingController,
-      //   builderDelegate: PagedChildBuilderDelegate<dynamic>(
-      //       itemBuilder: (context, item, index) => _buildBillWidget(
-      //           data: item, deviceSize: deviceSize, context: context)),
-      // ),
+      child: PagedListView<int, dynamic>(
+        shrinkWrap: true,
+        pagingController: presenter.model.pagingController,
+        builderDelegate: PagedChildBuilderDelegate<dynamic>(
+            itemBuilder: (context, item, index) => _buildBillWidget(
+                data: item, deviceSize: deviceSize, context: context)),
+      ),
     );
   }
 }

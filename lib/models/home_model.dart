@@ -1,18 +1,16 @@
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '/models/entity/storage.dart';
 
 class HomeModel {
-  List<Storage> _listStorage;
   String _searchAddress;
   bool _isLoading;
+  PagingController<int, Storage> pagingController;
 
   HomeModel() {
     _isLoading = false;
     _searchAddress = '';
+    pagingController = PagingController(firstPageKey: 0);
   }
-
-  get listStorage => this._listStorage;
-
-  set listStorage(value) => this._listStorage = value;
 
   get searchAddress => this._searchAddress;
 

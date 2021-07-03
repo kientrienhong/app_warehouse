@@ -16,17 +16,24 @@ class HomePresenter {
 
   set view(value) => this._view = value;
 
-  Future<List<Storage>> loadList(
-      int page, int size, String jwt, String address) async {
+  Future<void> loadList(int page, int size, String jwt, String address) async {
     try {
       var response =
           await ApiServices.loadListStorage(page, size, jwt, address);
-      List<dynamic> result = response.data['data'];
-      List<Storage> listStorage =
-          result.map<Storage>((e) => Storage.fromMap(e)).toList();
-      return listStorage;
+      List<Storage> newItems = response.data['data']
+          .map<Storage>((e) => Storage.fromMap(e))
+          .toList();
+      final isLastPage = newItems.length < size;
+      if (isLastPage) {
+        _model.pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = size + newItems.length;
+        _model.pagingController.appendPage(newItems, nextPageKey);
+      }
     } catch (e) {
-      return null;
+      _model.pagingController.error = e;
+    } finally {
+      _view.updateSearch();
     }
   }
 

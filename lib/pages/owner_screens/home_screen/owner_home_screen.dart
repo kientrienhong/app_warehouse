@@ -22,44 +22,29 @@ class OwnerHomeScreen extends StatefulWidget {
 }
 
 class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
-  static const _pageSize = 10;
-  PagingController<int, Storage> _pagingController =
-      PagingController(firstPageKey: 0);
   HomePresenter presenter;
   @override
   void initState() {
+    super.initState();
     presenter = HomePresenter();
     presenter.view = this;
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+    presenter.model.pagingController.addPageRequestListener((pageKey) {
+      fetchPage(pageKey, '');
     });
-    super.initState();
+  }
+
+  @override
+  Future<void> fetchPage(int pageKey, String address) async {
+    User user = Provider.of<User>(context, listen: false);
+    await presenter.loadList(pageKey, 5, user.jwtToken, '');
   }
 
   @override
   void onClickSearch(String search) {}
 
   @override
-  void updateSearch() {}
-
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      User user = Provider.of<User>(context, listen: false);
-      final response = await ApiServices.loadListStorage(
-          pageKey, _pageSize, user.jwtToken, presenter.model.searchAddress);
-      List<dynamic> result = response.data['data'];
-      List<Storage> newItems =
-          result.map<Storage>((e) => Storage.fromMap(e)).toList();
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      setState(() {});
-    }
+  void updateSearch() {
+    setState(() {});
   }
 
   @override
@@ -76,20 +61,21 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
             context: context,
             height: 24,
           ),
-          _pagingController.itemList != null
+          presenter.model.pagingController.error == null
               ? Container(
                   height: deviceSize.height / 1.5,
                   child: RefreshIndicator(
-                    onRefresh: () =>
-                        Future.sync(() => _pagingController.refresh()),
+                    onRefresh: () => Future.sync(
+                        () => presenter.model.pagingController.refresh()),
                     child: PagedListView<int, Storage>(
                       shrinkWrap: true,
-                      pagingController: _pagingController,
+                      pagingController: presenter.model.pagingController,
                       builderDelegate: PagedChildBuilderDelegate<Storage>(
                           itemBuilder: (context, item, index) => OwnerStorage(
                                 data: item,
                                 deviceSize: deviceSize,
-                                pageController: _pagingController,
+                                pageController:
+                                    presenter.model.pagingController,
                                 presenter: presenter,
                               )),
                     ),
@@ -114,8 +100,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
                           isLoading: false,
                           textColor: CustomColor.white,
                           onPressFunction: () async {
-                            await _fetchPage(0);
-                            setState(() {});
+                            await fetchPage(0, '');
                           },
                           buttonColor: CustomColor.purple,
                           borderRadius: 4),
