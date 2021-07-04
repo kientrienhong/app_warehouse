@@ -1,6 +1,6 @@
-import 'package:appwarehouse/helpers/firebase_storage_helper.dart';
-import 'package:appwarehouse/models/entity/user.dart';
-import 'package:appwarehouse/presenters/home_presenter.dart';
+import '/helpers/firebase_storage_helper.dart';
+import '/models/entity/user.dart';
+import '/presenters/home_presenter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '/common/custom_color.dart';
@@ -94,7 +94,7 @@ class OwnerStorage extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (data.status == 1) {
+        if (data.status == 2) {
           Navigator.push(
               context,
               MaterialPageRoute(

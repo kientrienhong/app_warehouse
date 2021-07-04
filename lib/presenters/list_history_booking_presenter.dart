@@ -1,7 +1,7 @@
-import 'package:appwarehouse/api/api_services.dart';
-import 'package:appwarehouse/models/entity/order.dart';
-import 'package:appwarehouse/models/list_history_booking._model.dart';
-import 'package:appwarehouse/views/list_history_booking_view.dart';
+import '/api/api_services.dart';
+import '/models/entity/order.dart';
+import '/models/list_history_booking._model.dart';
+import '/views/list_history_booking_view.dart';
 
 class ListHistoryBookingPresenter {
   ListHistoryBookingModel _model;
@@ -22,6 +22,7 @@ class ListHistoryBookingPresenter {
       var response = await ApiServices.loadListOrder(page, size, jwt);
       List<dynamic> newItems =
           response.data['data'].map((e) => Order.fromMap(e)).toList();
+      print(newItems);
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingController.appendLastPage(newItems);

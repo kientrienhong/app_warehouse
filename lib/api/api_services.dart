@@ -196,6 +196,27 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> postFeedback(
+      int idStorage, String jwt, int idOrder, double rating, String comment) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/feedbacks',
+          data: {
+            "storageId": idStorage,
+            "orderId": idOrder,
+            "rating": rating,
+            "comment": comment,
+            'order': null
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Feedback failed');
+    }
+  }
+
   static Future<dynamic> payment(
       double totalPrice,
       int months,

@@ -1,4 +1,4 @@
-import 'package:appwarehouse/models/entity/shelf.dart';
+import '/models/entity/shelf.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class OwnerDetailStorageModel {

@@ -1,6 +1,6 @@
-import 'package:appwarehouse/common/custom_button.dart';
-import 'package:appwarehouse/common/custom_color.dart';
-import 'package:appwarehouse/common/custom_text.dart';
+import '/common/custom_button.dart';
+import '/common/custom_color.dart';
+import '/common/custom_text.dart';
 
 import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';

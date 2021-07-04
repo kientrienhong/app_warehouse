@@ -1,8 +1,8 @@
-import 'package:appwarehouse/models/entity/storage.dart';
-import 'package:appwarehouse/models/entity/user.dart';
-import 'package:appwarehouse/pages/owner_screens/detail_storage/status_shelf.dart';
-import 'package:appwarehouse/presenters/owner_detail_storage_presenter.dart';
-import 'package:appwarehouse/views/owner_detail_storage_view.dart';
+import '/models/entity/storage.dart';
+import '/models/entity/user.dart';
+import '/pages/owner_screens/detail_storage/status_shelf.dart';
+import '/presenters/owner_detail_storage_presenter.dart';
+import '/views/owner_detail_storage_view.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '/common/custom_app_bar.dart';

@@ -1,3 +1,5 @@
+import '/common/custom_text.dart';
+
 import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_color.dart';
@@ -62,7 +64,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
       List<dynamic> result = response.data['data'];
       List<Storage> newItems =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
-      print(newItems);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -121,17 +122,23 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
             context: context,
             height: 24,
           ),
-          Container(
-            height: deviceSize.height / 1.5,
-            child: PagedListView<int, Storage>(
-              shrinkWrap: true,
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<Storage>(
-                  itemBuilder: (context, item, index) =>
-                      StorageProtectingWidget(
-                          data: item, deviceSize: deviceSize)),
-            ),
-          ),
+          _pagingController.error == null
+              ? Container(
+                  height: deviceSize.height / 1.5,
+                  child: PagedListView<int, Storage>(
+                    shrinkWrap: true,
+                    pagingController: _pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<Storage>(
+                        itemBuilder: (context, item, index) =>
+                            StorageProtectingWidget(
+                                data: item, deviceSize: deviceSize)),
+                  ),
+                )
+              : CustomText(
+                  text: 'Not found!',
+                  color: CustomColor.black[3],
+                  context: context,
+                  fontSize: 24),
           CustomSizedBox(
             context: context,
             height: 72,

@@ -1,8 +1,10 @@
-import 'package:appwarehouse/api/api_services.dart';
-import 'package:appwarehouse/models/entity/order.dart';
-import 'package:appwarehouse/models/entity/user.dart';
-import 'package:appwarehouse/presenters/list_history_booking_presenter.dart';
-import 'package:appwarehouse/views/list_history_booking_view.dart';
+import 'package:appwarehouse/common/bill_widget.dart';
+
+import '/api/api_services.dart';
+import '/models/entity/order.dart';
+import '/models/entity/user.dart';
+import '/presenters/list_history_booking_presenter.dart';
+import '/views/list_history_booking_view.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import '/common/custom_color.dart';
@@ -55,12 +57,14 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
 
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (_) => DetailBillScreen(
-        //               data: data,
-        //             )));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => Scaffold(
+                      body: BillWidget(
+                        data: data,
+                      ),
+                    )));
       },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -84,18 +88,18 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: Container(
-                                width: 48,
-                                height: 48,
-                                child: Image.asset(
-                                  data.ownerAvatar == null
-                                      ? 'asda'
-                                      : data.ownerAvatar,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
+                          // ClipRRect(
+                          //   borderRadius: BorderRadius.circular(24),
+                          //   child: Container(
+                          //       width: 48,
+                          //       height: 48,
+                          //       child: Image.asset(
+                          //         data.ownerAvatar == null
+                          //             ? 'asda'
+                          //             : data.ownerAvatar,
+                          //         fit: BoxFit.cover,
+                          //       )),
+                          // ),
                           CustomSizedBox(
                             context: context,
                             width: 8,
@@ -104,9 +108,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomText(
-                                text: data.ownerName == null
-                                    ? 'Jessica'
-                                    : data.ownerName,
+                                text: data.ownerName,
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -117,7 +119,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                                 height: 8,
                               ),
                               CustomText(
-                                text: data.id.toString(),
+                                text: '#' + data.id.toString(),
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -128,8 +130,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                                 height: 8,
                               ),
                               CustomText(
-                                text:
-                                    data.name == null ? 'Storage 1' : data.name,
+                                text: data.name,
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -141,8 +142,8 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                               ),
                               CustomText(
                                   text: data.expiredDate == null
-                                      ? 'Not yet'
-                                      : data.expiredDate,
+                                      ? 'Date pick up: Not yet'
+                                      : 'Date pick up: ' + data.expiredDate,
                                   color: CustomColor.black,
                                   context: context,
                                   fontSize: 14),
@@ -150,24 +151,25 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                           ),
                         ])),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomText(
                       text: status,
                       color: colorStatus,
                       context: context,
-                      fontSize: 16,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       textAlign: TextAlign.right,
                     ),
                     CustomSizedBox(
                       context: context,
-                      height: 56,
+                      height: 48,
                     ),
                     CustomText(
                       text: data.total.toString(),
                       color: CustomColor.purple,
                       context: context,
-                      fontSize: 16,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     )
                   ],
@@ -205,6 +207,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
 
     return Container(
       height: deviceSize.height,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: PagedListView<int, dynamic>(
         shrinkWrap: true,
         pagingController: presenter.model.pagingController,

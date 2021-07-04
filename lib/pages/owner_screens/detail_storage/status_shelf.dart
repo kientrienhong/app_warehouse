@@ -1,4 +1,4 @@
-import 'package:appwarehouse/models/entity/shelf.dart';
+import '/models/entity/shelf.dart';
 
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';

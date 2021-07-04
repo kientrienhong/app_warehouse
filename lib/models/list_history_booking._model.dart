@@ -1,4 +1,4 @@
-import 'package:appwarehouse/models/entity/order.dart';
+import '/models/entity/order.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ListHistoryBookingModel {

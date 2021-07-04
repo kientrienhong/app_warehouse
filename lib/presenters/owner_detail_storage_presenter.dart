@@ -1,7 +1,7 @@
-import 'package:appwarehouse/api/api_services.dart';
-import 'package:appwarehouse/models/entity/shelf.dart';
-import 'package:appwarehouse/models/owner_detail_storage_model.dart';
-import 'package:appwarehouse/views/owner_detail_storage_view.dart';
+import '/api/api_services.dart';
+import '/models/entity/shelf.dart';
+import '/models/owner_detail_storage_model.dart';
+import '/views/owner_detail_storage_view.dart';
 
 class OwnerDetailStoragePresenter {
   OwnerDetailStorageModel _model;
