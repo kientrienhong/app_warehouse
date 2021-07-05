@@ -59,6 +59,21 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> loadFeedback(
+      int page, int size, String jwt, int storageId) {
+    try {
+      return Dio().get(
+          'https://localhost:44318/api/v1/feedbacks?StorageId=${storageId.toString()}page=$page&size=$size',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<dynamic> updateInfo(
       String name, String address, String phone, String jwt, String imageUrl) {
     try {
@@ -152,6 +167,22 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> addShelf(int idStorage, String jwt) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/storages',
+          data: {
+            "storageId": idStorage,
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            // 'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
+
   static Future<dynamic> updateStorage(
       int idStorage,
       String name,
@@ -196,6 +227,19 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> deleteShelf(int idShelf, String jwt) {
+    try {
+      return Dio().delete('https://localhost:44318/api/v1/shelves/$idShelf',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Log in failed');
+    }
+  }
+
   static Future<dynamic> postFeedback(
       int idStorage, String jwt, int idOrder, double rating, String comment) {
     try {
@@ -205,7 +249,27 @@ class ApiServices {
             "orderId": idOrder,
             "rating": rating,
             "comment": comment,
-            'order': null
+          },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            // 'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Feedback failed');
+    }
+  }
+
+  static Future<dynamic> updateFeedBack(
+      int idStorage, String jwt, int idOrder, double rating, String comment) {
+    try {
+      return Dio().put(
+          'https://localhost:44318/api/v1/feedbacks?orderId=${idOrder.toString()}&storageId=${idStorage.toString()}',
+          data: {
+            "storageId": idStorage,
+            "orderId": idOrder,
+            "rating": rating,
+            "comment": comment,
           },
           options: Options(headers: {
             'Authorization': 'bearer ' + jwt,

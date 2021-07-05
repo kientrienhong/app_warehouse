@@ -1,4 +1,5 @@
 import 'package:appwarehouse/common/bill_widget.dart';
+import 'package:appwarehouse/common/custom_app_bar.dart';
 
 import '/api/api_services.dart';
 import '/models/entity/order.dart';
@@ -61,8 +62,19 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
             context,
             MaterialPageRoute(
                 builder: (_) => Scaffold(
-                      body: BillWidget(
-                        data: data,
+                      body: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: SingleChildScrollView(
+                          child: Column(children: [
+                            CustomAppBar(
+                              isHome: false,
+                            ),
+                            BillWidget(
+                              data: data,
+                            ),
+                            CustomSizedBox(context: context, height: 24)
+                          ]),
+                        ),
                       ),
                     )));
       },
@@ -88,18 +100,16 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // ClipRRect(
-                          //   borderRadius: BorderRadius.circular(24),
-                          //   child: Container(
-                          //       width: 48,
-                          //       height: 48,
-                          //       child: Image.asset(
-                          //         data.ownerAvatar == null
-                          //             ? 'asda'
-                          //             : data.ownerAvatar,
-                          //         fit: BoxFit.cover,
-                          //       )),
-                          // ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: Container(
+                                width: 48,
+                                height: 48,
+                                child: Image.network(
+                                  data.ownerAvatar,
+                                  fit: BoxFit.cover,
+                                )),
+                          ),
                           CustomSizedBox(
                             context: context,
                             width: 8,
@@ -208,12 +218,16 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
     return Container(
       height: deviceSize.height,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: PagedListView<int, dynamic>(
-        shrinkWrap: true,
-        pagingController: presenter.model.pagingController,
-        builderDelegate: PagedChildBuilderDelegate<dynamic>(
-            itemBuilder: (context, item, index) => _buildBillWidget(
-                data: item, deviceSize: deviceSize, context: context)),
+      child: RefreshIndicator(
+        onRefresh: () =>
+            Future.sync(() => presenter.model.pagingController.refresh()),
+        child: PagedListView<int, dynamic>(
+          shrinkWrap: true,
+          pagingController: presenter.model.pagingController,
+          builderDelegate: PagedChildBuilderDelegate<dynamic>(
+              itemBuilder: (context, item, index) => _buildBillWidget(
+                  data: item, deviceSize: deviceSize, context: context)),
+        ),
       ),
     );
   }

@@ -3,11 +3,21 @@ import '/models/entity/storage.dart';
 
 class HomeModel {
   String _searchAddress;
-  bool _isLoading;
+  bool _isLoadingRefresh;
+
+  get isLoadingRefresh => this._isLoadingRefresh;
+
+  set isLoadingRefresh(value) => this._isLoadingRefresh = value;
+  bool _isLoadingDeleteStorage;
+
+  get isLoadingDeleteStorage => this._isLoadingDeleteStorage;
+
+  set isLoadingDeleteStorage(value) => this._isLoadingDeleteStorage = value;
   PagingController<int, Storage> pagingController;
 
   HomeModel() {
-    _isLoading = false;
+    _isLoadingRefresh = false;
+    _isLoadingDeleteStorage = false;
     _searchAddress = '';
     pagingController = PagingController(firstPageKey: 0);
   }
@@ -15,8 +25,4 @@ class HomeModel {
   get searchAddress => this._searchAddress;
 
   set searchAddress(value) => this._searchAddress = value;
-
-  get isLoading => this._isLoading;
-
-  set isLoading(value) => this._isLoading = value;
 }

@@ -84,10 +84,10 @@ class FirebaseStorageHelper {
       if (element['file'] != null) {
         String destination =
             '$email/${storageId.toString()}/$type/${index.toString()}.png';
-
-        index++;
         task = FirebaseServices.uploadFile(destination, element['file']);
         if (task == null) return null;
+        index++;
+
         final snapshot = await task.whenComplete(() {});
         final urlDownload = await snapshot.ref.getDownloadURL();
         return {'imageUrl': urlDownload, 'id': element['id'], 'type': typeInt};

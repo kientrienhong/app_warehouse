@@ -4,9 +4,7 @@ import '/pages/owner_screens/detail_storage/status_shelf.dart';
 import '/presenters/owner_detail_storage_presenter.dart';
 import '/views/owner_detail_storage_view.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
 import '/common/custom_app_bar.dart';
-import '/common/custom_button.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
@@ -32,6 +30,36 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
     presenter.view = this;
     presenter.model.pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
+    });
+  }
+
+  @override
+  void onHandleAddShelf(int idStorage) {
+    User user = Provider.of<User>(context, listen: false);
+  }
+
+  @override
+  void onHandleDeleteShelf(int idShelf) async {
+    User user = Provider.of<User>(context, listen: false);
+    var result = await presenter.deleteShelf(user.jwtToken, idShelf);
+    if (result == true) {
+      Navigator.of(context).pop();
+      presenter.model.pagingController.refresh();
+    }
+  }
+
+  @override
+  void updateLoadingAddShelf() {
+    setState(() {
+      presenter.model.isLoadingAddShelf = !presenter.model.isLoadingAddShelf;
+    });
+  }
+
+  @override
+  void updateLoadingDeleteShelf() {
+    setState(() {
+      presenter.model.isLoadingDeleteShelf =
+          !presenter.model.isLoadingDeleteShelf;
     });
   }
 
@@ -76,21 +104,16 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
               shrinkWrap: true,
               pagingController: presenter.model.pagingController,
               builderDelegate: PagedChildBuilderDelegate<dynamic>(
-                  itemBuilder: (context, item, index) =>
-                      StatusShelf(data: item, deviceSize: deviceSize)),
+                  itemBuilder: (context, item, index) => StatusShelf(
+                        data: item,
+                        deviceSize: deviceSize,
+                        presenter: presenter,
+                      )),
             ),
             CustomSizedBox(
               context: context,
               height: 24,
             ),
-            CustomButton(
-                height: 32,
-                text: 'Submit',
-                width: double.infinity,
-                textColor: CustomColor.green,
-                onPressFunction: () {},
-                buttonColor: CustomColor.lightBlue,
-                borderRadius: 4),
             CustomSizedBox(
               context: context,
               height: 32,

@@ -1,4 +1,3 @@
-import 'package:appwarehouse/common/custom_app_bar.dart';
 import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/models/entity/user.dart';
@@ -19,7 +18,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class BillWidget extends StatelessWidget {
-  final Order data;
+  Order data;
 
   BillWidget({this.data});
 
@@ -28,87 +27,77 @@ class BillWidget extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 24, right: 24),
-        child: Column(
-          children: [
-            CustomAppBar(
-              isHome: false,
-            ),
+      child: Column(
+        children: [
+          BillInfoWidget(
+            data: data,
+          ),
+          if (data.smallBoxQuantity > 0)
             CustomSizedBox(
               context: context,
-              height: 8,
+              height: 40,
             ),
-            BillInfoWidget(
-              data: data,
-            ),
-            if (data.smallBoxQuantity > 0)
-              CustomSizedBox(
-                context: context,
-                height: 40,
-              ),
-            if (data.smallBoxQuantity > 0)
-              BoxInfoBillWidget(
-                  deviceSize: deviceSize,
-                  price: '${data.smallBoxPrice} VND',
-                  imagePath: 'assets/images/smallBox.png',
-                  amount: data.smallBoxQuantity,
-                  size: '0.5m x 1m x 2m'),
-            CustomSizedBox(
-              context: context,
-              height: 32,
-            ),
-            if (data.bigBoxQuantity > 0)
-              BoxInfoBillWidget(
-                  deviceSize: deviceSize,
-                  price: '${data.bigBoxPrice} VND',
-                  imagePath: 'assets/images/largeBox.png',
-                  amount: data.bigBoxQuantity,
-                  size: '1m x 1m x 2m'),
-            if (data.bigBoxQuantity > 0)
-              CustomSizedBox(
-                context: context,
-                height: 24,
-              ),
-            InfoCall(
-              role: 'Owner',
-              avatar: data.ownerAvatar,
-              deviceSize: deviceSize,
-              name: data.ownerName,
-              phone: data.ownerPhone,
-            ),
+          if (data.smallBoxQuantity > 0)
+            BoxInfoBillWidget(
+                deviceSize: deviceSize,
+                price: '${data.smallBoxPrice} VND',
+                imagePath: 'assets/images/smallBox.png',
+                amount: data.smallBoxQuantity,
+                size: '0.5m x 1m x 2m'),
+          CustomSizedBox(
+            context: context,
+            height: 32,
+          ),
+          if (data.bigBoxQuantity > 0)
+            BoxInfoBillWidget(
+                deviceSize: deviceSize,
+                price: '${data.bigBoxPrice} VND',
+                imagePath: 'assets/images/largeBox.png',
+                amount: data.bigBoxQuantity,
+                size: '1m x 1m x 2m'),
+          if (data.bigBoxQuantity > 0)
             CustomSizedBox(
               context: context,
               height: 24,
             ),
-            QrImage(
-              data: data.id.toString(),
-              size: 88.0,
-              version: 2,
-            ),
-            CustomSizedBox(
+          InfoCall(
+            role: 'Owner',
+            avatar: data.ownerAvatar,
+            deviceSize: deviceSize,
+            name: data.ownerName,
+            phone: data.ownerPhone,
+          ),
+          CustomSizedBox(
+            context: context,
+            height: 24,
+          ),
+          QrImage(
+            data: data.id.toString(),
+            size: 88.0,
+            version: 2,
+          ),
+          CustomSizedBox(
+            context: context,
+            height: 8,
+          ),
+          if (data.expiredDate != null)
+            CustomText(
+              text: 'Expired date: ${data.expiredDate.toString()}',
+              color: CustomColor.black[1],
               context: context,
-              height: 8,
+              fontSize: 16,
             ),
-            if (data.expiredDate != null)
-              CustomText(
-                text: 'Expired date: ${data.expiredDate.toString()}',
-                color: CustomColor.black[1],
-                context: context,
-                fontSize: 16,
-              ),
-            FeedbackWidget(
-              data: data,
-            )
-          ],
-        ),
+          FeedbackWidget(
+            data: data,
+          )
+        ],
       ),
     );
   }
 }
 
 class FeedbackWidget extends StatefulWidget {
-  final Order data;
+  Order data;
   FeedbackWidget({this.data});
 
   @override
@@ -126,6 +115,9 @@ class _FeedbackWidgetState extends State<FeedbackWidget>
     _controller = TextEditingController();
     _presenter = FeedbackPresenter();
     _presenter.view = this;
+    if (widget.data != null) {
+      _controller.text = widget.data.comment;
+    }
   }
 
   @override
@@ -147,8 +139,14 @@ class _FeedbackWidgetState extends State<FeedbackWidget>
   void handleOnClickFeedback(
       int idStorage, int idOrder, String comment, double rating) {
     User user = Provider.of<User>(context, listen: false);
-    _presenter.onHandleClickFeed(
-        idStorage, idOrder, comment, rating, user.jwtToken);
+    if (widget.data.rating == null) {
+      _presenter.onHandleAddFeedback(
+          idStorage, idOrder, comment, rating, user.jwtToken);
+      widget.data = widget.data.copyWith(rating: rating);
+    } else {
+      _presenter.onHandleUpdateFeedback(
+          idStorage, idOrder, comment, rating, user.jwtToken);
+    }
   }
 
   @override
@@ -186,7 +184,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget>
                   height: 8,
                 ),
                 RatingBar.builder(
-                  initialRating: 0,
+                  initialRating:
+                      widget.data.rating == null ? 0 : widget.data.rating,
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,
@@ -235,8 +234,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget>
                     isLoading: _presenter.model.isLoading,
                     textColor: CustomColor.green,
                     onPressFunction: () {
-                      handleOnClickFeedback(
-                          1519, widget.data.id, _controller.text, _rating);
+                      handleOnClickFeedback(widget.data.idStorage,
+                          widget.data.id, _controller.text, _rating);
                     },
                     buttonColor: CustomColor.lightBlue,
                     borderRadius: 4),

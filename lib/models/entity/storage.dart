@@ -7,6 +7,7 @@ class Storage {
   final int ownerId;
   final String address;
   final int rating;
+  final int numberOfRatings;
   final List<dynamic> picture;
   final String name;
   final String description;
@@ -21,6 +22,7 @@ class Storage {
       this.address,
       this.description,
       this.name,
+      this.numberOfRatings,
       this.ownerPhone,
       this.ownerId,
       this.ownerName,
@@ -40,6 +42,7 @@ class Storage {
     String name,
     String description,
     String ownerPhone,
+    int numberOfRatings,
     String ownerAvatar,
     StorageStatus status,
     String ownerName,
@@ -54,6 +57,7 @@ class Storage {
         rating: rating ?? this.rating,
         picture: picture ?? this.picture,
         name: name ?? this.name,
+        numberOfRatings: numberOfRatings ?? this.numberOfRatings,
         description: description ?? this.description,
         status: status ?? this.status,
         ownerName: ownerName ?? this.ownerName,
@@ -74,6 +78,7 @@ class Storage {
       'status': status,
       'ownerName': ownerName,
       'priceFrom': priceFrom,
+      'numberOfRatings': numberOfRatings,
       'priceTo': priceTo,
       'ownerPhone': ownerPhone,
       "ownerAvatar": ownerAvatar
@@ -88,6 +93,7 @@ class Storage {
       rating: map['rating']?.toInt(),
       picture: map['images'],
       name: map['name'],
+      numberOfRatings: map['numberOfRatings'],
       ownerPhone: map['ownerPhone'],
       description: map['description'],
       status: map['status']?.toInt(),
@@ -119,8 +125,10 @@ class Storage {
         other.rating == rating &&
         other.picture == picture &&
         other.name == name &&
+        other.numberOfRatings == numberOfRatings &&
         other.ownerAvatar == ownerAvatar &&
         other.description == description &&
+        other.numberOfRatings == numberOfRatings &&
         other.status == status &&
         other.ownerName == ownerName &&
         other.ownerPhone == ownerPhone &&
@@ -135,9 +143,11 @@ class Storage {
         address.hashCode ^
         rating.hashCode ^
         picture.hashCode ^
+        numberOfRatings.hashCode ^
         ownerPhone.hashCode ^
         name.hashCode ^
         description.hashCode ^
+        numberOfRatings.hashCode ^
         ownerAvatar.hashCode ^
         status.hashCode ^
         ownerName.hashCode ^

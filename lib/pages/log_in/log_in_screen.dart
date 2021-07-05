@@ -161,7 +161,7 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
         }
       }
     } catch (e) {
-      loginPresenter.view.updateViewErrorMsg(e.toString());
+      loginPresenter.view.updateViewErrorMsg('Invalid username / password');
     }
   }
 

@@ -198,6 +198,7 @@ class DetailBillScreen extends StatelessWidget {
               height: 24,
             ),
             InfoCall(
+                role: 'Customer',
                 deviceSize: deviceSize,
                 phone: '07777777',
                 avatar: 'assets/images/avatar.png',

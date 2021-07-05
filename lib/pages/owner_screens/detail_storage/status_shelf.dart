@@ -1,16 +1,45 @@
+import 'package:appwarehouse/common/custom_dialog.dart';
+import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/presenters/owner_detail_storage_presenter.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '/models/entity/shelf.dart';
 
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
-import '/pages/owner_screens/shelf_detail/shelf_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 
-class StatusShelf extends StatelessWidget {
+class StatusShelf extends StatefulWidget {
   final Size deviceSize;
   final Shelf data;
-  StatusShelf({@required this.deviceSize, @required this.data});
+
+  final OwnerDetailStoragePresenter presenter;
+  StatusShelf(
+      {@required this.presenter,
+      @required this.deviceSize,
+      @required this.data});
+
+  @override
+  State<StatusShelf> createState() => _StatusShelfState();
+}
+
+class _StatusShelfState extends State<StatusShelf> {
+  void _showDialog(BuildContext context, int idShelf) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return CustomDeleteDialog(
+            isLoading: widget.presenter.model.isLoadingDeleteShelf,
+            title: 'Delete Storage',
+            content: 'Are you sure?',
+            deleteFunction: () =>
+                widget.presenter.view.onHandleDeleteShelf(idShelf),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +53,21 @@ class StatusShelf extends StatelessWidget {
         //             )));
       },
       child: Container(
-        height: deviceSize.height / 18,
+        height: widget.deviceSize.height / 18,
         margin: const EdgeInsets.only(bottom: 12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: deviceSize.height / 18,
-              width: deviceSize.width / 4.4,
+              height: widget.deviceSize.height / 18,
+              width: widget.deviceSize.width / 4.4,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   color: CustomColor.lightBlue),
               child: Center(
                 child: CustomText(
-                  text: 'Shelf - ' + data.id.toString(),
+                  text: 'Shelf - ' + widget.data.id.toString(),
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16,
@@ -48,7 +77,7 @@ class StatusShelf extends StatelessWidget {
             ),
             CustomSizedBox(
               context: context,
-              width: 24,
+              width: 16,
             ),
             CustomText(
                 text: 'Used',
@@ -60,10 +89,10 @@ class StatusShelf extends StatelessWidget {
               width: 4,
             ),
             new LinearPercentIndicator(
-              width: deviceSize.width / 2.7,
+              width: widget.deviceSize.width / 3,
               lineHeight: 8,
               backgroundColor: CustomColor.lightBlue,
-              percent: data.usage.toDouble(),
+              percent: widget.data.usage.toDouble(),
               progressColor: CustomColor.purple,
             ),
             CustomSizedBox(
@@ -71,11 +100,25 @@ class StatusShelf extends StatelessWidget {
               width: 2,
             ),
             CustomText(
-                text: data.usage.toString() + '%',
+                text: widget.data.usage.toString() + '%',
                 color: CustomColor.black,
                 context: context,
                 fontWeight: FontWeight.bold,
-                fontSize: 16)
+                fontSize: 16),
+            if (widget.data.usage == 0)
+              CustomSizedBox(
+                context: context,
+                width: 8,
+              ),
+            if (widget.data.usage == 0)
+              GestureDetector(
+                onTap: () => _showDialog(context, widget.data.id),
+                child: Container(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset('assets/images/delete.png',
+                        fit: BoxFit.cover)),
+              )
           ],
         ),
       ),

@@ -14,64 +14,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-class OwnerStorage extends StatelessWidget {
+class OwnerStorage extends StatefulWidget {
   final Storage data;
   final Size deviceSize;
   final HomePresenter presenter;
-  final PagingController pageController;
   OwnerStorage(
       {@required this.data,
       @required this.deviceSize,
-      @required this.pageController,
       @required this.presenter});
 
+  @override
+  State<OwnerStorage> createState() => _OwnerStorageState();
+}
+
+class _OwnerStorageState extends State<OwnerStorage> {
   Color colorStatusChecking;
+
   String statusChecking;
+
+  void deleteStorage(BuildContext context) async {
+    User user = Provider.of<User>(context, listen: false);
+    bool result =
+        await widget.presenter.deleteStorage(user.jwtToken, widget.data.id);
+    if (result == true) {
+      await FirebaseStorageHelper.deleteFolder(widget.data.id, user.email);
+      Navigator.of(context).pop();
+      widget.presenter.model.pagingController.refresh();
+    }
+  }
 
   void _showDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (_) {
-          return CustomDialog(
-              title: 'Delete Storage',
-              content: 'Are you sure?',
-              listAction: [
-                TextButton(
-                    onPressed: () async {
-                      User user = Provider.of<User>(context, listen: false);
-                      bool result =
-                          await presenter.deleteStorage(user.jwtToken, data.id);
-                      if (result == true) {
-                        await FirebaseStorageHelper.deleteFolder(
-                            data.id, user.email);
-                        Navigator.of(context).pop();
-                        pageController.refresh();
-                      }
-                    },
-                    child: CustomText(
-                      text: 'Delete',
-                      color: Colors.red,
-                      context: context,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    )),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: CustomText(
-                      text: 'Cancel',
-                      color: CustomColor.black,
-                      context: context,
-                      fontSize: 16,
-                    ))
-              ]);
+          print(widget.presenter.model.isLoadingDeleteStorage);
+          return CustomDeleteDialog(
+            isLoading: widget.presenter.model.isLoadingDeleteStorage,
+            title: 'Delete Storage',
+            content: 'Are you sure?',
+            deleteFunction: () => deleteStorage(context),
+          );
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    switch (data.status) {
+    switch (widget.data.status) {
       case 2:
         {
           colorStatusChecking = CustomColor.green;
@@ -94,19 +82,19 @@ class OwnerStorage extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        if (data.status == 2) {
+        if (widget.data.status == 2) {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (_) => OwnerDetailStorage(
-                        data: data,
+                        data: widget.data,
                       )));
         }
       },
       child: Stack(children: [
         Container(
           margin: const EdgeInsets.only(bottom: 24),
-          height: deviceSize.height / 2.6,
+          height: widget.deviceSize.height / 2.6,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: CustomColor.white,
@@ -123,10 +111,10 @@ class OwnerStorage extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                 child: Container(
-                    width: deviceSize.width,
-                    height: deviceSize.height / 5.2,
+                    width: widget.deviceSize.width,
+                    height: widget.deviceSize.height / 5.2,
                     child: Image.network(
-                      data.picture[0]['imageUrl'],
+                      widget.data.picture[0]['imageUrl'],
                       fit: BoxFit.cover,
                     )),
               ),
@@ -140,7 +128,7 @@ class OwnerStorage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                      text: data.name,
+                      text: widget.data.name,
                       color: CustomColor.black,
                       context: context,
                       fontSize: 16,
@@ -164,7 +152,7 @@ class OwnerStorage extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 16),
                   child: CustomText(
-                      text: data.address,
+                      text: widget.data.address,
                       color: CustomColor.black[2],
                       context: context,
                       maxLines: 2,
@@ -179,16 +167,29 @@ class OwnerStorage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RatingBarIndicator(
-                      rating: data.rating == null ? 0 : data.rating * 1.0,
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Color(0xFFFFCC1F),
+                    Row(children: [
+                      RatingBarIndicator(
+                        rating: widget.data.rating == null
+                            ? 0 * 1.0
+                            : widget.data.rating * 1.0,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Color(0xFFFFCC1F),
+                        ),
+                        itemCount: 5,
+                        itemSize: 18,
+                        direction: Axis.horizontal,
                       ),
-                      itemCount: 5,
-                      itemSize: 18,
-                      direction: Axis.horizontal,
-                    ),
+                      CustomSizedBox(
+                        context: context,
+                        width: 4,
+                      ),
+                      CustomText(
+                          text: '(${widget.data.numberOfRatings})',
+                          color: CustomColor.black[3],
+                          context: context,
+                          fontSize: 16)
+                    ]),
                     Row(children: [
                       GestureDetector(
                           onTap: () {
@@ -198,7 +199,7 @@ class OwnerStorage extends StatelessWidget {
                                     builder: (_) => Scaffold(
                                           backgroundColor: CustomColor.white,
                                           body: CreateStorageScreen(
-                                            data: data,
+                                            data: widget.data,
                                           ),
                                         )));
                           },

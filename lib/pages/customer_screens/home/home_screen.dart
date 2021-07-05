@@ -39,6 +39,11 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
   Future<void> fetchPage(int pageKey, String address) {}
 
   @override
+  void updateLoadingDeleteStorage() {}
+  @override
+  void updateLoadingRefresh() {}
+
+  @override
   void initState() {
     presenter = HomePresenter();
     presenter.view = this;
