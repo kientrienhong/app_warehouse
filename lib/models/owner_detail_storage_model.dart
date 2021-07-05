@@ -1,4 +1,4 @@
-import 'package:appwarehouse/models/entity/shelf.dart';
+import '/models/entity/shelf.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class OwnerDetailStorageModel {
@@ -7,14 +7,20 @@ class OwnerDetailStorageModel {
   get pagingController => this._pagingController;
 
   set pagingController(value) => this._pagingController = value;
-  bool _isLoading;
+  bool _isLoadingAddShelf;
 
-  get isLoading => this._isLoading;
+  bool _isLoadingDeleteShelf;
+  get isLoadingAddShelf => this._isLoadingAddShelf;
 
-  set isLoading(value) => this._isLoading = value;
+  set isLoadingAddShelf(value) => this._isLoadingAddShelf = value;
+
+  get isLoadingDeleteShelf => this._isLoadingDeleteShelf;
+
+  set isLoadingDeleteShelf(value) => this._isLoadingDeleteShelf = value;
 
   OwnerDetailStorageModel() {
-    _isLoading = false;
+    _isLoadingAddShelf = false;
+    _isLoadingDeleteShelf = false;
     pagingController = PagingController(firstPageKey: 0);
   }
 }

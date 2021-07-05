@@ -1,32 +1,48 @@
+import 'package:appwarehouse/common/custom_button.dart';
+import 'package:appwarehouse/models/entity/order.dart';
+import 'package:appwarehouse/models/entity/order_customer.dart';
+import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/presenters/bill_presenter.dart';
+import 'package:appwarehouse/views/bill_view.dart';
+
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import '/pages/owner_screens/bill/detail_bill_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 enum StatusBill { PAID, DELIVERIED, CHECK_OUT, TIME_OUT }
 
-class BillScreen extends StatelessWidget {
+class BillScreen extends StatefulWidget {
+  @override
+  State<BillScreen> createState() => _BillScreenState();
+}
+
+class _BillScreenState extends State<BillScreen> implements BillView {
+  BillPresenter presenter;
+
   Widget _buildBillWidget(
-      {@required Map<String, dynamic> data,
+      {@required OrderCustomer data,
       @required BuildContext context,
       @required Size deviceSize}) {
     Color colorStatus;
     String status;
-    switch (data['status']) {
-      case StatusBill.CHECK_OUT:
+    switch (data.status) {
+      case 0:
         {
           colorStatus = CustomColor.green;
           status = 'Check out';
           break;
         }
-      case StatusBill.PAID:
+      case 1:
         {
           colorStatus = CustomColor.purple;
           status = 'Paid';
           break;
         }
-      case StatusBill.TIME_OUT:
+      case 2:
         {
           colorStatus = CustomColor.red;
           status = 'Time out';
@@ -42,12 +58,12 @@ class BillScreen extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => DetailBillScreen(
-                      data: data,
-                    )));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (_) => DetailBillScreen(
+        //               data: data,
+        //             )));
       },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -76,8 +92,8 @@ class BillScreen extends StatelessWidget {
                             child: Container(
                                 width: 48,
                                 height: 48,
-                                child: Image.asset(
-                                  data['avatarPath'],
+                                child: Image.network(
+                                  data.customerAvatar,
                                   fit: BoxFit.cover,
                                 )),
                           ),
@@ -89,7 +105,7 @@ class BillScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomText(
-                                text: data['customerName'],
+                                text: data.customerName,
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -100,7 +116,7 @@ class BillScreen extends StatelessWidget {
                                 height: 8,
                               ),
                               CustomText(
-                                text: data['orderId'],
+                                text: '#' + data.id.toString(),
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -111,7 +127,7 @@ class BillScreen extends StatelessWidget {
                                 height: 8,
                               ),
                               CustomText(
-                                text: data['storageName'],
+                                text: data.name,
                                 color: CustomColor.black,
                                 context: context,
                                 fontSize: 16,
@@ -121,11 +137,11 @@ class BillScreen extends StatelessWidget {
                                 context: context,
                                 height: 8,
                               ),
-                              CustomText(
-                                  text: 'Expired Date: ' + data['expiredDate'],
-                                  color: CustomColor.black,
-                                  context: context,
-                                  fontSize: 14),
+                              // CustomText(
+                              //     text: 'Expired Date: ' + data.,
+                              //     color: CustomColor.black,
+                              //     context: context,
+                              //     fontSize: 14),
                             ],
                           ),
                         ])),
@@ -144,7 +160,7 @@ class BillScreen extends StatelessWidget {
                       height: 56,
                     ),
                     CustomText(
-                      text: data['price'],
+                      text: data.total.toString() + ' VND',
                       color: CustomColor.purple,
                       context: context,
                       fontSize: 16,
@@ -200,6 +216,27 @@ class BillScreen extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    presenter = BillPresenter();
+    presenter.view = this;
+    presenter.model.pagingController.addPageRequestListener((pageKey) {
+      fetchPage(pageKey);
+    });
+  }
+
+  @override
+  void updateView() {
+    setState(() {});
+  }
+
+  @override
+  void fetchPage(int pageKey) {
+    User user = Provider.of<User>(context, listen: false);
+    presenter.fetchPage(pageKey, user.jwtToken, 5);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
 
@@ -210,15 +247,45 @@ class BillScreen extends StatelessWidget {
           context: context,
           height: 16,
         ),
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: (_, index) {
-              return _buildBillWidget(
-                  data: data[index], context: context, deviceSize: deviceSize);
-            },
-            itemCount: data.length,
-          ),
-        ),
+        presenter.model.pagingController.error == null
+            ? Container(
+                height: deviceSize.height / 1.5,
+                child: RefreshIndicator(
+                  onRefresh: () => Future.sync(
+                      () => presenter.model.pagingController.refresh()),
+                  child: PagedListView<int, OrderCustomer>(
+                    shrinkWrap: true,
+                    pagingController: presenter.model.pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<OrderCustomer>(
+                        itemBuilder: (context, item, index) => _buildBillWidget(
+                            data: item,
+                            context: context,
+                            deviceSize: deviceSize)),
+                  ),
+                ),
+              )
+            : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                CustomText(
+                    text: 'Not have customer order yet!',
+                    color: CustomColor.black[3],
+                    context: context,
+                    fontSize: 24),
+                CustomSizedBox(
+                  context: context,
+                  height: 16,
+                ),
+                CustomButton(
+                    height: 32,
+                    text: 'Refresh',
+                    width: double.infinity,
+                    isLoading: false,
+                    textColor: CustomColor.white,
+                    onPressFunction: () async {
+                      fetchPage(0);
+                    },
+                    buttonColor: CustomColor.purple,
+                    borderRadius: 4),
+              ]),
         CustomSizedBox(
           context: context,
           height: 32,

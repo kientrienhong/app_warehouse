@@ -1,7 +1,7 @@
-import 'package:appwarehouse/api/api_services.dart';
-import 'package:appwarehouse/models/entity/shelf.dart';
-import 'package:appwarehouse/models/owner_detail_storage_model.dart';
-import 'package:appwarehouse/views/owner_detail_storage_view.dart';
+import '/api/api_services.dart';
+import '/models/entity/shelf.dart';
+import '/models/owner_detail_storage_model.dart';
+import '/views/owner_detail_storage_view.dart';
 
 class OwnerDetailStoragePresenter {
   OwnerDetailStorageModel _model;
@@ -22,7 +22,6 @@ class OwnerDetailStoragePresenter {
       var response = await ApiServices.loadShelves(page, size, jwt, idStorage);
       List<dynamic> newItems =
           response.data['data'].map((e) => Shelf.fromMap(e)).toList();
-      print(newItems);
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingController.appendLastPage(newItems);
@@ -33,6 +32,23 @@ class OwnerDetailStoragePresenter {
     } catch (e) {
       print(e.toString());
       _model.pagingController.error = e;
+    }
+  }
+
+  Future<bool> deleteShelf(String jwt, int idShelf) async {
+    try {
+      _view.updateLoadingDeleteShelf();
+      var response = await ApiServices.deleteShelf(idShelf, jwt);
+      if (response.data == 'Deleted') {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+      return false;
+    } finally {
+      _view.updateLoadingDeleteShelf();
     }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class Order {
   final int id;
+  final int idStorage;
   final String name;
   final String address;
   final double total;
@@ -15,13 +16,18 @@ class Order {
   final String ownerAvatar;
   final String expiredDate;
   final int status;
+  final String comment;
+  final double rating;
   Order({
     this.id,
     this.expiredDate,
     this.name,
+    this.idStorage,
     this.address,
+    this.rating,
     this.total,
     this.month,
+    this.comment,
     this.smallBoxQuantity,
     this.smallBoxPrice,
     this.bigBoxQuantity,
@@ -32,29 +38,34 @@ class Order {
     this.status,
   });
 
-  Order copyWith({
-    int id,
-    String name,
-    String address,
-    double total,
-    int month,
-    String expiredDate,
-    int smallBoxQuantity,
-    double smallBoxPrice,
-    int bigBoxQuantity,
-    double bigBoxPrice,
-    String ownerPhone,
-    String ownerName,
-    String ownerAvatar,
-    int status,
-  }) {
+  Order copyWith(
+      {int id,
+      String name,
+      String address,
+      double total,
+      int idStorage,
+      int month,
+      String expiredDate,
+      int smallBoxQuantity,
+      String comment,
+      double smallBoxPrice,
+      int bigBoxQuantity,
+      double bigBoxPrice,
+      String ownerPhone,
+      String ownerName,
+      String ownerAvatar,
+      int status,
+      double rating}) {
     return Order(
       expiredDate: expiredDate ?? this.expiredDate,
+      rating: rating ?? this.rating,
       id: id ?? this.id,
+      comment: comment ?? this.comment,
       name: name ?? this.name,
       address: address ?? this.address,
       total: total ?? this.total,
       month: month ?? this.month,
+      idStorage: idStorage ?? this.idStorage,
       smallBoxQuantity: smallBoxQuantity ?? this.smallBoxQuantity,
       smallBoxPrice: smallBoxPrice ?? this.smallBoxPrice,
       bigBoxQuantity: bigBoxQuantity ?? this.bigBoxQuantity,
@@ -71,9 +82,12 @@ class Order {
       'id': id,
       'name': name,
       'expiredDate': expiredDate,
+      'storageId': idStorage,
       'address': address,
       'total': total,
-      'month': month,
+      'comment': comment,
+      'months': month,
+      'rating': rating,
       'smallBoxQuantity': smallBoxQuantity,
       'smallBoxPrice': smallBoxPrice,
       'bigBoxQuantity': bigBoxQuantity,
@@ -87,21 +101,23 @@ class Order {
 
   factory Order.fromMap(Map<String, dynamic> map) {
     return Order(
-      id: map['id']?.toInt(),
-      name: map['name'],
-      address: map['address'],
-      total: map['total']?.toDouble(),
-      month: map['month']?.toInt(),
-      smallBoxQuantity: map['smallBoxQuantity']?.toInt(),
-      smallBoxPrice: map['smallBoxPrice']?.toDouble(),
-      bigBoxQuantity: map['bigBoxQuantity']?.toInt(),
-      bigBoxPrice: map['bigBoxPrice']?.toDouble(),
-      ownerPhone: map['ownerPhone'],
-      expiredDate: map['expiredDate'],
-      ownerName: map['ownerName'],
-      ownerAvatar: map['ownerAvatar'],
-      status: map['status']?.toInt(),
-    );
+        id: map['id']?.toInt(),
+        name: map['name'],
+        address: map['address'],
+        total: map['total']?.toDouble(),
+        month: map['months']?.toInt(),
+        idStorage: map['storageId'].toInt(),
+        smallBoxQuantity: map['smallBoxQuantity']?.toInt(),
+        smallBoxPrice: map['smallBoxPrice']?.toDouble(),
+        bigBoxQuantity: map['bigBoxQuantity']?.toInt(),
+        bigBoxPrice: map['bigBoxPrice']?.toDouble(),
+        ownerPhone: map['ownerPhone'],
+        rating: map['rating'] == null ? null : map['rating'].toDouble(),
+        expiredDate: map['expiredDate'],
+        ownerName: map['ownerName'],
+        ownerAvatar: map['ownerAvatar'],
+        status: map['status']?.toInt(),
+        comment: map['comment']);
   }
 
   String toJson() => json.encode(toMap());
@@ -121,9 +137,12 @@ class Order {
         other.id == id &&
         other.name == name &&
         other.address == address &&
+        other.comment == comment &&
         other.expiredDate == expiredDate &&
+        other.rating == rating &&
         other.total == total &&
         other.month == month &&
+        other.idStorage == idStorage &&
         other.smallBoxQuantity == smallBoxQuantity &&
         other.smallBoxPrice == smallBoxPrice &&
         other.bigBoxQuantity == bigBoxQuantity &&
@@ -139,7 +158,10 @@ class Order {
     return id.hashCode ^
         name.hashCode ^
         address.hashCode ^
+        idStorage.hashCode ^
         total.hashCode ^
+        rating.hashCode ^
+        comment.hashCode ^
         month.hashCode ^
         expiredDate.hashCode ^
         smallBoxQuantity.hashCode ^

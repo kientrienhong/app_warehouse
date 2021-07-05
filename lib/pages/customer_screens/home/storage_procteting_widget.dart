@@ -88,16 +88,28 @@ class StorageProtectingWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RatingBarIndicator(
-                      rating: data.rating == null ? 0 * 1.0 : data.rating * 1.0,
-                      itemBuilder: (context, index) => Icon(
-                        Icons.star,
-                        color: Color(0xFFFFCC1F),
+                    Row(children: [
+                      RatingBarIndicator(
+                        rating:
+                            data.rating == null ? 0 * 1.0 : data.rating * 1.0,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Color(0xFFFFCC1F),
+                        ),
+                        itemCount: 5,
+                        itemSize: 18,
+                        direction: Axis.horizontal,
                       ),
-                      itemCount: 5,
-                      itemSize: 18,
-                      direction: Axis.horizontal,
-                    ),
+                      CustomSizedBox(
+                        context: context,
+                        width: 4,
+                      ),
+                      CustomText(
+                          text: '(${data.numberOfRatings})',
+                          color: CustomColor.black[3],
+                          context: context,
+                          fontSize: 16)
+                    ]),
                     CustomText(
                       text: '${data.priceFrom} -  ${data.priceTo} VND',
                       color: CustomColor.purple,

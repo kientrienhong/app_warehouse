@@ -44,6 +44,7 @@ class HomePresenter {
 
   Future<bool> deleteStorage(String jwt, int idStorage) async {
     try {
+      _view.updateLoadingDeleteStorage();
       var response = await ApiServices.deleteStorage(idStorage, jwt);
       if (response.data == 'Deleted') {
         return true;
@@ -52,6 +53,8 @@ class HomePresenter {
       return false;
     } catch (e) {
       return null;
+    } finally {
+      _view.updateLoadingDeleteStorage();
     }
   }
 }

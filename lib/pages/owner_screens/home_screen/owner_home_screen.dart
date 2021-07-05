@@ -1,8 +1,7 @@
-import 'package:appwarehouse/common/custom_button.dart';
-import 'package:appwarehouse/common/custom_color.dart';
-import 'package:appwarehouse/common/custom_text.dart';
+import '/common/custom_button.dart';
+import '/common/custom_color.dart';
+import '/common/custom_text.dart';
 
-import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_sizebox.dart';
 import '/models/entity/user.dart';
@@ -48,6 +47,21 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   }
 
   @override
+  void updateLoadingDeleteStorage() {
+    setState(() {
+      presenter.model.isLoadingDeleteStorage =
+          !presenter.model.isLoadingDeleteStorage;
+    });
+  }
+
+  @override
+  void updateLoadingRefresh() {
+    setState(() {
+      presenter.model.isLoadingRefresh = !presenter.model.isLoadingRefresh;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Padding(
@@ -74,8 +88,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
                           itemBuilder: (context, item, index) => OwnerStorage(
                                 data: item,
                                 deviceSize: deviceSize,
-                                pageController:
-                                    presenter.model.pagingController,
                                 presenter: presenter,
                               )),
                     ),
@@ -97,10 +109,17 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
                           height: 32,
                           text: 'Refresh',
                           width: double.infinity,
-                          isLoading: false,
+                          isLoading: presenter.model.isLoadingRefresh,
                           textColor: CustomColor.white,
                           onPressFunction: () async {
-                            await fetchPage(0, '');
+                            try {
+                              presenter.view.updateLoadingRefresh();
+                              await fetchPage(0, '');
+                            } catch (e) {
+                              print(e.toString());
+                            } finally {
+                              presenter.view.updateLoadingRefresh();
+                            }
                           },
                           buttonColor: CustomColor.purple,
                           borderRadius: 4),

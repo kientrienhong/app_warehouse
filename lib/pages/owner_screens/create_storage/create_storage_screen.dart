@@ -417,6 +417,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
           Container(
             width: deviceSize.width,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomMsgInput(
                     msg: presenter.model.msg,
@@ -424,6 +425,10 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
                     maxLines: 6)
               ],
             ),
+          ),
+          CustomSizedBox(
+            context: context,
+            height: 16,
           ),
           CustomButton(
               isLoading: presenter.model.isLoading,
@@ -450,7 +455,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
               borderRadius: 4),
           CustomSizedBox(
             context: context,
-            height: 80,
+            height: 88,
           ),
         ],
       ),

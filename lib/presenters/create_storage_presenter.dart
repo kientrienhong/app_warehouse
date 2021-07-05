@@ -123,13 +123,8 @@ class CreateStoragePresenter {
 
   Future<List<Map<String, dynamic>>> formatDataCreate(
       String email, int storageId, List<dynamic> reponseImages) async {
-    List<Map> listImageStorage = await uploadImage(
-        'imageStorage',
-        _model.allImage['imageStorage']
-            .where((e) => e['file'] != null)
-            .toList(),
-        email,
-        storageId);
+    List<Map> listImageStorage = await uploadImage('imageStorage',
+        _model.allImage['imageStorage'].toList(), email, storageId);
     List<Map> listPaperStorage = await uploadImage(
         'paperworker',
         _model.allImage['paperStorage']
@@ -219,8 +214,7 @@ class CreateStoragePresenter {
 
       List<Map<String, dynamic>> responseUploadImage =
           await formatData(user.email, storageId);
-      print('responseUploadImage');
-      print(responseUploadImage);
+
       var response = await ApiServices.updateStorage(
           id,
           name,
@@ -282,7 +276,6 @@ class CreateStoragePresenter {
           user.jwtToken);
       if (responseCreate.data['error'] == null) {
         int storageId = responseCreate.data['id'];
-        print(responseCreate);
         List<Map<String, dynamic>> responseUploadImage = await formatDataCreate(
             user.email, storageId, responseCreate.data['images']);
         var reponseUpdate = await ApiServices.updateStorage(

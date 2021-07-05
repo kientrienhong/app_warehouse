@@ -50,10 +50,24 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
         context: context,
         builder: (_) {
-          return CustomDialog(
-            content: 'Are you sure?',
-            title: 'Log out',
-            listAction: [
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: CustomText(
+              text: 'Log out',
+              color: Colors.black,
+              textAlign: TextAlign.center,
+              context: context,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+            content: CustomText(
+                text: 'Are you sure?',
+                textAlign: TextAlign.center,
+                color: CustomColor.black[3],
+                context: context,
+                fontSize: 24),
+            actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
