@@ -172,49 +172,6 @@ class _BillScreenState extends State<BillScreen> implements BillView {
     );
   }
 
-  List<Map<String, dynamic>> data = [
-    {
-      'orderId': '#00111',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': 'Not yet',
-      'status': StatusBill.PAID,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Medium Storage'
-    },
-    {
-      'orderId': '#00112',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': '09/07/2021',
-      'status': StatusBill.DELIVERIED,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Large Storage'
-    },
-    {
-      'orderId': '#00113',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': '05/30/2021',
-      'status': StatusBill.TIME_OUT,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Small Storage'
-    },
-    {
-      'orderId': '#00114',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': '05/30/2021',
-      'status': StatusBill.CHECK_OUT,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Medium Storage'
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -249,7 +206,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
         ),
         presenter.model.pagingController.error == null
             ? Container(
-                height: deviceSize.height / 1.5,
+                height: deviceSize.height / 1.3,
                 child: RefreshIndicator(
                   onRefresh: () => Future.sync(
                       () => presenter.model.pagingController.refresh()),

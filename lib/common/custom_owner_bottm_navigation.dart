@@ -14,8 +14,8 @@ class CustomOwnerBottomNavigation extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(
             bottom: 16,
-            left: deviceSize.width / 7,
-            right: deviceSize.width / 7),
+            left: deviceSize.width / 15,
+            right: deviceSize.width / 15),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
           child: Container(
@@ -36,31 +36,31 @@ class CustomOwnerBottomNavigation extends StatelessWidget {
                 selectedItemColor: CustomColor.purple,
                 backgroundColor: CustomColor.white,
                 type: BottomNavigationBarType.fixed,
-                showSelectedLabels: false,
+                // showSelectedLabels: false,
                 currentIndex: index,
                 onTap: tapTab,
-                showUnselectedLabels: false,
+                // showUnselectedLabels: false,
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                       icon: ImageIcon(
                         AssetImage('assets/images/home.png'),
                       ),
-                      label: ''),
+                      label: 'Home'),
                   BottomNavigationBarItem(
                       icon: ImageIcon(
                         AssetImage('assets/images/document.png'),
                       ),
-                      label: ''),
+                      label: 'Orders'),
                   BottomNavigationBarItem(
                       icon: ImageIcon(
                         AssetImage('assets/images/paperplus.png'),
                       ),
-                      label: ''),
+                      label: 'Add Storage'),
                   BottomNavigationBarItem(
                       icon: ImageIcon(
                         AssetImage('assets/images/profile.png'),
                       ),
-                      label: ''),
+                      label: 'Profile'),
                 ],
               ),
             ),

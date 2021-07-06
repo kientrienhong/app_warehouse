@@ -89,6 +89,19 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> loadDeatailShelf(String jwt, int shelfId) {
+    try {
+      return Dio().get('https://localhost:44318/api/v1/shelves/$shelfId',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<dynamic> updateInfo(
       String name, String address, String phone, String jwt, String imageUrl) {
     try {

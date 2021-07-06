@@ -45,7 +45,6 @@ class CustomerDetailStoragePresenter {
           _model.priceTo,
           idStorage,
           jwt);
-      print(response);
       if (response.data['error'] != null) {
         _view.updateMsg(true, 'Pay failed');
         return null;

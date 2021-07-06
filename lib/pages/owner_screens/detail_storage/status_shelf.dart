@@ -1,5 +1,6 @@
 import 'package:appwarehouse/common/custom_dialog.dart';
 import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/shelf_detail/shelf_detail_screen.dart';
 import 'package:appwarehouse/presenters/owner_detail_storage_presenter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -45,12 +46,12 @@ class _StatusShelfState extends State<StatusShelf> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (_) => ShelfDetailScreen(
-        //               data: data,
-        //             )));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => ShelfDetailScreen(
+                      shelf: widget.data,
+                    )));
       },
       child: Container(
         height: widget.deviceSize.height / 18,

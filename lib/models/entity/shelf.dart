@@ -48,8 +48,8 @@ class Shelf {
       status: map['status']?.toInt(),
       usage: map['usage']?.toInt(),
     );
-    print(test);
-    return test;  }
+    return test;
+  }
 
   String toJson() => json.encode(toMap());
 

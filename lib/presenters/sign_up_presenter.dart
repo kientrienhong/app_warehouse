@@ -87,7 +87,6 @@ class SignUpPresenter {
           await FirebaseStorageHelper.uploadAvatar(file, task, email);
       var response = await ApiServices.signUp(role, email, password,
           confirmPassword, name, phone, address, responseUrl);
-      // print(response);
       response = json.encode(response.data);
       Map<String, dynamic> result = json.decode(response);
       if (result['error'] != null) {

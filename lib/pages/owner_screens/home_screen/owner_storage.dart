@@ -46,7 +46,6 @@ class _OwnerStorageState extends State<OwnerStorage> {
     showDialog(
         context: context,
         builder: (_) {
-          print(widget.presenter.model.isLoadingDeleteStorage);
           return CustomDeleteDialog(
             isLoading: widget.presenter.model.isLoadingDeleteStorage,
             title: 'Delete Storage',

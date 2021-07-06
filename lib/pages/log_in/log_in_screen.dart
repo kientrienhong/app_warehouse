@@ -7,7 +7,6 @@ import '/common/custom_text.dart';
 import '/models/entity/user.dart';
 import '/models/login_model.dart';
 import '/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
-import '/pages/forgot_password/forgot_password.dart';
 import '/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import '/pages/sign_up/sign_up_screen.dart';
 import '/presenters/login_presenters.dart';
@@ -95,7 +94,7 @@ class LogInScreen extends StatelessWidget {
                       ),
                       CustomSizedBox(
                         context: context,
-                        height: 8,
+                        height: 24,
                       ),
                     ],
                   ),
@@ -255,24 +254,6 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
             focusNode: _focusNodePassword,
             controller: _controllerPassword,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ForgotPasswordScreen()));
-            },
-            child: CustomText(
-                text: 'Forgot Password? ',
-                color: CustomColor.purple,
-                context: context,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-          ),
-          CustomSizedBox(
-            context: context,
-            height: 10,
-          ),
           if (_model.errorMsg.isNotEmpty)
             Container(
               width: double.infinity,
@@ -287,23 +268,7 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
             ),
           CustomSizedBox(
             context: context,
-            height: 16,
-          ),
-          _buildButton(
-              color: Color(0xFFE16259),
-              text: 'Continue with Google',
-              imageUrl: 'assets/images/google.png'),
-          CustomSizedBox(
-            context: context,
-            height: 16,
-          ),
-          _buildButton(
-              color: Color(0xFF1877F2),
-              text: 'Continue with Facebook',
-              imageUrl: 'assets/images/facebook.png'),
-          CustomSizedBox(
-            context: context,
-            height: 16,
+            height: 40,
           ),
           CustomButton(
               height: 32,

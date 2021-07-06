@@ -37,10 +37,8 @@ class CustomBottomNavigation extends StatelessWidget {
                 selectedItemColor: CustomColor.purple,
                 backgroundColor: CustomColor.white,
                 type: BottomNavigationBarType.fixed,
-                showSelectedLabels: false,
                 currentIndex: index,
                 onTap: tapTab,
-                showUnselectedLabels: false,
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                       icon: ImageIcon(
