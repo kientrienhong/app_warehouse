@@ -1,5 +1,4 @@
 import 'package:appwarehouse/common/custom_button.dart';
-import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
 import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/presenters/bill_presenter.dart';
@@ -8,10 +7,10 @@ import 'package:appwarehouse/views/bill_view.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
-import '/pages/owner_screens/bill/detail_bill_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 
 enum StatusBill { PAID, DELIVERIED, CHECK_OUT, TIME_OUT }
 
@@ -22,6 +21,7 @@ class BillScreen extends StatefulWidget {
 
 class _BillScreenState extends State<BillScreen> implements BillView {
   BillPresenter presenter;
+  final oCcy = new NumberFormat("#,##0", "en_US");
 
   Widget _buildBillWidget(
       {@required OrderCustomer data,
@@ -160,7 +160,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                       height: 56,
                     ),
                     CustomText(
-                      text: data.total.toString() + ' VND',
+                      text: oCcy.format(data.total) + ' VND',
                       color: CustomColor.purple,
                       context: context,
                       fontSize: 16,
