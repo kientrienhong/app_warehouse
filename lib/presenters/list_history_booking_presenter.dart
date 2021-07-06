@@ -22,6 +22,7 @@ class ListHistoryBookingPresenter {
       var response = await ApiServices.loadListOrder(page, size, jwt);
       List<dynamic> newItems =
           response.data['data'].map((e) => Order.fromMap(e)).toList();
+      print(newItems);
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingController.appendLastPage(newItems);

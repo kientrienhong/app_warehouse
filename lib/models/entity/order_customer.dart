@@ -104,7 +104,7 @@ class OrderCustomer {
       customerPhone: map['customerPhone'],
       customerName: map['customerName'],
       customerAvatar: map['customerAvatar'],
-      rating: map['rating'],
+      rating: map['rating']?.toDouble(),
       storageId: map['storageId']?.toInt(),
       status: map['status']?.toInt(),
     );

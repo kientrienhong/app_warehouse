@@ -1,7 +1,6 @@
 import '/helpers/firebase_storage_helper.dart';
 import '/models/entity/user.dart';
 import '/presenters/home_presenter.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '/common/custom_color.dart';
 import '/common/custom_dialog.dart';

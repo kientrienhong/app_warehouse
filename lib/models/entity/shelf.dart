@@ -41,14 +41,15 @@ class Shelf {
   }
 
   factory Shelf.fromMap(Map<String, dynamic> map) {
-    return Shelf(
+    Shelf test = Shelf(
       id: map['id']?.toInt(),
       storageId: map['storageId']?.toInt(),
       size: map['size'],
       status: map['status']?.toInt(),
       usage: map['usage']?.toInt(),
     );
-  }
+    print(test);
+    return test;  }
 
   String toJson() => json.encode(toMap());
 

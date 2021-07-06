@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:appwarehouse/common/avatar_widget.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import '/models/entity/storage.dart';
 import '/models/entity/user.dart';
 import '/pages/owner_screens/detail_storage/status_shelf.dart';
@@ -31,11 +36,24 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
     presenter.model.pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
     });
+    presenter.model.pagingFeedbackController.addPageRequestListener((pageKey) {
+      fetchFeedBack(pageKey);
+    });
   }
 
   @override
-  void onHandleAddShelf(int idStorage) {
+  void onHandleAddShelf(int idStorage) async {
     User user = Provider.of<User>(context, listen: false);
+    var result = await presenter.addShelf(user.jwtToken, idStorage);
+    if (result == true) {
+      presenter.model.pagingController.refresh();
+    }
+  }
+
+  @override
+  void fetchFeedBack(int pageKey) {
+    User user = Provider.of<User>(context, listen: false);
+    presenter.loadListFeedBack(pageKey, 10, user.jwtToken, widget.data.id);
   }
 
   @override
@@ -89,37 +107,150 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
                 text: 'Shelves',
                 fontWeight: FontWeight.bold,
               ),
-              Container(
-                child: ImageIcon(
-                  AssetImage('assets/images/plus.png'),
-                  color: CustomColor.purple,
-                ),
-              )
+              presenter.model.isLoadingAddShelf == false
+                  ? GestureDetector(
+                      onTap: () => onHandleAddShelf(widget.data.id),
+                      child: Container(
+                        child: ImageIcon(
+                          AssetImage('assets/images/plus.png'),
+                          color: CustomColor.purple,
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 16,
+                      width: 16,
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(CustomColor.purple),
+                      ),
+                    )
             ]),
             CustomSizedBox(
               context: context,
               height: 8,
             ),
-            PagedListView<int, dynamic>(
-              shrinkWrap: true,
-              pagingController: presenter.model.pagingController,
-              builderDelegate: PagedChildBuilderDelegate<dynamic>(
-                  itemBuilder: (context, item, index) => StatusShelf(
-                        data: item,
-                        deviceSize: deviceSize,
-                        presenter: presenter,
-                      )),
+            Container(
+              height: deviceSize.height / 4,
+              child: PagedListView<int, dynamic>(
+                shrinkWrap: true,
+                pagingController: presenter.model.pagingController,
+                builderDelegate: PagedChildBuilderDelegate<dynamic>(
+                    itemBuilder: (context, item, index) => StatusShelf(
+                          data: item,
+                          deviceSize: deviceSize,
+                          presenter: presenter,
+                        )),
+              ),
             ),
             CustomSizedBox(
               context: context,
               height: 24,
             ),
+            CustomText(
+                text: 'Feedbacks',
+                color: CustomColor.black,
+                context: context,
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
             CustomSizedBox(
               context: context,
-              height: 32,
+              height: 16,
+            ),
+            Container(
+              height: deviceSize.height / 3.5,
+              child: PagedListView<int, dynamic>(
+                shrinkWrap: true,
+                pagingController: presenter.model.pagingFeedbackController,
+                builderDelegate: PagedChildBuilderDelegate<dynamic>(
+                    itemBuilder: (context, item, index) => FeedBackWidget(
+                          data: item,
+                        )),
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class FeedBackWidget extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  FeedBackWidget({this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+    return Container(
+      height: deviceSize.height / 6,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: CustomColor.white,
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 14,
+                offset: Offset(0, 6),
+                color: Color(0xFF000000).withOpacity(0.06))
+          ]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 48,
+            width: deviceSize.width / 2.2,
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    height: 48,
+                    width: 48,
+                    child: Image(
+                      image: NetworkImage(data['avatar']),
+                      fit: BoxFit.cover,
+                      key: ValueKey(new Random().nextInt(100)),
+                    ),
+                  ),
+                ),
+                CustomSizedBox(
+                  context: context,
+                  width: 16,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomText(
+                        text: data['name'],
+                        color: CustomColor.black,
+                        context: context,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                    CustomSizedBox(context: context, height: 4),
+                    CustomText(
+                        text: data['comment'],
+                        color: CustomColor.black[3],
+                        context: context,
+                        fontSize: 16)
+                  ],
+                )
+              ],
+            ),
+          ),
+          RatingBarIndicator(
+            rating: data['rating'] == null ? 0 * 1.0 : data['rating'] * 1.0,
+            itemBuilder: (context, index) => Icon(
+              Icons.star,
+              color: Color(0xFFFFCC1F),
+            ),
+            itemCount: 5,
+            itemSize: 18,
+            direction: Axis.horizontal,
+          ),
+        ],
       ),
     );
   }

@@ -35,6 +35,40 @@ class OwnerDetailStoragePresenter {
     }
   }
 
+  void loadListFeedBack(int page, int size, String jwt, int idStorage) async {
+    try {
+      var response =
+          await ApiServices.loadListFeedback(page, size, jwt, idStorage);
+      List<dynamic> newItems = response.data['data'];
+      final isLastPage = newItems.length < size;
+      if (isLastPage) {
+        _model.pagingFeedbackController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = size + newItems.length;
+        _model.pagingFeedbackController.appendPage(newItems, nextPageKey);
+      }
+    } catch (e) {
+      print(e.toString());
+      _model.pagingFeedbackController.error = e;
+    }
+  }
+
+  Future<bool> addShelf(String jwt, int idStorage) async {
+    try {
+      _view.updateLoadingAddShelf();
+      var response = await ApiServices.addShelf(idStorage, jwt);
+      if (response.data['error'] != null) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    } finally {
+      _view.updateLoadingAddShelf();
+    }
+  }
+
   Future<bool> deleteShelf(String jwt, int idShelf) async {
     try {
       _view.updateLoadingDeleteShelf();

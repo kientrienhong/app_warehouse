@@ -4,4 +4,5 @@ abstract class OwnerDetailStorageView {
   void onHandleAddShelf(int idStorage);
   void onHandleDeleteShelf(int idShelf);
   void fetchPage(int pageKey);
+  void fetchFeedBack(int pageKey);
 }

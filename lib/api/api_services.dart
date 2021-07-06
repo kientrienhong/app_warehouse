@@ -30,6 +30,21 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> loadListFeedback(
+      int page, int size, String jwt, int idStorage) {
+    try {
+      return Dio().get(
+          'https://localhost:44318/api/v1/feedbacks?StorageId=$idStorage&page=$page&size=$size',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Unathorized');
+    }
+  }
+
   static Future<dynamic> loadListOrder(int page, int size, String jwt) {
     try {
       return Dio()
@@ -169,7 +184,7 @@ class ApiServices {
 
   static Future<dynamic> addShelf(int idStorage, String jwt) {
     try {
-      return Dio().post('https://localhost:44318/api/v1/storages',
+      return Dio().post('https://localhost:44318/api/v1/shelves',
           data: {
             "storageId": idStorage,
           },

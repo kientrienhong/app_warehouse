@@ -93,7 +93,7 @@ class Storage {
       rating: map['rating']?.toInt(),
       picture: map['images'],
       name: map['name'],
-      numberOfRatings: map['numberOfRatings'],
+      numberOfRatings: map['numberOfRatings'].toInt(),
       ownerPhone: map['ownerPhone'],
       description: map['description'],
       status: map['status']?.toInt(),

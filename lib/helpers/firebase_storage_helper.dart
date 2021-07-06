@@ -90,7 +90,12 @@ class FirebaseStorageHelper {
 
         final snapshot = await task.whenComplete(() {});
         final urlDownload = await snapshot.ref.getDownloadURL();
-        return {'imageUrl': urlDownload, 'id': element['id'], 'type': typeInt};
+        Map result = {
+          'imageUrl': urlDownload,
+          'id': element['id'],
+          'type': typeInt
+        };
+        return result;
       }
       index++;
 

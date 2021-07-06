@@ -22,6 +22,7 @@ class BillPresenter {
       List<OrderCustomer> newItems = response.data['data']
           .map<OrderCustomer>((e) => OrderCustomer.fromMap(e))
           .toList();
+
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingController.appendLastPage(newItems);
