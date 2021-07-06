@@ -11,7 +11,7 @@ class ApiServices {
         'returnSecureToken': true
       });
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception('Log In failed');
     }
   }
 
@@ -89,6 +89,19 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> getStorage(String jwt, int storageId) {
+    try {
+      return Dio().get('https://localhost:44318/api/v1/storages/$storageId',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<dynamic> loadDeatailShelf(String jwt, int shelfId) {
     try {
       return Dio().get('https://localhost:44318/api/v1/shelves/$shelfId',
@@ -118,7 +131,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -137,7 +150,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -161,7 +174,7 @@ class ApiServices {
         'avatar': avatarUrl
       });
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -191,7 +204,7 @@ class ApiServices {
             // 'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -207,7 +220,7 @@ class ApiServices {
             // 'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -237,7 +250,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -251,7 +264,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -264,7 +277,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 

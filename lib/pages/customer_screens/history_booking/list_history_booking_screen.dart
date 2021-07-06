@@ -95,7 +95,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    width: deviceSize.width / 1.7,
+                    width: deviceSize.width / 2.3,
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -146,22 +146,12 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
-                              CustomSizedBox(
-                                context: context,
-                                height: 8,
-                              ),
-                              CustomText(
-                                  text: data.expiredDate == null
-                                      ? 'Date pick up: Not yet'
-                                      : 'Date pick up: ' + data.expiredDate,
-                                  color: CustomColor.black,
-                                  context: context,
-                                  fontSize: 14),
                             ],
                           ),
                         ])),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     CustomText(
                       text: status,
@@ -173,11 +163,24 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                     ),
                     CustomSizedBox(
                       context: context,
-                      height: 48,
+                      height: 8,
                     ),
                     CustomText(
-                      text: data.total.toString(),
+                        text: data.expiredDate == null
+                            ? 'Expired date: Not yet'
+                            : 'Expired date: ' + data.expiredDate,
+                        color: CustomColor.black,
+                        context: context,
+                        textAlign: TextAlign.right,
+                        fontSize: 14),
+                    CustomSizedBox(
+                      context: context,
+                      height: 8,
+                    ),
+                    CustomText(
+                      text: data.total.toString() + ' VND',
                       color: CustomColor.purple,
+                      textAlign: TextAlign.right,
                       context: context,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

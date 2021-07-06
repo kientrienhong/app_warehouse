@@ -55,8 +55,53 @@ class _OwnerStorageState extends State<OwnerStorage> {
         });
   }
 
+  void _showDialogReject(BuildContext context, Size deviceSize) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return Container(
+            width: deviceSize.width / 1.2,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              title: CustomText(
+                text: 'Reject Reason',
+                color: Colors.red,
+                textAlign: TextAlign.center,
+                context: context,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              content: Container(
+                child: CustomText(
+                    text: widget.data.rejectedReason,
+                    textAlign: TextAlign.center,
+                    textOverflow: TextOverflow.visible,
+                    maxLines: null,
+                    color: CustomColor.black[3],
+                    context: context,
+                    fontSize: 24),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: CustomText(
+                      text: 'OK',
+                      color: CustomColor.black,
+                      context: context,
+                      fontSize: 16,
+                    ))
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
     switch (widget.data.status) {
       case 2:
         {
@@ -87,6 +132,8 @@ class _OwnerStorageState extends State<OwnerStorage> {
                   builder: (_) => OwnerDetailStorage(
                         data: widget.data,
                       )));
+        } else if (widget.data.status == 3) {
+          _showDialogReject(context, deviceSize);
         }
       },
       child: Stack(children: [

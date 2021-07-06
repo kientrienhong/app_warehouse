@@ -31,10 +31,8 @@ class _OwnerBottomNavigationState extends State<OwnerBottomNavigation> {
     final deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      // drawerScrimColor: Color.fromARGB(51, 51, 51, 5),
       resizeToAvoidBottomInset: true,
       backgroundColor: CustomColor.white,
-      // resizeToAvoidBottomPadding: false,
       body: Stack(
         children: [
           IndexedStack(

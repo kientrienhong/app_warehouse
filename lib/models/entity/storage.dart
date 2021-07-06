@@ -16,9 +16,11 @@ class Storage {
   final String ownerPhone;
   final double priceFrom;
   final double priceTo;
+  final String rejectedReason;
   String ownerAvatar;
   Storage(
       {this.id,
+      this.rejectedReason,
       this.address,
       this.description,
       this.name,
@@ -42,6 +44,7 @@ class Storage {
     String name,
     String description,
     String ownerPhone,
+    String rejectedReason,
     int numberOfRatings,
     String ownerAvatar,
     StorageStatus status,
@@ -54,6 +57,7 @@ class Storage {
         ownerId: ownerId ?? this.ownerId,
         ownerAvatar: ownerAvatar ?? this.ownerAvatar,
         address: address ?? this.address,
+        rejectedReason: rejectedReason ?? this.rejectedReason,
         rating: rating ?? this.rating,
         picture: picture ?? this.picture,
         name: name ?? this.name,
@@ -76,6 +80,7 @@ class Storage {
       'name': name,
       'description': description,
       'status': status,
+      'rejectedReason': rejectedReason,
       'ownerName': ownerName,
       'priceFrom': priceFrom,
       'numberOfRatings': numberOfRatings,
@@ -91,6 +96,7 @@ class Storage {
       ownerId: map['ownerId'].toInt(),
       address: map['address'],
       rating: map['rating']?.toInt(),
+      rejectedReason: map['rejectedReason'],
       picture: map['images'],
       name: map['name'],
       numberOfRatings: map['numberOfRatings'].toInt(),
@@ -130,6 +136,7 @@ class Storage {
         other.description == description &&
         other.numberOfRatings == numberOfRatings &&
         other.status == status &&
+        other.rejectedReason == rejectedReason &&
         other.ownerName == ownerName &&
         other.ownerPhone == ownerPhone &&
         other.priceFrom == priceFrom &&
@@ -142,6 +149,7 @@ class Storage {
         ownerId.hashCode ^
         address.hashCode ^
         rating.hashCode ^
+        rejectedReason.hashCode ^
         picture.hashCode ^
         numberOfRatings.hashCode ^
         ownerPhone.hashCode ^

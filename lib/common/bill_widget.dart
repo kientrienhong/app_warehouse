@@ -16,9 +16,11 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class BillWidget extends StatelessWidget {
   Order data;
+  final oCcy = new NumberFormat("#,##0", "en_US");
 
   BillWidget({this.data});
 
@@ -40,7 +42,7 @@ class BillWidget extends StatelessWidget {
           if (data.smallBoxQuantity > 0)
             BoxInfoBillWidget(
                 deviceSize: deviceSize,
-                price: '${data.smallBoxPrice} VND',
+                price: '${oCcy.format(data.smallBoxPrice)} VND',
                 imagePath: 'assets/images/smallBox.png',
                 amount: data.smallBoxQuantity,
                 size: '0.5m x 1m x 2m'),
@@ -51,7 +53,7 @@ class BillWidget extends StatelessWidget {
           if (data.bigBoxQuantity > 0)
             BoxInfoBillWidget(
                 deviceSize: deviceSize,
-                price: '${data.bigBoxPrice} VND',
+                price: '${oCcy.format(data.bigBoxPrice)} VND',
                 imagePath: 'assets/images/largeBox.png',
                 amount: data.bigBoxQuantity,
                 size: '1m x 1m x 2m'),

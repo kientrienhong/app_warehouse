@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class DetailProtectingServiceScreen extends StatefulWidget {
   final Storage data;
@@ -31,6 +32,7 @@ class _DetailProtectingServiceScreenState
     extends State<DetailProtectingServiceScreen>
     implements CustomerDetailStorageView {
   CustomerDetailStoragePresenter presenter;
+  final oCcy = new NumberFormat("#,##0", "en_US");
 
   Widget _buildOptionBox(
       {@required BuildContext context,
@@ -376,7 +378,7 @@ class _DetailProtectingServiceScreenState
                   context: context,
                   size: '0.5m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '${widget.data.priceFrom} VND',
+                  price: '${oCcy.format(widget.data.priceFrom)} VND',
                   imagePath: 'assets/images/smallBox.png'),
               CustomSizedBox(
                 context: context,
@@ -387,7 +389,7 @@ class _DetailProtectingServiceScreenState
                   context: context,
                   size: '1m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '${widget.data.priceTo} VND',
+                  price: '${oCcy.format(widget.data.priceTo)} VND',
                   imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,

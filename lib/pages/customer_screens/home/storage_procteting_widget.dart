@@ -5,12 +5,15 @@ import '/models/entity/storage.dart';
 import '/pages/customer_screens/for_rent_detail/detail_protecting_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class StorageProtectingWidget extends StatelessWidget {
   final Storage data;
   final Size deviceSize;
 
   StorageProtectingWidget({@required this.data, @required this.deviceSize});
+  final oCcy = new NumberFormat("#,##0", "en_US");
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -26,7 +29,7 @@ class StorageProtectingWidget extends StatelessWidget {
       child: Stack(children: [
         Container(
           margin: const EdgeInsets.only(bottom: 40),
-          height: deviceSize.height / 2.6,
+          height: deviceSize.height / 2.8,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: CustomColor.white,
@@ -54,40 +57,20 @@ class StorageProtectingWidget extends StatelessWidget {
                 height: 16,
                 context: context,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: CustomText(
-                  text: data.name == null ? 'Storage' : data.name,
-                  color: CustomColor.black,
-                  textAlign: TextAlign.start,
-                  context: context,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              CustomSizedBox(
-                context: context,
-                height: 8,
-              ),
-              Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: 16),
-                  child: CustomText(
-                      text: data.address,
-                      color: CustomColor.black[2],
-                      context: context,
-                      maxLines: 2,
-                      fontSize: 14)),
-              CustomSizedBox(
-                context: context,
-                height: 12,
-              ),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    CustomText(
+                      text: data.name == null ? 'Storage' : data.name,
+                      color: CustomColor.black,
+                      textAlign: TextAlign.start,
+                      context: context,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                     Row(children: [
                       RatingBarIndicator(
                         rating:
@@ -110,15 +93,41 @@ class StorageProtectingWidget extends StatelessWidget {
                           context: context,
                           fontSize: 16)
                     ]),
-                    CustomText(
-                      text: '${data.priceFrom} -  ${data.priceTo} VND',
+                  ],
+                ),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(left: 16),
+                  child: CustomText(
+                      text: data.address,
+                      color: CustomColor.black[2],
+                      context: context,
+                      maxLines: 2,
+                      fontSize: 14)),
+              CustomSizedBox(
+                context: context,
+                height: 12,
+              ),
+              Container(
+                width: double.infinity,
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: CustomText(
+                      text:
+                          '${oCcy.format(data.priceFrom)} -  ${oCcy.format(data.priceTo)} VND',
                       color: CustomColor.purple,
                       context: context,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ]),
               )
             ],
           ),
