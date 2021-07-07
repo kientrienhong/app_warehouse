@@ -33,7 +33,8 @@ class CustomerDetailStoragePresenter {
     _view.updateQuantity(_model.quantities, _model.totalPrice);
   }
 
-  Future<Map<String, dynamic>> checkOut(int idStorage, String jwt) async {
+  Future<Map<String, dynamic>> checkOut(
+      int idStorage, String jwt, DateTime datePickUp) async {
     try {
       _view.updateLoading();
       var response = await ApiServices.payment(
@@ -43,6 +44,7 @@ class CustomerDetailStoragePresenter {
           _model.quantities['amountBigBox'],
           _model.priceFrom,
           _model.priceTo,
+          datePickUp,
           idStorage,
           jwt);
       if (response.data['error'] != null) {

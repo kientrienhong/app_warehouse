@@ -20,12 +20,13 @@ class Storage with ChangeNotifier {
   double priceTo;
   String rejectedReason;
   String ownerAvatar;
-
+  int remainingBoxes;
   Storage(
       {this.id,
       this.rejectedReason,
       this.address,
       this.description,
+      this.remainingBoxes,
       this.name,
       this.numberOfRatings,
       this.ownerPhone,
@@ -54,6 +55,7 @@ class Storage with ChangeNotifier {
     String ownerName,
     int priceFrom,
     int priceTo,
+    int remainingBoxes,
   }) {
     return Storage(
         id: id ?? this.id,
@@ -63,6 +65,7 @@ class Storage with ChangeNotifier {
         rejectedReason: rejectedReason ?? this.rejectedReason,
         rating: rating ?? this.rating,
         picture: picture ?? this.picture,
+        remainingBoxes: remainingBoxes ?? this.remainingBoxes,
         name: name ?? this.name,
         numberOfRatings: numberOfRatings ?? this.numberOfRatings,
         description: description ?? this.description,
@@ -84,6 +87,7 @@ class Storage with ChangeNotifier {
     this.ownerName = '';
     this.rejectedReason = '';
     this.ownerPhone = '';
+    this.remainingBoxes = -1;
     this.picture = [];
     this.priceFrom = -1;
     this.priceTo = -1;
@@ -103,6 +107,7 @@ class Storage with ChangeNotifier {
     this.picture = storage.picture;
     this.priceFrom = storage.priceFrom;
     this.priceTo = storage.priceTo;
+    this.remainingBoxes = storage.remainingBoxes;
     this.rating = storage.rating;
     this.ownerAvatar = storage.ownerAvatar;
     this.status = storage.status;
@@ -117,6 +122,7 @@ class Storage with ChangeNotifier {
       'rating': rating,
       'picture': picture,
       'name': name,
+      'remainingBoxes': remainingBoxes,
       'description': description,
       'status': status,
       'rejectedReason': rejectedReason,
@@ -141,6 +147,7 @@ class Storage with ChangeNotifier {
       numberOfRatings: map['numberOfRatings']?.toInt(),
       ownerPhone: map['ownerPhone'],
       description: map['description'],
+      remainingBoxes: map['remainingBoxes']?.toInt(),
       status: map['status']?.toInt(),
       ownerName: map['ownerName'],
       ownerAvatar: map['ownerAvatar'],
@@ -175,6 +182,7 @@ class Storage with ChangeNotifier {
         other.description == description &&
         other.numberOfRatings == numberOfRatings &&
         other.status == status &&
+        other.remainingBoxes == remainingBoxes &&
         other.rejectedReason == rejectedReason &&
         other.ownerName == ownerName &&
         other.ownerPhone == ownerPhone &&
@@ -190,6 +198,7 @@ class Storage with ChangeNotifier {
         rating.hashCode ^
         rejectedReason.hashCode ^
         picture.hashCode ^
+        remainingBoxes.hashCode ^
         numberOfRatings.hashCode ^
         ownerPhone.hashCode ^
         name.hashCode ^

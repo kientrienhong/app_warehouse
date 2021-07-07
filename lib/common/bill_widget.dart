@@ -1,6 +1,9 @@
+import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/common/custom_msg_input.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
 import 'package:appwarehouse/presenters/feedback_presenter.dart';
 import 'package:appwarehouse/views/feedback_view.dart';
 
@@ -23,6 +26,24 @@ class BillWidget extends StatelessWidget {
   final oCcy = new NumberFormat("#,##0", "en_US");
 
   BillWidget({this.data});
+
+  void callDetailOrder(BuildContext context) async {
+    String jwt =
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU2NjkwOTAsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTY2OTA5MCwiZXhwIjoxNjI1NjcyNjkwLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.pebmHXY-JLC7oa_9g4TwMPkFT-BaZMUaj_ziW5vN1OVNUONTYyjY0_CCMLVI3jik60zWq0Mggaab4HP1rQr4YVadMHBQQ3SeB-IfKQjdMgYFXVuvvlw9gqThYUiKLQJ_Xd_VE3pHS_CZPalLgxKZ_AVl-RzSGoLInNBU_OMiqrrYHXiod5I89jaLz5CahdGQ3hAyeT_Fogv9SPKizUCg3xa8bnjA0UvQrhdzMWTzu0S3gqp3jO6geOr3R9JC33ZANz6QarileHFIe3pmZGTe8qRc8mOUdulMmD2c4M-GihMpBvt1mYgVro4DY926Ji1HdDkTXVYEeiADJz3NpcKJKw';
+    var resultOrder = await ApiServices.getOrder(jwt, data.id);
+    Order order = Provider.of<Order>(context, listen: false);
+    order.setOrder(Order.fromMap(resultOrder.data));
+    var resultStorage = await ApiServices.getStorage(jwt, order.idStorage);
+    Storage storage = Provider.of<Storage>(context, listen: false);
+    storage.setStorage(Storage.fromMap(resultStorage.data));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChooseStorageScreen(
+                  idPreviousStorage: storage.id,
+                  order: order,
+                )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +94,13 @@ class BillWidget extends StatelessWidget {
             context: context,
             height: 24,
           ),
-          QrImage(
-            data: data.id.toString(),
-            size: 88.0,
-            version: 2,
+          GestureDetector(
+            onTap: () => callDetailOrder(context),
+            child: QrImage(
+              data: data.id.toString(),
+              size: 88.0,
+              version: 2,
+            ),
           ),
           CustomSizedBox(
             context: context,

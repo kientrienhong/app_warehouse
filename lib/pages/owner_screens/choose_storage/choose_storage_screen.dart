@@ -3,13 +3,16 @@ import 'package:appwarehouse/common/custom_color.dart';
 import 'package:appwarehouse/common/custom_sizebox.dart';
 import 'package:appwarehouse/common/custom_text.dart';
 import 'package:appwarehouse/models/entity/box.dart';
+import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/pages/owner_screens/detail_storage/status_shelf.dart';
 import 'package:appwarehouse/presenters/choose_storage_presenter.dart';
 import 'package:appwarehouse/views/choose_storage_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +20,8 @@ import 'package:provider/provider.dart';
 class ChooseStorageScreen extends StatefulWidget {
   final int idPreviousStorage;
   final Box box;
-  ChooseStorageScreen({this.idPreviousStorage, this.box});
+  final Order order;
+  ChooseStorageScreen({this.idPreviousStorage, this.box, this.order});
   @override
   _ChooseStorageScreenState createState() => _ChooseStorageScreenState();
 }
@@ -25,6 +29,47 @@ class ChooseStorageScreen extends StatefulWidget {
 class _ChooseStorageScreenState extends State<ChooseStorageScreen>
     implements ChooseStorageView {
   ChooseStoragePresenter presenter;
+
+  Widget _buildNoteForIcon(
+      {@required String name,
+      @required Color color,
+      @required int quantity,
+      @required Size deviceSize,
+      @required BuildContext context}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: deviceSize.width / 11,
+          width: deviceSize.width / 11,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: CustomText(
+              context: context,
+              text: quantity.toString(),
+              color: CustomColor.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        CustomSizedBox(
+          context: context,
+          width: 8,
+        ),
+        CustomText(
+            text: name,
+            color: CustomColor.black,
+            fontWeight: FontWeight.bold,
+            context: context,
+            fontSize: 14)
+      ],
+    );
+  }
 
   Widget _buildStorage(
       {Size deviceSize, Storage data, BuildContext context, int currentIndex}) {
@@ -100,8 +145,12 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
   @override
   void fetchShelf(int pageKey, int idStorage) async {
     User user = Provider.of<User>(context, listen: false);
-    await presenter.loadListShelves(pageKey, 5, user.jwtToken,
-        presenter.model.currentStorageId, widget.box.shelfId);
+    await presenter.loadListShelves(
+        pageKey,
+        5,
+        user.jwtToken,
+        presenter.model.currentStorageId,
+        widget.box == null ? -1 : widget.box.shelfId);
   }
 
   @override
@@ -116,142 +165,198 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
 
   @override
   Widget build(BuildContext context) {
+    Order order = Provider.of<Order>(context, listen: false);
+
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(left: 24),
-        child: Column(
-          children: [
-            CustomAppBar(
-              isHome: false,
-            ),
-            CustomText(
-                text: 'Storages',
-                color: CustomColor.black,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 24),
+          child: Column(
+            children: [
+              CustomAppBar(
+                isHome: false,
+              ),
+              CustomSizedBox(
                 context: context,
-                fontSize: 24),
-            CustomSizedBox(
-              context: context,
-              height: 8,
-            ),
-            Container(
-              width: double.infinity,
-              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                CustomText(
-                    text: 'Box\'s current position',
-                    color: CustomColor.blue,
-                    context: context,
-                    fontSize: 14),
-              ]),
-            ),
-            CustomSizedBox(
-              context: context,
-              height: 4,
-            ),
-            Container(
-              height: deviceSize.height / 7,
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                _buildStorage(
-                    context: context,
-                    currentIndex: 0,
-                    data: Provider.of<Storage>(context, listen: false),
-                    deviceSize: deviceSize),
-                Container(
-                  width: 4,
-                  height: deviceSize.height / 7,
-                  color: CustomColor.black[2],
-                ),
-                Container(
-                  width: deviceSize.width * (2 / 3) - 40,
-                  child: RefreshIndicator(
-                    onRefresh: () => Future.sync(() =>
-                        presenter.model.pagingStorageController.refresh()),
-                    child: PagedListView<int, Storage>(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      pagingController: presenter.model.pagingStorageController,
-                      builderDelegate: PagedChildBuilderDelegate<Storage>(
-                          itemBuilder: (context, item, index) =>
-                              GestureDetector(
-                                onTap: () => onClickStorage(index),
-                                child: _buildStorage(
-                                    context: context,
-                                    currentIndex: index + 1,
-                                    data: item,
-                                    deviceSize: deviceSize),
-                              )),
-                    ),
-                  ),
-                ),
-              ]),
-            ),
-            CustomSizedBox(
-              context: context,
-              height: 8,
-            ),
-            CustomText(
-                text: 'Shelves',
-                color: CustomColor.black,
-                context: context,
-                fontWeight: FontWeight.bold,
-                fontSize: 24),
-            CustomSizedBox(
-              context: context,
-              height: 8,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      style: BorderStyle.solid,
-                      color: CustomColor.lightBlue,
-                      width: 2)),
-              width: double.infinity,
-              margin: const EdgeInsets.only(right: 24),
-              child: Column(children: [
-                CustomText(
+                height: 8,
+              ),
+              CustomText(
+                  text: 'Customer\'s order',
                   color: CustomColor.purple,
                   context: context,
-                  fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  text: 'Box\'s current shelf position',
+                  fontSize: 24),
+              CustomSizedBox(
+                context: context,
+                height: 4,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: CustomColor.lightBlue, width: 2),
                 ),
-                CustomSizedBox(
+                margin: const EdgeInsets.only(right: 24),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildNoteForIcon(
+                        name: '1m x 1m x 2m',
+                        color: CustomColor.lightBlue,
+                        quantity: order.bigBoxQuantity,
+                        deviceSize: deviceSize,
+                        context: context),
+                    _buildNoteForIcon(
+                        name: '0.5m x 1m x 2m',
+                        color: CustomColor.purple,
+                        quantity: order.smallBoxQuantity,
+                        deviceSize: deviceSize,
+                        context: context),
+                  ],
+                ),
+              ),
+              CustomText(
+                  text: 'Storages',
+                  color: CustomColor.black,
                   context: context,
-                  height: 8,
-                ),
-                StatusShelf(
-                  deviceSize: deviceSize,
-                  data: Provider.of<Shelf>(context, listen: false),
-                  isMove: true,
-                ),
-              ]),
-            ),
-            CustomSizedBox(
-              context: context,
-              height: 8,
-            ),
-            Container(
-              height: deviceSize.height / 4,
-              child: RefreshIndicator(
-                onRefresh: () => Future.sync(
-                    () => presenter.model.pagingShelfController.refresh()),
-                child: PagedListView<int, Shelf>(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  pagingController: presenter.model.pagingShelfController,
-                  builderDelegate: PagedChildBuilderDelegate<Shelf>(
-                    itemBuilder: (context, item, index) => StatusShelf(
+                  fontSize: 24),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              Container(
+                width: double.infinity,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  CustomText(
+                      text: 'Box\'s current position',
+                      color: CustomColor.blue,
+                      context: context,
+                      fontSize: 14),
+                ]),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 4,
+              ),
+              Container(
+                height: deviceSize.height / 7,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 4,
+                        height: deviceSize.height / 7,
+                        color: CustomColor.black[2],
+                      ),
+                      presenter.model.pagingStorageController.itemList != null
+                          ? Container(
+                              width: deviceSize.width * (2 / 3) - 40,
+                              child: RefreshIndicator(
+                                onRefresh: () => Future.sync(() => presenter
+                                    .model.pagingStorageController
+                                    .refresh()),
+                                child: PagedListView<int, Storage>(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  pagingController:
+                                      presenter.model.pagingStorageController,
+                                  builderDelegate:
+                                      PagedChildBuilderDelegate<Storage>(
+                                          itemBuilder: (context, item, index) =>
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    onClickStorage(index),
+                                                child: _buildStorage(
+                                                    context: context,
+                                                    currentIndex: index + 1,
+                                                    data: item,
+                                                    deviceSize: deviceSize),
+                                              )),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              margin: const EdgeInsets.only(left: 16),
+                              child: CustomText(
+                                  text: 'Empty Storage',
+                                  color: CustomColor.purple,
+                                  context: context,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16))
+                    ]),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              CustomText(
+                  text: 'Shelves',
+                  color: CustomColor.black,
+                  context: context,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              if (widget.box != null)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          style: BorderStyle.solid,
+                          color: CustomColor.lightBlue,
+                          width: 2)),
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(right: 24),
+                  child: Column(children: [
+                    CustomText(
+                      color: CustomColor.purple,
+                      context: context,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      text: 'Box\'s current shelf position',
+                    ),
+                    CustomSizedBox(
+                      context: context,
+                      height: 8,
+                    ),
+                    StatusShelf(
                       deviceSize: deviceSize,
-                      data: item,
+                      data: Provider.of<Shelf>(context, listen: false),
                       isMove: true,
+                    ),
+                  ]),
+                ),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              Container(
+                height: deviceSize.height / 4,
+                child: RefreshIndicator(
+                  onRefresh: () => Future.sync(
+                      () => presenter.model.pagingShelfController.refresh()),
+                  child: PagedListView<int, Shelf>(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    pagingController: presenter.model.pagingShelfController,
+                    builderDelegate: PagedChildBuilderDelegate<Shelf>(
+                      itemBuilder: (context, item, index) => StatusShelf(
+                        deviceSize: deviceSize,
+                        data: item,
+                        isMove: true,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
 
@@ -26,6 +27,9 @@ void main() async {
       ),
       ChangeNotifierProvider<Shelf>(
         create: (_) => Shelf.empty(),
+      ),
+      ChangeNotifierProvider<Order>(
+        create: (_) => Order.empty(),
       ),
     ],
     child: MyApp(),

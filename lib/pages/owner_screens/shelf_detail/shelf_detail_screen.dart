@@ -1,9 +1,11 @@
 import 'package:appwarehouse/models/entity/box.dart';
+import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
 import 'package:appwarehouse/presenters/shelf_detail_presenter.dart';
 import 'package:appwarehouse/views/shelf_detail_view.dart';
+import 'package:flutter/cupertino.dart';
 
 import '/common/custom_app_bar.dart';
 import '/common/custom_button.dart';
@@ -13,6 +15,8 @@ import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+
+enum TypeBox { small, big }
 
 class ShelfDetailScreen extends StatefulWidget {
   final Shelf shelf;
@@ -26,48 +30,48 @@ class ShelfDetailScreen extends StatefulWidget {
 class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     implements ShelfDetailView {
   ShelfDetailPresenter presenter;
-
+  TypeBox current = TypeBox.small;
   int staggeredTileBuilderIndex = 0;
 
-  void sortList(List<Map<String, dynamic>> list) {
-    list.sort((a, b) {
-      return a['formatedPosition']
-          .toLowerCase()
-          .compareTo(b['formatedPosition'].toLowerCase());
-    });
-    list = list.reversed.toList();
-  }
-
-  void formatData(List<Map<String, dynamic>> listBox) {
-    sortList(listBox);
-    int numberLargeBox = 0;
-    listBox.forEach((element) {
-      int position = int.parse(element['formatedPosition']);
-      element['formatedPosition'] = (position - numberLargeBox).toString();
-      if (element['type'] == 'large') {
-        numberLargeBox++;
-      }
-    });
-  }
-
-  Widget _buildBox({
-    @required int index,
-    @required Color color,
-  }) {
-    return Container(
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
+  Widget _buildNoteForIconDialog(
+      {@required String name,
+      @required Color color,
+      @required int quantity,
+      @required Size deviceSize,
+      @required BuildContext context}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: deviceSize.width / 11,
+          width: deviceSize.width / 11,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: CustomText(
+              context: context,
+              text: quantity.toString(),
+              color: CustomColor.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        CustomSizedBox(
+          context: context,
+          width: 8,
+        ),
+        CustomText(
+            text: name,
+            color: CustomColor.black,
+            fontWeight: FontWeight.bold,
+            context: context,
+            fontSize: 14)
+      ],
     );
-  }
-
-  int checkIsLargeType(int index, List<Map<String, dynamic>> listBox) {
-    final box = listBox[staggeredTileBuilderIndex];
-    if (box['formatedPosition'] == index.toString()) {
-      if (box['type'] == 'large') {
-        return 2;
-      }
-    }
-    return 1;
   }
 
   Widget _buildNoteForIcon(
@@ -99,6 +103,150 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
             fontSize: 14)
       ],
     );
+  }
+
+  void sortList(List<Map<String, dynamic>> list) {
+    list.sort((a, b) {
+      return a['formatedPosition']
+          .toLowerCase()
+          .compareTo(b['formatedPosition'].toLowerCase());
+    });
+    list = list.reversed.toList();
+  }
+
+  _showDialog(Size deviceSize) {
+    Order order = Provider.of<Order>(context, listen: false);
+
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              content: Container(
+                height: deviceSize.height / 3,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomText(
+                              text: 'Order',
+                              color: CustomColor.black,
+                              context: context,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                          CustomSizedBox(context: context, width: 4),
+                          CustomText(
+                              text: 'Id: #${order.id.toString()}',
+                              color: CustomColor.black,
+                              context: context,
+                              fontSize: 16),
+                        ]),
+                    CustomSizedBox(
+                      context: context,
+                      height: 4,
+                    ),
+                    CustomText(
+                        text: 'Type Box',
+                        color: CustomColor.black,
+                        context: context,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                    CustomSizedBox(context: context, height: 4),
+                    ListTile(
+                      title: _buildNoteForIconDialog(
+                          name: '1m x 1m x 2m',
+                          color: CustomColor.lightBlue,
+                          quantity: order.smallBoxQuantity,
+                          deviceSize: deviceSize,
+                          context: context),
+                      leading: Radio(
+                        value: TypeBox.small,
+                        groupValue: current,
+                        onChanged: (TypeBox value) {
+                          if (order.smallBoxQuantity == 0)
+                            setState(() {
+                              current = value;
+                              order.setOrder(order.copyWith(
+                                  smallBoxQuantity: --order.smallBoxQuantity));
+                            });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: _buildNoteForIconDialog(
+                          name: '1m x 1m x 2m',
+                          color: CustomColor.purple,
+                          quantity: order.bigBoxQuantity,
+                          deviceSize: deviceSize,
+                          context: context),
+                      leading: Radio(
+                        value: TypeBox.big,
+                        groupValue: current,
+                        onChanged: (TypeBox value) {
+                          if (order.bigBoxQuantity == 0)
+                            setState(() {
+                              current = value;
+                              order.setOrder(order.copyWith(
+                                  bigBoxQuantity: --order.bigBoxQuantity));
+                            });
+                        },
+                      ),
+                    ),
+                    CustomButton(
+                        height: 32,
+                        text: 'Submit',
+                        width: double.infinity,
+                        isLoading: false,
+                        textColor: CustomColor.green,
+                        onPressFunction: () {},
+                        buttonColor: CustomColor.lightBlue,
+                        borderRadius: 4)
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  void formatData(List<Map<String, dynamic>> listBox) {
+    sortList(listBox);
+    int numberLargeBox = 0;
+    listBox.forEach((element) {
+      int position = int.parse(element['formatedPosition']);
+      element['formatedPosition'] = (position - numberLargeBox).toString();
+      if (element['type'] == 'large') {
+        numberLargeBox++;
+      }
+    });
+  }
+
+  Widget _buildBox({
+    @required int index,
+    @required Color color,
+    @required Size deviceSize,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        if (color == CustomColor.black[3]) {
+          _showDialog(deviceSize);
+        }
+      },
+      child: Container(
+        decoration:
+            BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+
+  int checkIsLargeType(int index, List<Map<String, dynamic>> listBox) {
+    final box = listBox[staggeredTileBuilderIndex];
+    if (box['formatedPosition'] == index.toString()) {
+      if (box['type'] == 'large') {
+        return 2;
+      }
+    }
+    return 1;
   }
 
   @override
@@ -310,6 +458,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                             // }
                             return _buildBox(
                               index: index,
+                              deviceSize: deviceSize,
                               color: CustomColor.black[3],
                             );
                           },
