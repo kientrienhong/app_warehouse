@@ -23,6 +23,7 @@ class HomePresenter {
       List<Storage> newItems = response.data['data']
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();
+      print(newItems);
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingController.appendLastPage(newItems);

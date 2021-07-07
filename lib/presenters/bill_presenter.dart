@@ -1,6 +1,5 @@
 import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/models/bill_model.dart';
-import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
 import 'package:appwarehouse/views/bill_view.dart';
 

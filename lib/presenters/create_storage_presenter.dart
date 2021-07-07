@@ -125,13 +125,8 @@ class CreateStoragePresenter {
       String email, int storageId, List<dynamic> reponseImages) async {
     List<Map> listImageStorage = await uploadImage('imageStorage',
         _model.allImage['imageStorage'].toList(), email, storageId);
-    List<Map> listPaperStorage = await uploadImage(
-        'paperworker',
-        _model.allImage['paperStorage']
-            .where((e) => e['file'] != null)
-            .toList(),
-        email,
-        storageId);
+    List<Map> listPaperStorage = await uploadImage('paperworker',
+        _model.allImage['paperStorage'].toList(), email, storageId);
     List<Map<String, dynamic>> listResult = [];
     int index = 0;
     int indexResponseImages = 0;
@@ -143,7 +138,8 @@ class CreateStoragePresenter {
           "imageUrl": image['imageUrl'],
           'type': 0,
           'id': reponseImages[indexResponseImages++]['id'],
-          'storageId': storageId
+          'storageId': storageId,
+          'location': image['location']
         });
         if (listResult.last['id'] == null) listResult.last.remove('id');
         if (listResult.last['storageId'] == null)
@@ -162,7 +158,8 @@ class CreateStoragePresenter {
           "imageUrl": image['imageUrl'],
           'type': 1,
           'id': reponseImages[indexResponseImages++]['id'],
-          'storageId': storageId
+          'storageId': storageId,
+          'location': image['location']
         });
         if (listResult.last['id'] == null) listResult.last.remove('id');
         if (listResult.last['storageId'] == null)
@@ -257,12 +254,15 @@ class CreateStoragePresenter {
       }
 
       List<Map<String, dynamic>> tempListImage = [];
+      int index = 0;
       _model.allImage['imageStorage'].forEach((element) {
-        tempListImage.add({'imageUrl': null, 'type': 0});
+        tempListImage.add(
+            {'imageUrl': null, 'type': 0, 'location': (index++).toString()});
       });
-
+      index = 0;
       _model.allImage['paperStorage'].forEach((element) {
-        tempListImage.add({'imageUrl': null, 'type': 1});
+        tempListImage.add(
+            {'imageUrl': null, 'type': 1, 'location': (index++).toString()});
       });
 
       var responseCreate = await ApiServices.addStorage(
@@ -274,6 +274,8 @@ class CreateStoragePresenter {
           int.parse(priceBigBox),
           tempListImage,
           user.jwtToken);
+      print('testestestestsetesw');
+      print(responseCreate.data);
       if (responseCreate.data['error'] == null) {
         int storageId = responseCreate.data['id'];
         List<Map<String, dynamic>> responseUploadImage = await formatDataCreate(

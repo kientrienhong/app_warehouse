@@ -79,26 +79,40 @@ class FirebaseStorageHelper {
       int storageId) async {
     int index = 0;
     int typeInt = type == 'imageStorage' ? 0 : 1;
+    List<int> locations = [0, 1, 2];
+    for (int i = 0; i < image.length; i++) {
+      if (image[i]['location'] == '0') {
+        locations.remove(0);
+        continue;
+      }
 
+      if (image[i]['location'] == '1') {
+        locations.remove(1);
+        continue;
+      }
+
+      if (image[i]['location'] == '2') {
+        locations.remove(2);
+        continue;
+      }
+    }
     return Future.wait(image.map((element) async {
       if (element['file'] != null) {
+        String location = locations[index].toString();
+        index++;
         String destination =
-            '$email/${storageId.toString()}/$type/${index.toString()}.png';
+            '$email/${storageId.toString()}/$type/$location.png';
         task = FirebaseServices.uploadFile(destination, element['file']);
         if (task == null) return null;
-        index++;
-
         final snapshot = await task.whenComplete(() {});
         final urlDownload = await snapshot.ref.getDownloadURL();
-        Map result = {
+        return {
           'imageUrl': urlDownload,
           'id': element['id'],
-          'type': typeInt
+          'type': typeInt,
+          'location': location
         };
-        return result;
       }
-      index++;
-
       return element;
     }));
   }

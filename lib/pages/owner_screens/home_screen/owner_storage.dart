@@ -101,6 +101,13 @@ class _OwnerStorageState extends State<OwnerStorage> {
 
   @override
   Widget build(BuildContext context) {
+    String imageGallery = '';
+    for (int i = 0; i < widget.data.picture.length; i++) {
+      if (widget.data.picture[i]['type'] == 0) {
+        imageGallery = widget.data.picture[i]['imageUrl'];
+        break;
+      }
+    }
     final deviceSize = MediaQuery.of(context).size;
     switch (widget.data.status) {
       case 2:
@@ -161,7 +168,7 @@ class _OwnerStorageState extends State<OwnerStorage> {
                     width: widget.deviceSize.width,
                     height: widget.deviceSize.height / 5.2,
                     child: Image.network(
-                      widget.data.picture[0]['imageUrl'],
+                      imageGallery,
                       fit: BoxFit.cover,
                     )),
               ),
