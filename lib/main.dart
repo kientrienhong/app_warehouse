@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:appwarehouse/models/entity/shelf.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
+
 import '/config/http_overrides.dart';
 import '/models/entity/user.dart';
 import '/pages/log_in/log_in_screen.dart';
@@ -13,8 +16,20 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
 
-  runApp(ChangeNotifierProvider<User>(
-      create: (_) => User.empty(), child: MyApp()));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<User>(
+        create: (_) => User.empty(),
+      ),
+      ChangeNotifierProvider<Storage>(
+        create: (_) => Storage.empty(),
+      ),
+      ChangeNotifierProvider<Shelf>(
+        create: (_) => Shelf.empty(),
+      ),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

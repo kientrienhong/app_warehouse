@@ -1,6 +1,7 @@
 import 'package:appwarehouse/models/entity/box.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
 import 'package:appwarehouse/presenters/shelf_detail_presenter.dart';
 import 'package:appwarehouse/views/shelf_detail_view.dart';
 
@@ -460,12 +461,19 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                   children: [
                     CustomButton(
                         height: 32,
+                        isLoading: false,
                         text: 'Move',
                         width: deviceSize.width / 3,
                         textColor: CustomColor.green,
                         onPressFunction: () {
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (_) => ChooseSelfScreen()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ChooseStorageScreen(
+                                        box: presenter.model.listBox[0],
+                                        idPreviousStorage:
+                                            widget.shelf.storageId,
+                                      )));
                         },
                         buttonColor: CustomColor.lightBlue,
                         borderRadius: 4),

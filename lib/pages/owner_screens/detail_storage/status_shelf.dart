@@ -1,9 +1,7 @@
 import 'package:appwarehouse/common/custom_dialog.dart';
-import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/pages/owner_screens/shelf_detail/shelf_detail_screen.dart';
 import 'package:appwarehouse/presenters/owner_detail_storage_presenter.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
+import 'package:provider/provider.dart';
 import '/models/entity/shelf.dart';
 
 import '/common/custom_color.dart';
@@ -11,16 +9,16 @@ import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:provider/provider.dart';
 
 class StatusShelf extends StatefulWidget {
   final Size deviceSize;
   final Shelf data;
-
+  final bool isMove;
   final OwnerDetailStoragePresenter presenter;
   StatusShelf(
       {@required this.presenter,
       @required this.deviceSize,
+      this.isMove: false,
       @required this.data});
 
   @override
@@ -46,6 +44,8 @@ class _StatusShelfState extends State<StatusShelf> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Shelf shelf = Provider.of<Shelf>(context, listen: false);
+        shelf.setShelf(widget.data);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -111,7 +111,7 @@ class _StatusShelfState extends State<StatusShelf> {
                 context: context,
                 width: 8,
               ),
-            if (widget.data.usage == 0)
+            if (widget.data.usage == 0 && widget.isMove == false)
               GestureDetector(
                 onTap: () => _showDialog(context, widget.data.id),
                 child: Container(

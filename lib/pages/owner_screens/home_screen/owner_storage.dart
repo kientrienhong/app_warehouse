@@ -126,6 +126,8 @@ class _OwnerStorageState extends State<OwnerStorage> {
     return GestureDetector(
       onTap: () {
         if (widget.data.status == 2) {
+          Storage currentStorage = Provider.of<Storage>(context, listen: false);
+          currentStorage.setStorage(widget.data);
           Navigator.push(
               context,
               MaterialPageRoute(

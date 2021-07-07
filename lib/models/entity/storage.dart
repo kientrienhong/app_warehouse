@@ -1,23 +1,26 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 enum StorageStatus { pending, reject, approved }
 
-class Storage {
-  final int id;
-  final int ownerId;
-  final String address;
-  final int rating;
-  final int numberOfRatings;
-  final List<dynamic> picture;
-  final String name;
-  final String description;
-  final int status;
-  final String ownerName;
-  final String ownerPhone;
-  final double priceFrom;
-  final double priceTo;
-  final String rejectedReason;
+class Storage with ChangeNotifier {
+  int id;
+  int ownerId;
+  String address;
+  int rating;
+  int numberOfRatings;
+  List<dynamic> picture;
+  String name;
+  String description;
+  int status;
+  String ownerName;
+  String ownerPhone;
+  double priceFrom;
+  double priceTo;
+  String rejectedReason;
   String ownerAvatar;
+
   Storage(
       {this.id,
       this.rejectedReason,
@@ -70,6 +73,42 @@ class Storage {
         ownerPhone: ownerPhone ?? this.ownerPhone);
   }
 
+  Storage.empty() {
+    this.address = '';
+    this.description = '';
+    this.id = -1;
+    this.name = '';
+    this.numberOfRatings = -1;
+    this.ownerAvatar = '';
+    this.ownerId = -1;
+    this.ownerName = '';
+    this.rejectedReason = '';
+    this.ownerPhone = '';
+    this.picture = [];
+    this.priceFrom = -1;
+    this.priceTo = -1;
+    this.status = -1;
+  }
+
+  void setStorage(Storage storage) {
+    this.id = storage.id;
+    this.rejectedReason = storage.rejectedReason;
+    this.address = storage.address;
+    this.description = storage.description;
+    this.name = storage.name;
+    this.numberOfRatings = storage.numberOfRatings;
+    this.ownerPhone = storage.ownerPhone;
+    this.ownerId = storage.ownerId;
+    this.ownerName = storage.ownerName;
+    this.picture = storage.picture;
+    this.priceFrom = storage.priceFrom;
+    this.priceTo = storage.priceTo;
+    this.rating = storage.rating;
+    this.ownerAvatar = storage.ownerAvatar;
+    this.status = storage.status;
+    notifyListeners();
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -93,13 +132,13 @@ class Storage {
   factory Storage.fromMap(Map<String, dynamic> map) {
     return Storage(
       id: map['id']?.toInt(),
-      ownerId: map['ownerId'].toInt(),
+      ownerId: map['ownerId']?.toInt(),
       address: map['address'],
       rating: map['rating']?.toInt(),
       rejectedReason: map['rejectedReason'],
       picture: map['images'],
       name: map['name'],
-      numberOfRatings: map['numberOfRatings'].toInt(),
+      numberOfRatings: map['numberOfRatings']?.toInt(),
       ownerPhone: map['ownerPhone'],
       description: map['description'],
       status: map['status']?.toInt(),

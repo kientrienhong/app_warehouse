@@ -15,12 +15,12 @@ class ChooseStoragePresenter {
 
   set view(value) => this._view = value;
 
-  ChooseStoragePresenter() {
-    _model = ChooseStorageModel();
+  ChooseStoragePresenter(int idPreviousStorage) {
+    _model = ChooseStorageModel(idPreviousStorage);
   }
 
-  Future<void> loadListStorage(
-      int page, int size, String jwt, String address) async {
+  Future<void> loadListStorage(int page, int size, String jwt, String address,
+      int idPreviousStorage) async {
     try {
       var response =
           await ApiServices.loadListStorage(page, size, jwt, address);
@@ -28,6 +28,9 @@ class ChooseStoragePresenter {
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();
       newItems = newItems.where((element) => element.status == 2).toList();
+      newItems =
+          newItems.where((element) => element.id != idPreviousStorage).toList();
+
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingStorageController.appendLastPage(newItems);
@@ -41,12 +44,14 @@ class ChooseStoragePresenter {
     }
   }
 
-  Future<void> loadListShelves(
-      int page, int size, String jwt, int idStorage) async {
+  Future<void> loadListShelves(int page, int size, String jwt, int idStorage,
+      int idPreviousShelf) async {
     try {
       var response = await ApiServices.loadShelves(page, size, jwt, idStorage);
-      List<dynamic> newItems =
-          response.data['data'].map((e) => Shelf.fromMap(e)).toList();
+      List<Shelf> newItems =
+          response.data['data'].map<Shelf>((e) => Shelf.fromMap(e)).toList();
+      newItems =
+          newItems.where((element) => element.id != idPreviousShelf).toList();
       final isLastPage = newItems.length < size;
       if (isLastPage) {
         _model.pagingShelfController.appendLastPage(newItems);
@@ -57,15 +62,6 @@ class ChooseStoragePresenter {
     } catch (e) {
       print(e.toString());
       _model.pagingShelfController.error = e;
-    }
-  }
-
-  void getCurrentStorage(int idStorage, String jwt) async {
-    try {
-      var response = await ApiServices.getStorage(jwt, idStorage);
-      _model.previousStorage = Shelf.fromMap(response.data);
-    } catch (e) {
-      print(e.toString());
     }
   }
 }
