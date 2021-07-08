@@ -7,6 +7,22 @@ class ChooseStorageModel {
   PagingController<int, Shelf> _pagingShelfController;
   int _index;
   int _currentStorageId;
+  bool _isLoadingImportedBoxes;
+  bool _isErrorImportedBoxes;
+
+  get isErrorImportedBoxes => this._isErrorImportedBoxes;
+
+  set isErrorImportedBoxes(value) => this._isErrorImportedBoxes = value;
+  String _msgImportedBoxes;
+
+  bool get isLoadingImportedBoxes => this._isLoadingImportedBoxes;
+
+  set isLoadingImportedBoxes(bool value) =>
+      this._isLoadingImportedBoxes = value;
+
+  get msgImportedBoxes => this._msgImportedBoxes;
+
+  set msgImportedBoxes(value) => this._msgImportedBoxes = value;
 
   get currentStorageId => this._currentStorageId;
 
@@ -26,5 +42,8 @@ class ChooseStorageModel {
     _pagingStorageController = PagingController(firstPageKey: 0);
     _index = 0;
     _currentStorageId = idPreviousStorage;
+    _msgImportedBoxes = '';
+    _isLoadingImportedBoxes = false;
+    _isErrorImportedBoxes = false;
   }
 }

@@ -22,6 +22,7 @@ class ShelfDetailPresenter {
     try {
       _view.updateLoading();
       var response = await ApiServices.loadDeatailShelf(jwt, shelfId);
+      print(response.data['boxes']);
       List<Box> listBox =
           response.data['boxes'].map<Box>((e) => Box.fromMap(e)).toList();
       _model.listBox = listBox;

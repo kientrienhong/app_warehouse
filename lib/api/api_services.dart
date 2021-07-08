@@ -288,6 +288,21 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> importBoxes(
+      String jwt, List<Map<String, dynamic>> listResult) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/order-details',
+          data: {"orderDetails": listResult},
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            // 'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Feedback failed');
+    }
+  }
+
   static Future<dynamic> updateFeedBack(
       int idStorage, String jwt, int idOrder, double rating, String comment) {
     try {

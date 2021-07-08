@@ -1,8 +1,11 @@
 import 'package:appwarehouse/common/custom_app_bar.dart';
+import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/common/custom_color.dart';
+import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/common/custom_sizebox.dart';
 import 'package:appwarehouse/common/custom_text.dart';
 import 'package:appwarehouse/models/entity/box.dart';
+import 'package:appwarehouse/models/entity/imported_boxes.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
@@ -136,6 +139,22 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
   }
 
   @override
+  void updateImportedLoading() {
+    setState(() {
+      presenter.model.isLoadingImportedBoxes =
+          !presenter.model.isLoadingImportedBoxes;
+    });
+  }
+
+  @override
+  void updateMsg(String msg, bool isError) {
+    setState(() {
+      presenter.model.msgImportedBoxes = msg;
+      presenter.model.isErrorImportedBoxes = isError;
+    });
+  }
+
+  @override
   void fetchStorage(int pageKey) async {
     User user = Provider.of<User>(context, listen: false);
     await presenter.loadListStorage(
@@ -164,9 +183,21 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
+  void onClickSubmitImportBox() async {
+    User user = Provider.of<User>(context, listen: false);
+    ImportedBoxes importedBoxes =
+        Provider.of<ImportedBoxes>(context, listen: false);
     Order order = Provider.of<Order>(context, listen: false);
 
+    bool result = await presenter.importedBoxes(
+        user.jwtToken, importedBoxes.listResult, order);
+    if (result == null) {
+      importedBoxes.setImportedBoxes(ImportedBoxes());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -199,23 +230,55 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildNoteForIcon(
-                        name: '1m x 1m x 2m',
-                        color: CustomColor.lightBlue,
-                        quantity: order.bigBoxQuantity,
-                        deviceSize: deviceSize,
-                        context: context),
-                    _buildNoteForIcon(
-                        name: '0.5m x 1m x 2m',
-                        color: CustomColor.purple,
-                        quantity: order.smallBoxQuantity,
-                        deviceSize: deviceSize,
-                        context: context),
-                  ],
-                ),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Consumer<Order>(
+                        builder: (context, item, child) {
+                          return _buildNoteForIcon(
+                              name: '1m x 1m x 2m',
+                              color: CustomColor.lightBlue,
+                              quantity: item.bigBoxQuantity,
+                              deviceSize: deviceSize,
+                              context: context);
+                        },
+                      ),
+                      Consumer<Order>(
+                        builder: (context, item, child) {
+                          return _buildNoteForIcon(
+                              name: '0.5m x 1m x 2m',
+                              color: CustomColor.purple,
+                              quantity: item.smallBoxQuantity,
+                              deviceSize: deviceSize,
+                              context: context);
+                        },
+                      ),
+                    ],
+                  ),
+                  CustomSizedBox(context: context, height: 8),
+                  if (presenter.model.msgImportedBoxes.length > 0)
+                    CustomMsgInput(
+                        msg: presenter.model.msgImportedBoxes,
+                        isError: presenter.model.isErrorImportedBoxes,
+                        maxLines: 1),
+                  CustomSizedBox(context: context, height: 8),
+                  CustomButton(
+                      height: 32,
+                      text: 'Submit',
+                      width: double.infinity,
+                      isLoading: presenter.model.isLoadingImportedBoxes,
+                      textColor: CustomColor.green,
+                      onPressFunction: () {
+                        onClickSubmitImportBox();
+                      },
+                      buttonColor: CustomColor.lightBlue,
+                      borderRadius: 4)
+                ]),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 8,
               ),
               CustomText(
                   text: 'Storages',
@@ -246,12 +309,17 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      _buildStorage(
+                          context: context,
+                          currentIndex: 0,
+                          data: Provider.of<Storage>(context, listen: false),
+                          deviceSize: deviceSize),
                       Container(
                         width: 4,
                         height: deviceSize.height / 7,
                         color: CustomColor.black[2],
                       ),
-                      presenter.model.pagingStorageController.itemList != null
+                      presenter.model.pagingStorageController.error == null
                           ? Container(
                               width: deviceSize.width * (2 / 3) - 40,
                               child: RefreshIndicator(
@@ -355,6 +423,10 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                   ),
                 ),
               ),
+              CustomSizedBox(
+                context: context,
+                height: 16,
+              )
             ],
           ),
         ),

@@ -274,8 +274,7 @@ class CreateStoragePresenter {
           int.parse(priceBigBox),
           tempListImage,
           user.jwtToken);
-      print('testestestestsetesw');
-      print(responseCreate.data);
+
       if (responseCreate.data['error'] == null) {
         int storageId = responseCreate.data['id'];
         List<Map<String, dynamic>> responseUploadImage = await formatDataCreate(

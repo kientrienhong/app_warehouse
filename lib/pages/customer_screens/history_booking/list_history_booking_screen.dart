@@ -1,7 +1,7 @@
 import 'package:appwarehouse/common/bill_widget.dart';
 import 'package:appwarehouse/common/custom_app_bar.dart';
+import 'package:appwarehouse/common/custom_button.dart';
 
-import '/api/api_services.dart';
 import '/models/entity/order.dart';
 import '/models/entity/user.dart';
 import '/presenters/list_history_booking_presenter.dart';
@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
-import '/pages/owner_screens/bill/bill_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ListHistoryBookingScreen extends StatefulWidget {
   @override
@@ -23,12 +23,16 @@ class ListHistoryBookingScreen extends StatefulWidget {
 class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
     implements ListHistoryBookingview {
   ListHistoryBookingPresenter presenter;
+  String restrictFractionalSeconds(String dateTime) =>
+      dateTime.replaceFirstMapped(RegExp(r"(\.\d{6})\d+"), (m) => m[1]);
+
   Widget _buildBillWidget(
       {@required Order data,
       @required BuildContext context,
       @required Size deviceSize}) {
     Color colorStatus;
     String status;
+    DateFormat dateFormater = DateFormat('yyyy-MM-dd');
     switch (data.status) {
       case 0:
         {
@@ -166,9 +170,9 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                       height: 8,
                     ),
                     CustomText(
-                        text: data.expiredDate == null
-                            ? 'Expired date: Not yet'
-                            : 'Expired date: ' + data.expiredDate,
+                        text: 'Expired date: ' +
+                            DateFormat('dd/MM/yyyy').format(dateFormater
+                                .parse(data.expiredDate.split('T')[0])),
                         color: CustomColor.black,
                         context: context,
                         textAlign: TextAlign.right,
@@ -189,6 +193,11 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                 )
               ])),
     );
+  }
+
+  @override
+  void updateListView() {
+    setState(() {});
   }
 
   @override
@@ -218,20 +227,59 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
 
-    return Container(
-      height: deviceSize.height,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: RefreshIndicator(
-        onRefresh: () =>
-            Future.sync(() => presenter.model.pagingController.refresh()),
-        child: PagedListView<int, dynamic>(
-          shrinkWrap: true,
-          pagingController: presenter.model.pagingController,
-          builderDelegate: PagedChildBuilderDelegate<dynamic>(
-              itemBuilder: (context, item, index) => _buildBillWidget(
-                  data: item, deviceSize: deviceSize, context: context)),
-        ),
-      ),
-    );
+    return presenter.model.pagingController.error == null
+        ? Container(
+            height: deviceSize.height,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: RefreshIndicator(
+              onRefresh: () =>
+                  Future.sync(() => presenter.model.pagingController.refresh()),
+              child: PagedListView<int, dynamic>(
+                shrinkWrap: true,
+                pagingController: presenter.model.pagingController,
+                builderDelegate: PagedChildBuilderDelegate<dynamic>(
+                    itemBuilder: (context, item, index) => _buildBillWidget(
+                        data: item, deviceSize: deviceSize, context: context)),
+              ),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(
+                      text: 'Not have bill yet!',
+                      color: CustomColor.black[3],
+                      context: context,
+                      fontSize: 24),
+                  CustomSizedBox(
+                    context: context,
+                    height: 16,
+                  ),
+                  CustomButton(
+                      height: 32,
+                      text: 'Refresh',
+                      width: double.infinity,
+                      isLoading: presenter.model.isLoading,
+                      textColor: CustomColor.white,
+                      onPressFunction: () async {
+                        try {
+                          presenter.view.updateLoading();
+                          fetchPage(
+                            0,
+                          );
+                        } catch (e) {
+                          print(e.toString());
+                        } finally {
+                          presenter.view.updateLoading();
+                          presenter.view.updateListView();
+                        }
+                      },
+                      buttonColor: CustomColor.purple,
+                      borderRadius: 4),
+                ]),
+          );
   }
 }

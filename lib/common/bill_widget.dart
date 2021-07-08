@@ -24,12 +24,13 @@ import 'package:intl/intl.dart';
 class BillWidget extends StatelessWidget {
   Order data;
   final oCcy = new NumberFormat("#,##0", "en_US");
+  DateFormat dateFormater = DateFormat('yyyy-MM-dd');
 
   BillWidget({this.data});
 
   void callDetailOrder(BuildContext context) async {
     String jwt =
-        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU2NjkwOTAsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTY2OTA5MCwiZXhwIjoxNjI1NjcyNjkwLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.pebmHXY-JLC7oa_9g4TwMPkFT-BaZMUaj_ziW5vN1OVNUONTYyjY0_CCMLVI3jik60zWq0Mggaab4HP1rQr4YVadMHBQQ3SeB-IfKQjdMgYFXVuvvlw9gqThYUiKLQJ_Xd_VE3pHS_CZPalLgxKZ_AVl-RzSGoLInNBU_OMiqrrYHXiod5I89jaLz5CahdGQ3hAyeT_Fogv9SPKizUCg3xa8bnjA0UvQrhdzMWTzu0S3gqp3jO6geOr3R9JC33ZANz6QarileHFIe3pmZGTe8qRc8mOUdulMmD2c4M-GihMpBvt1mYgVro4DY926Ji1HdDkTXVYEeiADJz3NpcKJKw';
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU3NjI2NTMsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTc2MjY1MywiZXhwIjoxNjI1NzY2MjUzLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.o4gX1YIIcLgMS0CykwGe_DPrmKNhDRcmKqOn_hjUgyG0obXrr5-FwmRnMFlC6Y5IZnhVTKU-TdUCtIKXow7Sx9sbxne7pSirOY1aj3VKvBlvBnxVf4u0TcCdW5rUnqgLzcP1pLCQ97hxH7kYW_dfolcU8lNkGOz1cT2HxUVAiVOdmn4EQQ1H70lzcX7Z3q4D2ewngEzlJ9KQjVnW_QkU6XgKtQvAWVZz8t28JenPjRbBySg3zaRXKyO9DaOECrms49bO92NiJ5etRXlBYLJt2dRH5NCzaqhJB4yD2YGOHePivoIEkYl2gKXUiZECoIBt7elvuVfW-1mlnp0wQrYwkQ';
     var resultOrder = await ApiServices.getOrder(jwt, data.id);
     Order order = Provider.of<Order>(context, listen: false);
     order.setOrder(Order.fromMap(resultOrder.data));
@@ -108,11 +109,16 @@ class BillWidget extends StatelessWidget {
           ),
           if (data.expiredDate != null)
             CustomText(
-              text: 'Expired date: ${data.expiredDate.toString()}',
+              text:
+                  'Expired date: ${DateFormat('dd/MM/yyyy').format(dateFormater.parse(data.expiredDate.split('T')[0]))}',
               color: CustomColor.black[1],
               context: context,
               fontSize: 16,
             ),
+          CustomSizedBox(
+            context: context,
+            height: 8,
+          ),
           FeedbackWidget(
             data: data,
           )

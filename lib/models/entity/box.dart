@@ -1,17 +1,16 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class Box {
   final int id;
   final int shelfId;
-  final String type;
+  final int type;
   final String size;
   final double price;
   final int status;
-
+  final String position;
   Box({
     this.id,
+    this.position,
     this.shelfId,
     this.type,
     this.size,
@@ -22,13 +21,15 @@ class Box {
   Box copyWith({
     int id,
     int shelfId,
-    String type,
+    int type,
     String size,
     double price,
+    String position,
     int status,
   }) {
     return Box(
       id: id ?? this.id,
+      position: position ?? this.position,
       shelfId: shelfId ?? this.shelfId,
       type: type ?? this.type,
       size: size ?? this.size,
@@ -41,22 +42,23 @@ class Box {
     return {
       'id': id.toInt(),
       'shelfId': shelfId.toInt(),
-      'type': type,
+      'type': type.toInt(),
       'size': size,
       'price': price.toDouble(),
       'status': status,
+      'position': position
     };
   }
 
   factory Box.fromMap(Map<String, dynamic> map) {
     return Box(
-      id: map['id']?.toInt(),
-      shelfId: map['shelfId']?.toInt(),
-      type: map['type'],
-      size: map['size'],
-      price: map['price']?.toDouble(),
-      status: map['status']?.toInt(),
-    );
+        id: map['id']?.toInt(),
+        shelfId: map['shelfId']?.toInt(),
+        type: map['type']?.toInt(),
+        size: map['size'],
+        price: map['price']?.toDouble(),
+        status: map['status']?.toInt(),
+        position: map['position']);
   }
 
   String toJson() => json.encode(toMap());
@@ -73,6 +75,7 @@ class Box {
         other.type == type &&
         other.size == size &&
         other.price == price &&
+        other.position == position &&
         other.status == status;
   }
 
@@ -81,6 +84,7 @@ class Box {
     return id.hashCode ^
         shelfId.hashCode ^
         type.hashCode ^
+        position.hashCode ^
         size.hashCode ^
         price.hashCode ^
         status.hashCode;

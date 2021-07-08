@@ -50,6 +50,7 @@ class _StatusShelfState extends State<StatusShelf> {
             context,
             MaterialPageRoute(
                 builder: (_) => ShelfDetailScreen(
+                      isMove: widget.isMove,
                       shelf: widget.data,
                     )));
       },
@@ -93,7 +94,7 @@ class _StatusShelfState extends State<StatusShelf> {
               width: widget.deviceSize.width / 3,
               lineHeight: 8,
               backgroundColor: CustomColor.lightBlue,
-              percent: widget.data.usage.toDouble(),
+              percent: widget.data.usage.toDouble() / 100,
               progressColor: CustomColor.purple,
             ),
             CustomSizedBox(

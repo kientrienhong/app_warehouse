@@ -1,5 +1,6 @@
 import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/models/choose_storage_screen_model.dart';
+import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/views/choose_storage_view.dart';
@@ -41,6 +42,8 @@ class ChooseStoragePresenter {
     } catch (e) {
       print(e.toString());
       _model.pagingStorageController.error = e;
+    } finally {
+      _view.updateViewCurrentStorage(null);
     }
   }
 
@@ -63,5 +66,33 @@ class ChooseStoragePresenter {
       print(e.toString());
       _model.pagingShelfController.error = e;
     }
+  }
+
+  Future<bool> importedBoxes(
+      String jwt, List<Map<String, dynamic>> listResult, Order order) async {
+    try {
+      _view.updateImportedLoading();
+      if (order.bigBoxQuantity > 0 && order.smallBoxQuantity > 0) {
+        _view.updateMsg('You must import all boxes of customer', true);
+
+        return false;
+      }
+      var response = await ApiServices.importBoxes(jwt, listResult);
+      if (response.data is String) {
+        _view.updateMsg('Import sucess', false);
+        _view.updateImportedLoading();
+        return true;
+      }
+      _view.updateMsg('Import faild', true);
+      _view.updateImportedLoading();
+      return true;
+    } catch (e) {
+      print(e.toString());
+      _view.updateMsg('Import faild', true);
+
+      _view.updateImportedLoading();
+
+      return false;
+    } finally {}
   }
 }

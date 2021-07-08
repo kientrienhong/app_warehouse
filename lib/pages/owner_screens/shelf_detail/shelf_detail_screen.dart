@@ -1,4 +1,5 @@
 import 'package:appwarehouse/models/entity/box.dart';
+import 'package:appwarehouse/models/entity/imported_boxes.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/user.dart';
@@ -20,8 +21,8 @@ enum TypeBox { small, big }
 
 class ShelfDetailScreen extends StatefulWidget {
   final Shelf shelf;
-
-  ShelfDetailScreen({this.shelf});
+  final bool isMove;
+  ShelfDetailScreen({this.shelf, @required this.isMove});
 
   @override
   State<ShelfDetailScreen> createState() => _ShelfDetailScreenState();
@@ -30,7 +31,7 @@ class ShelfDetailScreen extends StatefulWidget {
 class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     implements ShelfDetailView {
   ShelfDetailPresenter presenter;
-  TypeBox current = TypeBox.small;
+  TypeBox current = TypeBox.big;
   int staggeredTileBuilderIndex = 0;
 
   Widget _buildNoteForIconDialog(
@@ -105,123 +106,153 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     );
   }
 
-  void sortList(List<Map<String, dynamic>> list) {
-    list.sort((a, b) {
-      return a['formatedPosition']
-          .toLowerCase()
-          .compareTo(b['formatedPosition'].toLowerCase());
-    });
-    list = list.reversed.toList();
-  }
+  _showDialog(Size deviceSize, int idBox) {
+    if (widget.isMove == false) {
+      return;
+    }
 
-  _showDialog(Size deviceSize) {
     Order order = Provider.of<Order>(context, listen: false);
 
     showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
-              content: Container(
-                height: deviceSize.height / 3,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomText(
-                              text: 'Order',
-                              color: CustomColor.black,
-                              context: context,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                          CustomSizedBox(context: context, width: 4),
-                          CustomText(
-                              text: 'Id: #${order.id.toString()}',
-                              color: CustomColor.black,
-                              context: context,
-                              fontSize: 16),
-                        ]),
-                    CustomSizedBox(
-                      context: context,
-                      height: 4,
-                    ),
-                    CustomText(
-                        text: 'Type Box',
-                        color: CustomColor.black,
+        builder: (_) => StatefulBuilder(
+              builder: (context, setState) => AlertDialog(
+                content: Container(
+                  height: deviceSize.height / 3,
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomText(
+                                text: 'Order',
+                                color: CustomColor.black,
+                                context: context,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            CustomSizedBox(context: context, width: 4),
+                            CustomText(
+                                text: 'Id: #${order.id.toString()}',
+                                color: CustomColor.black,
+                                context: context,
+                                fontSize: 16),
+                          ]),
+                      CustomSizedBox(
                         context: context,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                    CustomSizedBox(context: context, height: 4),
-                    ListTile(
-                      title: _buildNoteForIconDialog(
-                          name: '1m x 1m x 2m',
-                          color: CustomColor.lightBlue,
-                          quantity: order.smallBoxQuantity,
-                          deviceSize: deviceSize,
-                          context: context),
-                      leading: Radio(
-                        value: TypeBox.small,
-                        groupValue: current,
-                        onChanged: (TypeBox value) {
-                          if (order.smallBoxQuantity == 0)
+                        height: 4,
+                      ),
+                      CustomText(
+                          text: 'Type Box',
+                          color: CustomColor.black,
+                          context: context,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                      CustomSizedBox(context: context, height: 4),
+                      ListTile(
+                        title: _buildNoteForIconDialog(
+                            name: '1m x 1m x 2m',
+                            color: CustomColor.lightBlue,
+                            quantity: order.bigBoxQuantity,
+                            deviceSize: deviceSize,
+                            context: context),
+                        leading: Radio(
+                          value: TypeBox.big,
+                          groupValue: current,
+                          onChanged: (TypeBox value) {
                             setState(() {
                               current = value;
-                              order.setOrder(order.copyWith(
-                                  smallBoxQuantity: --order.smallBoxQuantity));
                             });
-                        },
+                          },
+                        ),
                       ),
-                    ),
-                    ListTile(
-                      title: _buildNoteForIconDialog(
-                          name: '1m x 1m x 2m',
-                          color: CustomColor.purple,
-                          quantity: order.bigBoxQuantity,
-                          deviceSize: deviceSize,
-                          context: context),
-                      leading: Radio(
-                        value: TypeBox.big,
-                        groupValue: current,
-                        onChanged: (TypeBox value) {
-                          if (order.bigBoxQuantity == 0)
+                      ListTile(
+                        title: _buildNoteForIconDialog(
+                            name: '0.5m x 1m x 2m',
+                            color: CustomColor.purple,
+                            quantity: order.smallBoxQuantity,
+                            deviceSize: deviceSize,
+                            context: context),
+                        leading: Radio(
+                          value: TypeBox.small,
+                          groupValue: current,
+                          onChanged: (TypeBox value) {
                             setState(() {
                               current = value;
-                              order.setOrder(order.copyWith(
-                                  bigBoxQuantity: --order.bigBoxQuantity));
                             });
-                        },
+                          },
+                        ),
                       ),
-                    ),
-                    CustomButton(
-                        height: 32,
-                        text: 'Submit',
-                        width: double.infinity,
-                        isLoading: false,
-                        textColor: CustomColor.green,
-                        onPressFunction: () {},
-                        buttonColor: CustomColor.lightBlue,
-                        borderRadius: 4)
-                  ],
+                      CustomButton(
+                          height: 32,
+                          text: 'Submit',
+                          width: double.infinity,
+                          isLoading: false,
+                          textColor: CustomColor.green,
+                          onPressFunction: () {
+                            int type = -1;
+                            if (current == TypeBox.small) {
+                              type = 1;
+                              if (order.smallBoxQuantity == 0) {
+                                return;
+                              }
+                              int quantity = order.smallBoxQuantity - 1;
+                              order.setOrder(
+                                  order.copyWith(smallBoxQuantity: quantity));
+                            }
+
+                            if (current == TypeBox.big) {
+                              type = 2;
+                              if (order.bigBoxQuantity == 0) {
+                                return;
+                              }
+                              int quantity = order.bigBoxQuantity - 1;
+                              order.setOrder(
+                                  order.copyWith(bigBoxQuantity: quantity));
+                            }
+                            List<Box> listBox = presenter.model.listBox;
+                            double price = type == 1
+                                ? order.smallBoxPrice
+                                : order.bigBoxPrice;
+                            ImportedBoxes importedBoxes =
+                                Provider.of<ImportedBoxes>(context,
+                                    listen: false);
+                            int indexCurrentBox =
+                                listBox.indexWhere((e) => e.id == idBox);
+
+                            if (type == 2) {
+                              listBox.remove(listBox.firstWhere(
+                                  (element) => element.id == (idBox + 1)));
+                            }
+                            listBox[indexCurrentBox] = listBox[indexCurrentBox]
+                                .copyWith(type: type, status: 2, price: price);
+                            importedBoxes.addShelf(widget.shelf.id, listBox);
+                            importedBoxes.addBox({
+                              "boxId": idBox,
+                              "orderId": order.id,
+                              "price": price,
+                              "type": type,
+                              'boxCode':
+                                  '${order.id}_${type}_${importedBoxes.listResult.length}',
+                              "boxId2": type == 2 ? idBox + 1 : null
+                            });
+                            updateGridView(listBox);
+
+                            Navigator.pop(context);
+                          },
+                          buttonColor: CustomColor.lightBlue,
+                          borderRadius: 4)
+                    ],
+                  ),
                 ),
               ),
             ));
   }
 
-  void formatData(List<Map<String, dynamic>> listBox) {
-    sortList(listBox);
-    int numberLargeBox = 0;
-    listBox.forEach((element) {
-      int position = int.parse(element['formatedPosition']);
-      element['formatedPosition'] = (position - numberLargeBox).toString();
-      if (element['type'] == 'large') {
-        numberLargeBox++;
-      }
-    });
-  }
-
   Widget _buildBox({
+    @required int idBox,
     @required int index,
     @required Color color,
     @required Size deviceSize,
@@ -229,7 +260,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     return GestureDetector(
       onTap: () {
         if (color == CustomColor.black[3]) {
-          _showDialog(deviceSize);
+          _showDialog(deviceSize, idBox);
         }
       },
       child: Container(
@@ -239,23 +270,19 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     );
   }
 
-  int checkIsLargeType(int index, List<Map<String, dynamic>> listBox) {
-    final box = listBox[staggeredTileBuilderIndex];
-    if (box['formatedPosition'] == index.toString()) {
-      if (box['type'] == 'large') {
-        return 2;
-      }
-    }
-    return 1;
-  }
-
   @override
   void initState() {
     super.initState();
     presenter = ShelfDetailPresenter();
     presenter.view = this;
     User user = Provider.of(context, listen: false);
-    presenter.fetchListBox(user.jwtToken, widget.shelf.id);
+    ImportedBoxes importedBoxes =
+        Provider.of<ImportedBoxes>(context, listen: false);
+    if (importedBoxes.importedShelves.containsKey(widget.shelf.id)) {
+      presenter.model.listBox = importedBoxes.importedShelves[widget.shelf.id];
+    } else {
+      presenter.fetchListBox(user.jwtToken, widget.shelf.id);
+    }
   }
 
   @override
@@ -283,44 +310,9 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    int indexItem = 0;
     final deviceSize = MediaQuery.of(context).size;
-    // List<Map<String, dynamic>> listBox = [...data['listBox']];
 
     List<String> numbers = ['1', '2', '3', '4'];
-    // int totalItem = 12;
-    // listBox.forEach((element) {
-    //   String position = element['position'];
-
-    //   element.putIfAbsent('formatedPosition', () {
-    //     int result;
-    //     int dozen;
-    //     switch (position[0]) {
-    //       case 'A':
-    //         {
-    //           dozen = 0;
-    //           break;
-    //         }
-    //       case 'B':
-    //         {
-    //           dozen = 4;
-    //           break;
-    //         }
-    //       default:
-    //         {
-    //           dozen = 8;
-    //         }
-    //     }
-    //     result = dozen + int.parse(position[1]) - 1;
-
-    //     return result.toString();
-    //   });
-
-    //   if (element['type'] == 'large') {
-    //     totalItem--;
-    //   }
-    // });
-    // formatData(listBox);
 
     return Scaffold(
       body: Padding(
@@ -433,37 +425,49 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                           itemCount: presenter.model.listBox.length,
                           itemBuilder: (BuildContext context, int index) {
                             List<Box> listBox = presenter.model.listBox;
-                            // if (indexItem >= presenter.model.listBox.length) {
-                            //   return _buildBox(
-                            //     index: index,
-                            //     color: CustomColor.black[3],
-                            //   );
-                            // }
 
-                            // final box = listBox[indexItem];
-                            // if (box['formatedPosition'] == index.toString()) {
-                            //   if (box['type'] == 'large') {
-                            //     ++indexItem;
-                            //     return _buildBox(
-                            //       index: index,
-                            //       color: CustomColor.lightBlue,
-                            //     );
-                            //   } else {
-                            //     ++indexItem;
-                            //     return _buildBox(
-                            //       index: index,
-                            //       color: CustomColor.purple,
-                            //     );
-                            //   }
-                            // }
+                            Box box = listBox[index];
+                            if (box.type == 1) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (widget.isMove == false) {}
+                                },
+                                child: _buildBox(
+                                  deviceSize: deviceSize,
+                                  idBox: box.id,
+                                  index: index,
+                                  color: CustomColor.purple,
+                                ),
+                              );
+                            }
+
+                            if (box.type == 2) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (widget.isMove == false) {}
+                                },
+                                child: _buildBox(
+                                  deviceSize: deviceSize,
+                                  idBox: box.id,
+                                  index: index,
+                                  color: CustomColor.lightBlue,
+                                ),
+                              );
+                            }
+
                             return _buildBox(
+                              idBox: listBox[index].id,
                               index: index,
                               deviceSize: deviceSize,
                               color: CustomColor.black[3],
                             );
                           },
                           staggeredTileBuilder: (int index) =>
-                              new StaggeredTile.count(1, 1),
+                              new StaggeredTile.count(
+                                  presenter.model.listBox[index].type == 2
+                                      ? 2
+                                      : 1,
+                                  1),
                           mainAxisSpacing: 8.0,
                           crossAxisSpacing: 12.0,
                         ),

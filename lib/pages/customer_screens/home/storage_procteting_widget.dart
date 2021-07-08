@@ -117,7 +117,7 @@ class StorageProtectingWidget extends StatelessWidget {
                 width: double.infinity,
                 child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 16),
+                    padding: const EdgeInsets.only(right: 16),
                     child: CustomText(
                       text:
                           '${oCcy.format(data.priceFrom)} -  ${oCcy.format(data.priceTo)} VND',
