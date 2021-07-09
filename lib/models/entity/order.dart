@@ -51,10 +51,10 @@ class Order with ChangeNotifier {
     total = -1;
     month = -1;
     comment = '';
-    smallBoxQuantity = -1;
+    smallBoxQuantity = 0;
     smallBoxPrice = -1;
     bigBoxPrice = -1;
-    bigBoxQuantity = -1;
+    bigBoxQuantity = 0;
     ownerPhone = '';
     ownerName = '';
     ownerAvatar = '';

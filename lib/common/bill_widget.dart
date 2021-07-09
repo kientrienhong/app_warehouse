@@ -31,7 +31,7 @@ class BillWidget extends StatelessWidget {
 
   void callDetailOrder(BuildContext context) async {
     String jwt =
-        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU3ODgwMzMsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTc4ODAzMywiZXhwIjoxNjI1NzkxNjMzLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.IheDT8xuxljg_uJE9hjuGTnuHgS2bbkjYdIg9nMESb6a0C2EQP3576RPS1hVBGMrDSrk8M0a1ODGUqah3FYRuPt15e4qdWzi9G851FnHMBcYCaSxb0JcNa2xR1I_2JqspZNKVeEhuKJpYsgYenvwbQQv08ePbWQTeGZxp9DmKPmr7LWEXh93pW13J84TXGYTnDoikNC4zEmF5ecOlWhTM8bpAo5R3_FiVsUL7RCd-U3K7Tgnh6WYrdMUX5TVvZbLVDN4xtJgIS511q3vaadIGacoqXJWWkpiVDVDXVAjL4Ghx55E14AVUz1pP7qTn9FKP04hYowmXxVUWwfR9NKk9g';
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU4Mjg3NTIsInVzZXJfaWQiOiI5SE5vY0diZjhkY29URE9Fd1E4aTRNMFFLQ2cyIiwic3ViIjoiOUhOb2NHYmY4ZGNvVERPRXdROGk0TTBRS0NnMiIsImlhdCI6MTYyNTgyODc1MiwiZXhwIjoxNjI1ODMyMzUyLCJlbWFpbCI6Im93bmVyMzIxM0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIzMjEzQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.jA7F4_DDJVugmEg2kjDwBm1VxYyDuyejVQ8Lnbx3LBf1hZmPieVMNvUHyUpV7ajNWY5P6cpfh0ZGpgTspLtgmjDwyw7aLlZqnHCkyGE8DeH65oli6UHoEMxq6266_7XUnoNxxDY0mVU9Gvf_n8H2KA8cTlqFeEmfI3Yj1YHvHENrefWvUPwmv-2w0x0pmb0Xyjyr-gPVOUbjfqDLVZjLgh8ieAw3NdUyAl_GWheXRLX0EPsq0JwGa-0E6uJBQAonTjvWqgcQjoe7MzYXXue6TJoS2U3ImU3LmQrfEnV7DmOOG8H26n94fFsqtEOl_Kf9fd8tAfPR3g_sluvMPUSIYg';
     var resultOrder = await ApiServices.getOrder(jwt, data.id);
     Order order = Provider.of<Order>(context, listen: false);
     order.setOrder(Order.fromMap(resultOrder.data));
@@ -42,6 +42,7 @@ class BillWidget extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (_) => ChooseStorageScreen(
+                  isImported: true,
                   idPreviousStorage: storage.id,
                   order: order,
                 )));

@@ -30,5 +30,5 @@ class CustomTextButton extends TextButton {
                     color: textColor,
                     context: context,
                     fontSize: fontSize),
-            onPressed: onPressFunction);
+            onPressed: isLoading == false ? onPressFunction : () {});
 }

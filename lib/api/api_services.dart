@@ -289,10 +289,10 @@ class ApiServices {
   }
 
   static Future<dynamic> importBoxes(
-      String jwt, List<Map<String, dynamic>> listResult) {
+      String jwt, List<Map<String, dynamic>> listResult, String msg) {
     try {
       return Dio().post('https://localhost:44318/api/v1/order-details',
-          data: {"orderDetails": listResult},
+          data: {"orderDetails": listResult, "mailMessage": msg},
           options: Options(headers: {
             'Authorization': 'bearer ' + jwt,
             'Content-Type': "application/json",

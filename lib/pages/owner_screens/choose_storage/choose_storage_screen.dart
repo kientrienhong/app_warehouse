@@ -1,6 +1,7 @@
 import 'package:appwarehouse/common/custom_app_bar.dart';
 import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/common/custom_color.dart';
+import 'package:appwarehouse/common/custom_input.dart';
 import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/common/custom_sizebox.dart';
 import 'package:appwarehouse/common/custom_text.dart';
@@ -18,13 +19,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
 
 class ChooseStorageScreen extends StatefulWidget {
   final int idPreviousStorage;
   final Box box;
   final Order order;
-  ChooseStorageScreen({this.idPreviousStorage, this.box, this.order});
+  final bool isImported;
+  ChooseStorageScreen(
+      {this.isImported, this.idPreviousStorage, this.box, this.order});
   @override
   _ChooseStorageScreenState createState() => _ChooseStorageScreenState();
 }
@@ -32,7 +34,8 @@ class ChooseStorageScreen extends StatefulWidget {
 class _ChooseStorageScreenState extends State<ChooseStorageScreen>
     implements ChooseStorageView {
   ChooseStoragePresenter presenter;
-
+  TextEditingController reasonController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   Widget _buildNoteForIcon(
       {@required String name,
       @required Color color,
@@ -174,10 +177,20 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
 
   @override
   void onClickStorage(int index) {
+    if (index == 0) {
+      Storage storage = Provider.of<Storage>(context, listen: false);
+
+      setState(() {
+        presenter.model.index = index;
+        presenter.model.currentStorageId = storage.id;
+      });
+      presenter.model.pagingShelfController.refresh();
+      return;
+    }
     setState(() {
-      presenter.model.index = index + 1;
+      presenter.model.index = index;
       presenter.model.currentStorageId =
-          presenter.model.pagingStorageController.itemList[index].id;
+          presenter.model.pagingStorageController.itemList[index - 1].id;
     });
     presenter.model.pagingShelfController.refresh();
   }
@@ -188,17 +201,125 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
     ImportedBoxes importedBoxes =
         Provider.of<ImportedBoxes>(context, listen: false);
     Order order = Provider.of<Order>(context, listen: false);
-
-    bool result = await presenter.importedBoxes(
-        user.jwtToken, importedBoxes.listResult, order);
-    if (result == null) {
-      importedBoxes.setImportedBoxes(ImportedBoxes());
+//TODO
+    bool result;
+    if (importedBoxes.boxInDifferentStorage.keys.length > 0) {
+      if (reasonController.text.length == 0) {
+        updateMsg('You must provide reason but box another storage', true);
+        return;
+      }
+      result = await presenter.importedBoxes(user.jwtToken,
+          importedBoxes.listResult, order, reasonController.text);
+    } else {
+      result = await presenter.importedBoxes(
+          user.jwtToken, importedBoxes.listResult, order, '');
     }
+
+    if (result == true) {
+      importedBoxes.setImportedBoxes(ImportedBoxes());
+      order.setOrder(Order.empty());
+    }
+  }
+
+  Widget _buildCustomerOrder(Order order, Size deviceSize) {
+    ImportedBoxes importedBoxes =
+        Provider.of<ImportedBoxes>(context, listen: false);
+    if (widget.isImported == true)
+      return Column(
+        children: [
+          CustomText(
+              text: 'Customer\'s order',
+              color: CustomColor.purple,
+              context: context,
+              fontWeight: FontWeight.bold,
+              fontSize: 24),
+          CustomSizedBox(
+            context: context,
+            height: 4,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: CustomColor.lightBlue, width: 2),
+            ),
+            margin: const EdgeInsets.only(right: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            width: double.infinity,
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Consumer<Order>(
+                    builder: (context, item, child) {
+                      return _buildNoteForIcon(
+                          name: '1m x 1m x 2m',
+                          color: CustomColor.lightBlue,
+                          quantity: item.bigBoxQuantity,
+                          deviceSize: deviceSize,
+                          context: context);
+                    },
+                  ),
+                  Consumer<Order>(
+                    builder: (context, item, child) {
+                      return _buildNoteForIcon(
+                          name: '0.5m x 1m x 2m',
+                          color: CustomColor.purple,
+                          quantity: item.smallBoxQuantity,
+                          deviceSize: deviceSize,
+                          context: context);
+                    },
+                  ),
+                ],
+              ),
+              CustomSizedBox(context: context, height: 18),
+              Consumer<ImportedBoxes>(
+                builder: (context, importedBoxes, child) {
+                  if (importedBoxes.boxInDifferentStorage.keys.length > 0)
+                    return CustomOutLineInput(
+                        isDisable: false,
+                        focusNode: focusNode,
+                        controller: reasonController,
+                        deviceSize: deviceSize,
+                        labelText: 'Reason');
+
+                  return Container();
+                },
+              ),
+              if (presenter.model.msgImportedBoxes.length > 0)
+                CustomMsgInput(
+                    msg: presenter.model.msgImportedBoxes,
+                    isError: presenter.model.isErrorImportedBoxes,
+                    maxLines: 2),
+              CustomSizedBox(context: context, height: 8),
+              CustomButton(
+                  height: 32,
+                  text: 'Submit',
+                  width: double.infinity,
+                  isLoading: presenter.model.isLoadingImportedBoxes,
+                  textColor: CustomColor.green,
+                  onPressFunction: () {
+                    onClickSubmitImportBox();
+                  },
+                  buttonColor: CustomColor.lightBlue,
+                  borderRadius: 4)
+            ]),
+          ),
+        ],
+      );
+    return Container();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    reasonController.dispose();
+    focusNode.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
+    Order order = Provider.of<Order>(context, listen: false);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -212,70 +333,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                 context: context,
                 height: 8,
               ),
-              CustomText(
-                  text: 'Customer\'s order',
-                  color: CustomColor.purple,
-                  context: context,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24),
-              CustomSizedBox(
-                context: context,
-                height: 4,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: CustomColor.lightBlue, width: 2),
-                ),
-                margin: const EdgeInsets.only(right: 24),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                width: double.infinity,
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Consumer<Order>(
-                        builder: (context, item, child) {
-                          return _buildNoteForIcon(
-                              name: '1m x 1m x 2m',
-                              color: CustomColor.lightBlue,
-                              quantity: item.bigBoxQuantity,
-                              deviceSize: deviceSize,
-                              context: context);
-                        },
-                      ),
-                      Consumer<Order>(
-                        builder: (context, item, child) {
-                          return _buildNoteForIcon(
-                              name: '0.5m x 1m x 2m',
-                              color: CustomColor.purple,
-                              quantity: item.smallBoxQuantity,
-                              deviceSize: deviceSize,
-                              context: context);
-                        },
-                      ),
-                    ],
-                  ),
-                  CustomSizedBox(context: context, height: 8),
-                  if (presenter.model.msgImportedBoxes.length > 0)
-                    CustomMsgInput(
-                        msg: presenter.model.msgImportedBoxes,
-                        isError: presenter.model.isErrorImportedBoxes,
-                        maxLines: 1),
-                  CustomSizedBox(context: context, height: 8),
-                  CustomButton(
-                      height: 32,
-                      text: 'Submit',
-                      width: double.infinity,
-                      isLoading: presenter.model.isLoadingImportedBoxes,
-                      textColor: CustomColor.green,
-                      onPressFunction: () {
-                        onClickSubmitImportBox();
-                      },
-                      buttonColor: CustomColor.lightBlue,
-                      borderRadius: 4)
-                ]),
-              ),
+              _buildCustomerOrder(order, deviceSize),
               CustomSizedBox(
                 context: context,
                 height: 8,
@@ -309,20 +367,20 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildStorage(
-                          context: context,
-                          currentIndex: 0,
-                          data: Provider.of<Storage>(context, listen: false),
-                          deviceSize: deviceSize),
+                      GestureDetector(
+                        onTap: () => onClickStorage(0),
+                        child: _buildStorage(
+                            context: context,
+                            currentIndex: 0,
+                            data: Provider.of<Storage>(context, listen: false),
+                            deviceSize: deviceSize),
+                      ),
                       Container(
                         width: 4,
                         height: deviceSize.height / 7,
                         color: CustomColor.black[2],
                       ),
-                      presenter.model.pagingStorageController.error == null &&
-                              presenter
-                                      .model.pagingStorageController.itemList !=
-                                  null
+                      presenter.model.pagingStorageController.error == null
                           ? Container(
                               width: deviceSize.width * (2 / 3) - 40,
                               child: RefreshIndicator(
@@ -339,7 +397,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                                           itemBuilder: (context, item, index) =>
                                               GestureDetector(
                                                 onTap: () =>
-                                                    onClickStorage(index),
+                                                    onClickStorage(index + 1),
                                                 child: _buildStorage(
                                                     context: context,
                                                     currentIndex: index + 1,
@@ -397,6 +455,8 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                       height: 8,
                     ),
                     StatusShelf(
+                      isImported: widget.isImported,
+                      box: widget.box,
                       deviceSize: deviceSize,
                       data: Provider.of<Shelf>(context, listen: false),
                       isMove: true,
@@ -418,6 +478,8 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                     pagingController: presenter.model.pagingShelfController,
                     builderDelegate: PagedChildBuilderDelegate<Shelf>(
                       itemBuilder: (context, item, index) => StatusShelf(
+                        isImported: widget.isImported,
+                        box: widget.box,
                         deviceSize: deviceSize,
                         data: item,
                         isMove: true,

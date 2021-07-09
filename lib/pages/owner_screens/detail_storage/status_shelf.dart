@@ -1,4 +1,5 @@
 import 'package:appwarehouse/common/custom_dialog.dart';
+import 'package:appwarehouse/models/entity/box.dart';
 import 'package:appwarehouse/pages/owner_screens/shelf_detail/shelf_detail_screen.dart';
 import 'package:appwarehouse/presenters/owner_detail_storage_presenter.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +14,15 @@ import 'package:percent_indicator/percent_indicator.dart';
 class StatusShelf extends StatefulWidget {
   final Size deviceSize;
   final Shelf data;
+  final Box box;
   final bool isMove;
+  final bool isImported;
   final OwnerDetailStoragePresenter presenter;
   StatusShelf(
       {@required this.presenter,
       @required this.deviceSize,
+      this.box,
+      @required this.isImported,
       this.isMove: false,
       @required this.data});
 
@@ -51,6 +56,7 @@ class _StatusShelfState extends State<StatusShelf> {
             MaterialPageRoute(
                 builder: (_) => ShelfDetailScreen(
                       isMove: widget.isMove,
+                      isImported: widget.isImported,
                       shelf: widget.data,
                     )));
       },

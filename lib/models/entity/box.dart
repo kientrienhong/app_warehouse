@@ -9,8 +9,10 @@ class Box {
   final int status;
   final String position;
   final String boxCode;
+  final int orderId;
   Box({
     this.id,
+    this.orderId,
     this.position,
     this.boxCode,
     this.shelfId,
@@ -25,6 +27,7 @@ class Box {
     String boxCode,
     int shelfId,
     int type,
+    int orderId,
     String size,
     double price,
     String position,
@@ -38,6 +41,7 @@ class Box {
         size: size ?? this.size,
         price: price ?? this.price,
         status: status ?? this.status,
+        orderId: orderId ?? this.orderId,
         boxCode: boxCode ?? this.boxCode);
   }
 
@@ -46,6 +50,7 @@ class Box {
       'id': id.toInt(),
       'shelfId': shelfId.toInt(),
       'type': type.toInt(),
+      'orderId': orderId.toInt(),
       'size': size,
       'price': price.toDouble(),
       'status': status,
@@ -63,6 +68,7 @@ class Box {
         size: map['size'],
         price: map['price']?.toDouble(),
         status: map['status']?.toInt(),
+        orderId: map['orderId']?.toInt(),
         position: map['position']);
   }
 
@@ -78,6 +84,7 @@ class Box {
         other.id == id &&
         other.shelfId == shelfId &&
         other.type == type &&
+        other.orderId == orderId &&
         other.boxCode == boxCode &&
         other.size == size &&
         other.price == price &&
@@ -93,6 +100,7 @@ class Box {
         position.hashCode ^
         boxCode.hashCode ^
         size.hashCode ^
+        orderId.hashCode ^
         price.hashCode ^
         status.hashCode;
   }

@@ -28,6 +28,7 @@ class ChooseStoragePresenter {
       List<Storage> newItems = response.data['data']
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();
+      print(response.data);
       newItems = newItems.where((element) => element.status == 2).toList();
       newItems =
           newItems.where((element) => element.id != idPreviousStorage).toList();
@@ -68,16 +69,17 @@ class ChooseStoragePresenter {
     }
   }
 
-  Future<bool> importedBoxes(
-      String jwt, List<Map<String, dynamic>> listResult, Order order) async {
+  Future<bool> importedBoxes(String jwt, List<Map<String, dynamic>> listResult,
+      Order order, String msg) async {
     try {
       _view.updateImportedLoading();
-      if (order.bigBoxQuantity > 0 && order.smallBoxQuantity > 0) {
+      if (order.bigBoxQuantity > 0 || order.smallBoxQuantity > 0) {
         _view.updateMsg('You must import all boxes of customer', true);
+        _view.updateImportedLoading();
 
         return false;
       }
-      var response = await ApiServices.importBoxes(jwt, listResult);
+      var response = await ApiServices.importBoxes(jwt, listResult, msg);
       if (response.data is String) {
         _view.updateMsg('Import sucess', false);
         _view.updateImportedLoading();
