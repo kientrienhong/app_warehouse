@@ -94,13 +94,15 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
       String description, String priceSmallBox, String priceBigBox) async {
     try {
       User user = Provider.of(context, listen: false);
-      await presenter.onHandleEditStorage(widget.data.id, id, name, address,
-          description, user, priceSmallBox, priceBigBox);
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => OwnerBottomNavigation()),
-          (route) => false);
+      bool result = await presenter.onHandleEditStorage(widget.data.id, id,
+          name, address, description, user, priceSmallBox, priceBigBox);
+      if (result == true) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => OwnerBottomNavigation()),
+            (route) => false);
+      }
     } catch (e) {
       print(e.toString());
     }

@@ -1,23 +1,26 @@
 import 'dart:convert';
 
-class Order {
-  final int id;
-  final int idStorage;
-  final String name;
-  final String address;
-  final double total;
-  final int month;
-  final int smallBoxQuantity;
-  final double smallBoxPrice;
-  final int bigBoxQuantity;
-  final double bigBoxPrice;
-  final String ownerPhone;
-  final String ownerName;
-  final String ownerAvatar;
-  final String expiredDate;
-  final int status;
-  final String comment;
-  final double rating;
+import 'package:flutter/cupertino.dart';
+
+class Order with ChangeNotifier {
+  int id;
+  int idStorage;
+  String name;
+  String address;
+  double total;
+  int month;
+  int smallBoxQuantity;
+  double smallBoxPrice;
+  int bigBoxQuantity;
+  double bigBoxPrice;
+  String ownerPhone;
+  String ownerName;
+  String ownerAvatar;
+  String expiredDate;
+  int status;
+  String comment;
+  double rating;
+
   Order({
     this.id,
     this.expiredDate,
@@ -37,6 +40,47 @@ class Order {
     this.ownerAvatar,
     this.status,
   });
+
+  Order.empty() {
+    id = -1;
+    idStorage = -1;
+    expiredDate = '';
+    name = '';
+    address = '';
+    rating = -1;
+    total = -1;
+    month = -1;
+    comment = '';
+    smallBoxQuantity = -1;
+    smallBoxPrice = -1;
+    bigBoxPrice = -1;
+    bigBoxQuantity = -1;
+    ownerPhone = '';
+    ownerName = '';
+    ownerAvatar = '';
+    status = -1;
+  }
+
+  setOrder(Order order) {
+    this.id = order.id;
+    this.expiredDate = order.expiredDate;
+    this.name = order.name;
+    this.idStorage = order.idStorage;
+    this.address = order.address;
+    this.rating = order.rating;
+    this.total = order.total;
+    this.month = order.month;
+    this.comment = order.comment;
+    this.smallBoxQuantity = order.smallBoxQuantity;
+    this.smallBoxPrice = order.smallBoxPrice;
+    this.bigBoxQuantity = order.bigBoxQuantity;
+    this.bigBoxPrice = order.bigBoxPrice;
+    this.ownerPhone = order.ownerPhone;
+    this.ownerName = order.ownerName;
+    this.ownerAvatar = order.ownerAvatar;
+    this.status = order.status;
+    notifyListeners();
+  }
 
   Order copyWith(
       {int id,

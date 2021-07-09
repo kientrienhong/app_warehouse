@@ -1,6 +1,9 @@
+import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/common/custom_msg_input.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
 import 'package:appwarehouse/presenters/feedback_presenter.dart';
 import 'package:appwarehouse/views/feedback_view.dart';
 
@@ -16,11 +19,33 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class BillWidget extends StatelessWidget {
   Order data;
+  final oCcy = new NumberFormat("#,##0", "en_US");
+  DateFormat dateFormater = DateFormat('yyyy-MM-dd');
+  BillWidget({
+    this.data,
+  });
 
-  BillWidget({this.data});
+  void callDetailOrder(BuildContext context) async {
+    String jwt =
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU3ODgwMzMsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTc4ODAzMywiZXhwIjoxNjI1NzkxNjMzLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.IheDT8xuxljg_uJE9hjuGTnuHgS2bbkjYdIg9nMESb6a0C2EQP3576RPS1hVBGMrDSrk8M0a1ODGUqah3FYRuPt15e4qdWzi9G851FnHMBcYCaSxb0JcNa2xR1I_2JqspZNKVeEhuKJpYsgYenvwbQQv08ePbWQTeGZxp9DmKPmr7LWEXh93pW13J84TXGYTnDoikNC4zEmF5ecOlWhTM8bpAo5R3_FiVsUL7RCd-U3K7Tgnh6WYrdMUX5TVvZbLVDN4xtJgIS511q3vaadIGacoqXJWWkpiVDVDXVAjL4Ghx55E14AVUz1pP7qTn9FKP04hYowmXxVUWwfR9NKk9g';
+    var resultOrder = await ApiServices.getOrder(jwt, data.id);
+    Order order = Provider.of<Order>(context, listen: false);
+    order.setOrder(Order.fromMap(resultOrder.data));
+    var resultStorage = await ApiServices.getStorage(jwt, order.idStorage);
+    Storage storage = Provider.of<Storage>(context, listen: false);
+    storage.setStorage(Storage.fromMap(resultStorage.data));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChooseStorageScreen(
+                  idPreviousStorage: storage.id,
+                  order: order,
+                )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +65,7 @@ class BillWidget extends StatelessWidget {
           if (data.smallBoxQuantity > 0)
             BoxInfoBillWidget(
                 deviceSize: deviceSize,
-                price: '${data.smallBoxPrice} VND',
+                price: '${oCcy.format(data.smallBoxPrice)} VND',
                 imagePath: 'assets/images/smallBox.png',
                 amount: data.smallBoxQuantity,
                 size: '0.5m x 1m x 2m'),
@@ -51,7 +76,7 @@ class BillWidget extends StatelessWidget {
           if (data.bigBoxQuantity > 0)
             BoxInfoBillWidget(
                 deviceSize: deviceSize,
-                price: '${data.bigBoxPrice} VND',
+                price: '${oCcy.format(data.bigBoxPrice)} VND',
                 imagePath: 'assets/images/largeBox.png',
                 amount: data.bigBoxQuantity,
                 size: '1m x 1m x 2m'),
@@ -71,10 +96,13 @@ class BillWidget extends StatelessWidget {
             context: context,
             height: 24,
           ),
-          QrImage(
-            data: data.id.toString(),
-            size: 88.0,
-            version: 2,
+          GestureDetector(
+            onTap: () => callDetailOrder(context),
+            child: QrImage(
+              data: data.id.toString(),
+              size: 88.0,
+              version: 2,
+            ),
           ),
           CustomSizedBox(
             context: context,
@@ -82,14 +110,20 @@ class BillWidget extends StatelessWidget {
           ),
           if (data.expiredDate != null)
             CustomText(
-              text: 'Expired date: ${data.expiredDate.toString()}',
+              text:
+                  'Expired date: ${DateFormat('dd/MM/yyyy').format(dateFormater.parse(data.expiredDate.split('T')[0]))}',
               color: CustomColor.black[1],
               context: context,
               fontSize: 16,
             ),
-          FeedbackWidget(
-            data: data,
-          )
+          CustomSizedBox(
+            context: context,
+            height: 8,
+          ),
+          if (data.status != 1)
+            FeedbackWidget(
+              data: data,
+            )
         ],
       ),
     );

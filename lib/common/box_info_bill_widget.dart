@@ -11,7 +11,6 @@ class BoxInfoBillWidget extends StatelessWidget {
   final int amount;
   BoxInfoBillWidget(
       {this.amount: 1, this.deviceSize, this.imagePath, this.size, this.price});
-
   @override
   Widget build(BuildContext context) {
     return Row(

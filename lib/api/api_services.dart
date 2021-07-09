@@ -11,7 +11,7 @@ class ApiServices {
         'returnSecureToken': true
       });
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception('Log In failed');
     }
   }
 
@@ -89,6 +89,19 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> loadDeatailShelf(String jwt, int shelfId) {
+    try {
+      return Dio().get('https://localhost:44318/api/v1/shelves/$shelfId',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<dynamic> updateInfo(
       String name, String address, String phone, String jwt, String imageUrl) {
     try {
@@ -105,7 +118,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -124,7 +137,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -148,7 +161,7 @@ class ApiServices {
         'avatar': avatarUrl
       });
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -178,7 +191,7 @@ class ApiServices {
             // 'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -194,7 +207,7 @@ class ApiServices {
             // 'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -224,7 +237,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -238,7 +251,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -251,7 +264,7 @@ class ApiServices {
             'Accept': 'application/json',
           }));
     } catch (e) {
-      throw Exception('Log in failed');
+      throw Exception(e);
     }
   }
 
@@ -265,6 +278,21 @@ class ApiServices {
             "rating": rating,
             "comment": comment,
           },
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            // 'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception('Feedback failed');
+    }
+  }
+
+  static Future<dynamic> importBoxes(
+      String jwt, List<Map<String, dynamic>> listResult) {
+    try {
+      return Dio().post('https://localhost:44318/api/v1/order-details',
+          data: {"orderDetails": listResult},
           options: Options(headers: {
             'Authorization': 'bearer ' + jwt,
             'Content-Type': "application/json",
@@ -303,6 +331,7 @@ class ApiServices {
       int bigBoxQuantity,
       double smallBoxPrice,
       double bigBoxPrice,
+      DateTime datePickUp,
       int idStorage,
       String jwt) {
     try {
@@ -313,6 +342,7 @@ class ApiServices {
             "months": months,
             "smallBoxQuantity": smallBoxQuantity,
             "smallBoxPrice": smallBoxPrice,
+            "pickupTime": datePickUp.toIso8601String(),
             "bigBoxQuantity": bigBoxQuantity,
             "bigBoxPrice": bigBoxPrice
           },
@@ -323,6 +353,32 @@ class ApiServices {
           }));
     } catch (e) {
       throw Exception('Payment in failed');
+    }
+  }
+
+  static Future<dynamic> getStorage(String jwt, int storageId) {
+    try {
+      return Dio().get('https://localhost:44318/api/v1/storages/$storageId',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<dynamic> getOrder(String jwt, int orderId) {
+    try {
+      return Dio().get('https://localhost:44318/api/v1/orders/$orderId',
+          options: Options(headers: {
+            'Authorization': 'bearer ' + jwt,
+            'Content-Type': "application/json",
+            'Accept': 'application/json',
+          }));
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }

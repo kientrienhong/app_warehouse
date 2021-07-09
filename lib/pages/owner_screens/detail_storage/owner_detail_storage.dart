@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:appwarehouse/common/avatar_widget.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '/models/entity/storage.dart';
@@ -138,6 +137,7 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
                 builderDelegate: PagedChildBuilderDelegate<dynamic>(
                     itemBuilder: (context, item, index) => StatusShelf(
                           data: item,
+                          isMove: false,
                           deviceSize: deviceSize,
                           presenter: presenter,
                         )),

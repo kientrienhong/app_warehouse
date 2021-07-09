@@ -1,5 +1,4 @@
 import 'package:appwarehouse/common/custom_button.dart';
-import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
 import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/presenters/bill_presenter.dart';
@@ -8,10 +7,10 @@ import 'package:appwarehouse/views/bill_view.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
-import '/pages/owner_screens/bill/detail_bill_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 
 enum StatusBill { PAID, DELIVERIED, CHECK_OUT, TIME_OUT }
 
@@ -22,6 +21,7 @@ class BillScreen extends StatefulWidget {
 
 class _BillScreenState extends State<BillScreen> implements BillView {
   BillPresenter presenter;
+  final oCcy = new NumberFormat("#,##0", "en_US");
 
   Widget _buildBillWidget(
       {@required OrderCustomer data,
@@ -30,7 +30,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
     Color colorStatus;
     String status;
     switch (data.status) {
-      case 0:
+      case 3:
         {
           colorStatus = CustomColor.green;
           status = 'Check out';
@@ -42,7 +42,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
           status = 'Paid';
           break;
         }
-      case 2:
+      case 4:
         {
           colorStatus = CustomColor.red;
           status = 'Time out';
@@ -160,7 +160,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                       height: 56,
                     ),
                     CustomText(
-                      text: data.total.toString() + ' VND',
+                      text: oCcy.format(data.total) + ' VND',
                       color: CustomColor.purple,
                       context: context,
                       fontSize: 16,
@@ -171,49 +171,6 @@ class _BillScreenState extends State<BillScreen> implements BillView {
               ])),
     );
   }
-
-  List<Map<String, dynamic>> data = [
-    {
-      'orderId': '#00111',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': 'Not yet',
-      'status': StatusBill.PAID,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Medium Storage'
-    },
-    {
-      'orderId': '#00112',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': '09/07/2021',
-      'status': StatusBill.DELIVERIED,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Large Storage'
-    },
-    {
-      'orderId': '#00113',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': '05/30/2021',
-      'status': StatusBill.TIME_OUT,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Small Storage'
-    },
-    {
-      'orderId': '#00114',
-      'customerName': 'Jessica Clarent',
-      'price': '700,000 VND',
-      'expiredDate': '05/30/2021',
-      'status': StatusBill.CHECK_OUT,
-      'avatarPath': 'assets/images/avatar.png',
-      'months': 1,
-      'storageName': 'Medium Storage'
-    },
-  ];
 
   @override
   void initState() {
@@ -249,7 +206,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
         ),
         presenter.model.pagingController.error == null
             ? Container(
-                height: deviceSize.height / 1.5,
+                height: deviceSize.height / 1.3,
                 child: RefreshIndicator(
                   onRefresh: () => Future.sync(
                       () => presenter.model.pagingController.refresh()),

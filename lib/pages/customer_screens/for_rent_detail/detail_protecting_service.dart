@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class DetailProtectingServiceScreen extends StatefulWidget {
   final Storage data;
@@ -31,6 +32,22 @@ class _DetailProtectingServiceScreenState
     extends State<DetailProtectingServiceScreen>
     implements CustomerDetailStorageView {
   CustomerDetailStoragePresenter presenter;
+  final oCcy = new NumberFormat("#,##0", "en_US");
+  DateTime selectedDate = DateTime.now();
+  DateTime pickedDate;
+  @override
+  onClickSelectDate(BuildContext context) async {
+    pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: selectedDate,
+      lastDate: selectedDate.add(Duration(days: 3)),
+    );
+    if (pickedDate != null && pickedDate != selectedDate) {
+      DateFormat format = DateFormat('dd/MM/yyyy');
+      updateDatePickUp(format.format(pickedDate));
+    }
+  }
 
   Widget _buildOptionBox(
       {@required BuildContext context,
@@ -196,7 +213,8 @@ class _DetailProtectingServiceScreenState
 
     BraintreeDropInResult result = await BraintreeDropIn.start(request);
     if (result != null) {
-      var response = await presenter.checkOut(idStorage, user.jwtToken);
+      var response =
+          await presenter.checkOut(idStorage, user.jwtToken, pickedDate);
       if (response != null) {
         Order order = Order(
           id: response['id'],
@@ -223,6 +241,13 @@ class _DetailProtectingServiceScreenState
     } else {
       updateMsg(true, 'Paid fail');
     }
+  }
+
+  @override
+  void updateDatePickUp(String newDate) {
+    setState(() {
+      presenter.model.datePickUp = newDate;
+    });
   }
 
   @override
@@ -376,7 +401,7 @@ class _DetailProtectingServiceScreenState
                   context: context,
                   size: '0.5m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '${widget.data.priceFrom} VND',
+                  price: '${oCcy.format(widget.data.priceFrom)} VND',
                   imagePath: 'assets/images/smallBox.png'),
               CustomSizedBox(
                 context: context,
@@ -387,7 +412,7 @@ class _DetailProtectingServiceScreenState
                   context: context,
                   size: '1m x 1m x 2m',
                   deviceSize: deviceSize,
-                  price: '${widget.data.priceTo} VND',
+                  price: '${oCcy.format(widget.data.priceTo)} VND',
                   imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,
@@ -436,6 +461,45 @@ class _DetailProtectingServiceScreenState
               Row(
                 children: [
                   CustomText(
+                    text: 'Date pick up: ',
+                    color: CustomColor.black,
+                    context: context,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  CustomSizedBox(
+                    context: context,
+                    width: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () => onClickSelectDate(context),
+                    child: Container(
+                        width: 24,
+                        height: 24,
+                        child: Image.asset(
+                          'assets/images/calendar.png',
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                  CustomSizedBox(
+                    context: context,
+                    width: 8,
+                  ),
+                  CustomText(
+                      text: '${presenter.model.datePickUp}',
+                      color: CustomColor.purple,
+                      context: context,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                ],
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 16,
+              ),
+              Row(
+                children: [
+                  CustomText(
                     text: 'Price: ',
                     color: CustomColor.black,
                     context: context,
@@ -478,13 +542,6 @@ class _DetailProtectingServiceScreenState
                   child: TextButton(
                       onPressed: presenter.model.isLoading == false
                           ? () async {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => BillProtectingService(
-                              //               data: data,
-                              //             )));
-
                               onClickPayment(widget.data.id);
                             }
                           : () {},

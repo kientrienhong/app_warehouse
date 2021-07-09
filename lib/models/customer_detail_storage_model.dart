@@ -5,7 +5,14 @@ class CustomerDetailStorageModel {
   double _priceTo;
   bool _isLoading;
   bool _isError;
+  String _datePickUp;
+
+  get datePickUp => this._datePickUp;
+
+  set datePickUp(value) => this._datePickUp = value;
+
   String _msg;
+
   bool get isError => this._isError;
 
   set isError(bool value) => this._isError = value;
@@ -42,5 +49,6 @@ class CustomerDetailStorageModel {
     _isLoading = false;
     _msg = '';
     _isError = false;
+    _datePickUp = 'Not Yet';
   }
 }

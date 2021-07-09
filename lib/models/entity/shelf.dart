@@ -1,11 +1,13 @@
 import 'dart:convert';
 
-class Shelf {
-  final int id;
-  final int storageId;
-  final String size;
-  final int status;
-  final int usage;
+import 'package:flutter/cupertino.dart';
+
+class Shelf with ChangeNotifier {
+  int id;
+  int storageId;
+  String size;
+  int status;
+  int usage;
   Shelf({
     this.id,
     this.storageId,
@@ -13,6 +15,23 @@ class Shelf {
     this.status,
     this.usage,
   });
+
+  Shelf.empty() {
+    id = -1;
+    storageId = -1;
+    size = '';
+    status = -1;
+    usage = -1;
+  }
+
+  setShelf(Shelf shelf) {
+    this.id = shelf.id;
+    this.storageId = shelf.storageId;
+    this.size = shelf.size;
+    this.status = shelf.status;
+    this.usage = shelf.usage;
+    notifyListeners();
+  }
 
   Shelf copyWith({
     int id,
@@ -48,8 +67,8 @@ class Shelf {
       status: map['status']?.toInt(),
       usage: map['usage']?.toInt(),
     );
-    print(test);
-    return test;  }
+    return test;
+  }
 
   String toJson() => json.encode(toMap());
 
