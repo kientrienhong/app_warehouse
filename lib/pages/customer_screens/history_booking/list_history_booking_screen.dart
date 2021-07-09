@@ -34,7 +34,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
     String status;
     DateFormat dateFormater = DateFormat('yyyy-MM-dd');
     switch (data.status) {
-      case 0:
+      case 3:
         {
           colorStatus = CustomColor.green;
           status = 'Check out';
@@ -46,7 +46,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
           status = 'Paid';
           break;
         }
-      case 2:
+      case 4:
         {
           colorStatus = CustomColor.red;
           status = 'Time out';

@@ -25,12 +25,13 @@ class BillWidget extends StatelessWidget {
   Order data;
   final oCcy = new NumberFormat("#,##0", "en_US");
   DateFormat dateFormater = DateFormat('yyyy-MM-dd');
-
-  BillWidget({this.data});
+  BillWidget({
+    this.data,
+  });
 
   void callDetailOrder(BuildContext context) async {
     String jwt =
-        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU3NjI2NTMsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTc2MjY1MywiZXhwIjoxNjI1NzY2MjUzLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.o4gX1YIIcLgMS0CykwGe_DPrmKNhDRcmKqOn_hjUgyG0obXrr5-FwmRnMFlC6Y5IZnhVTKU-TdUCtIKXow7Sx9sbxne7pSirOY1aj3VKvBlvBnxVf4u0TcCdW5rUnqgLzcP1pLCQ97hxH7kYW_dfolcU8lNkGOz1cT2HxUVAiVOdmn4EQQ1H70lzcX7Z3q4D2ewngEzlJ9KQjVnW_QkU6XgKtQvAWVZz8t28JenPjRbBySg3zaRXKyO9DaOECrms49bO92NiJ5etRXlBYLJt2dRH5NCzaqhJB4yD2YGOHePivoIEkYl2gKXUiZECoIBt7elvuVfW-1mlnp0wQrYwkQ';
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU3ODgwMzMsInVzZXJfaWQiOiJMYXlWU1REaUVoYlRsMWl2UUEyOHFGYnhVcEIyIiwic3ViIjoiTGF5VlNURGlFaGJUbDFpdlFBMjhxRmJ4VXBCMiIsImlhdCI6MTYyNTc4ODAzMywiZXhwIjoxNjI1NzkxNjMzLCJlbWFpbCI6Im93bmVyMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.IheDT8xuxljg_uJE9hjuGTnuHgS2bbkjYdIg9nMESb6a0C2EQP3576RPS1hVBGMrDSrk8M0a1ODGUqah3FYRuPt15e4qdWzi9G851FnHMBcYCaSxb0JcNa2xR1I_2JqspZNKVeEhuKJpYsgYenvwbQQv08ePbWQTeGZxp9DmKPmr7LWEXh93pW13J84TXGYTnDoikNC4zEmF5ecOlWhTM8bpAo5R3_FiVsUL7RCd-U3K7Tgnh6WYrdMUX5TVvZbLVDN4xtJgIS511q3vaadIGacoqXJWWkpiVDVDXVAjL4Ghx55E14AVUz1pP7qTn9FKP04hYowmXxVUWwfR9NKk9g';
     var resultOrder = await ApiServices.getOrder(jwt, data.id);
     Order order = Provider.of<Order>(context, listen: false);
     order.setOrder(Order.fromMap(resultOrder.data));
@@ -119,9 +120,10 @@ class BillWidget extends StatelessWidget {
             context: context,
             height: 8,
           ),
-          FeedbackWidget(
-            data: data,
-          )
+          if (data.status != 1)
+            FeedbackWidget(
+              data: data,
+            )
         ],
       ),
     );

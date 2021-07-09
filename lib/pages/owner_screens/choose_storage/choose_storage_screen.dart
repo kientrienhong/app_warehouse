@@ -319,7 +319,10 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                         height: deviceSize.height / 7,
                         color: CustomColor.black[2],
                       ),
-                      presenter.model.pagingStorageController.error == null
+                      presenter.model.pagingStorageController.error == null &&
+                              presenter
+                                      .model.pagingStorageController.itemList !=
+                                  null
                           ? Container(
                               width: deviceSize.width * (2 / 3) - 40,
                               child: RefreshIndicator(

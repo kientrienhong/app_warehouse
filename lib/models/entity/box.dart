@@ -8,9 +8,11 @@ class Box {
   final double price;
   final int status;
   final String position;
+  final String boxCode;
   Box({
     this.id,
     this.position,
+    this.boxCode,
     this.shelfId,
     this.type,
     this.size,
@@ -20,6 +22,7 @@ class Box {
 
   Box copyWith({
     int id,
+    String boxCode,
     int shelfId,
     int type,
     String size,
@@ -28,14 +31,14 @@ class Box {
     int status,
   }) {
     return Box(
-      id: id ?? this.id,
-      position: position ?? this.position,
-      shelfId: shelfId ?? this.shelfId,
-      type: type ?? this.type,
-      size: size ?? this.size,
-      price: price ?? this.price,
-      status: status ?? this.status,
-    );
+        id: id ?? this.id,
+        position: position ?? this.position,
+        shelfId: shelfId ?? this.shelfId,
+        type: type ?? this.type,
+        size: size ?? this.size,
+        price: price ?? this.price,
+        status: status ?? this.status,
+        boxCode: boxCode ?? this.boxCode);
   }
 
   Map<String, dynamic> toMap() {
@@ -46,6 +49,7 @@ class Box {
       'size': size,
       'price': price.toDouble(),
       'status': status,
+      'boxCode': boxCode,
       'position': position
     };
   }
@@ -55,6 +59,7 @@ class Box {
         id: map['id']?.toInt(),
         shelfId: map['shelfId']?.toInt(),
         type: map['type']?.toInt(),
+        boxCode: map['boxCode'],
         size: map['size'],
         price: map['price']?.toDouble(),
         status: map['status']?.toInt(),
@@ -73,6 +78,7 @@ class Box {
         other.id == id &&
         other.shelfId == shelfId &&
         other.type == type &&
+        other.boxCode == boxCode &&
         other.size == size &&
         other.price == price &&
         other.position == position &&
@@ -85,6 +91,7 @@ class Box {
         shelfId.hashCode ^
         type.hashCode ^
         position.hashCode ^
+        boxCode.hashCode ^
         size.hashCode ^
         price.hashCode ^
         status.hashCode;

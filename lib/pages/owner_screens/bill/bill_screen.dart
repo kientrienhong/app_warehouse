@@ -30,7 +30,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
     Color colorStatus;
     String status;
     switch (data.status) {
-      case 0:
+      case 3:
         {
           colorStatus = CustomColor.green;
           status = 'Check out';
@@ -42,7 +42,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
           status = 'Paid';
           break;
         }
-      case 2:
+      case 4:
         {
           colorStatus = CustomColor.red;
           status = 'Time out';
