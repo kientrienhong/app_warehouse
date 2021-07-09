@@ -59,16 +59,17 @@ class ImportedBoxes with ChangeNotifier {
     }
   }
 
-  void addShelf(int idShelf, List<Box> listBox) {
+  void addShelf(int idShelf, List<Box> listBox, int idBox) {
     if (importedShelves.containsKey(idShelf)) {
       importedShelves.remove(idShelf);
     }
+    int index = listBox.indexWhere((element) => element.id == idBox);
+    listBox[index] = listBox[index].copyWith(isModified: true);
     importedShelves.putIfAbsent(idShelf, () => listBox);
     notifyListeners();
   }
 
   void addBox(Map<String, dynamic> result, bool isSameStorage) {
-    print(result);
     if (isSameStorage == false) {
       boxInDifferentStorage.putIfAbsent(result['boxId'], () => result['boxId']);
     }

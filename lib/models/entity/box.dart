@@ -10,8 +10,10 @@ class Box {
   final String position;
   final String boxCode;
   final int orderId;
+  final bool isModified;
   Box({
     this.id,
+    this.isModified: false,
     this.orderId,
     this.position,
     this.boxCode,
@@ -31,10 +33,12 @@ class Box {
     String size,
     double price,
     String position,
+    bool isModified,
     int status,
   }) {
     return Box(
         id: id ?? this.id,
+        isModified: isModified ?? this.isModified,
         position: position ?? this.position,
         shelfId: shelfId ?? this.shelfId,
         type: type ?? this.type,

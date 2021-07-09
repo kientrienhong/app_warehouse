@@ -201,7 +201,6 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
     ImportedBoxes importedBoxes =
         Provider.of<ImportedBoxes>(context, listen: false);
     Order order = Provider.of<Order>(context, listen: false);
-//TODO
     bool result;
     if (importedBoxes.boxInDifferentStorage.keys.length > 0) {
       if (reasonController.text.length == 0) {
@@ -222,8 +221,6 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
   }
 
   Widget _buildCustomerOrder(Order order, Size deviceSize) {
-    ImportedBoxes importedBoxes =
-        Provider.of<ImportedBoxes>(context, listen: false);
     if (widget.isImported == true)
       return Column(
         children: [

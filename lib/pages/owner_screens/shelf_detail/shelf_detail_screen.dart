@@ -296,7 +296,8 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                               listBox[indexCurrentBox] =
                                   listBox[indexCurrentBox].copyWith(
                                       type: type, status: 2, price: price);
-                              importedBoxes.addShelf(widget.shelf.id, listBox);
+                              importedBoxes.addShelf(
+                                  widget.shelf.id, listBox, idBox);
 
                               importedBoxes.addBox({
                                 "boxId": idBox,
@@ -330,12 +331,12 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
   }) {
     return GestureDetector(
       onTap: () {
-        if (color == CustomColor.black[3] && widget.isMove == true) {
+        if (color == CustomColor.black[3] && widget.isImported == true) {
           _showDialog(deviceSize, box.id, index);
           return;
         }
 
-        if (color != CustomColor.black[3] && widget.isImported == true) {
+        if (color == CustomColor.green && widget.isImported == true) {
           ImportedBoxes importedBoxes =
               Provider.of<ImportedBoxes>(context, listen: false);
 
@@ -555,7 +556,8 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
 
                             Box box = listBox[index];
 
-                            if (index == presenter.model.currentIndex) {
+                            if (index == presenter.model.currentIndex ||
+                                box.isModified == true) {
                               return _buildBox(
                                 deviceSize: deviceSize,
                                 box: box,
