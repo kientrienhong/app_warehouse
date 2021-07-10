@@ -28,7 +28,6 @@ class ChooseStoragePresenter {
       List<Storage> newItems = response.data['data']
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();
-      print(response.data);
       newItems = newItems.where((element) => element.status == 2).toList();
       newItems =
           newItems.where((element) => element.id != idPreviousStorage).toList();

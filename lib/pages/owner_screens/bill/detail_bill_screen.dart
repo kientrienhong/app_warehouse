@@ -1,3 +1,5 @@
+import 'package:appwarehouse/models/entity/order_customer.dart';
+
 import '/common/box_info_bill_widget.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_color.dart';
@@ -6,11 +8,14 @@ import '/common/custom_text.dart';
 import '/common/info_call.dart';
 import '/pages/owner_screens/bill/bill_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DetailBillScreen extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final OrderCustomer data;
 
   DetailBillScreen({this.data});
+  DateFormat dateFormater = DateFormat('yyyy-MM-dd');
+  final oCcy = new NumberFormat("#,##0", "en_US");
 
   final positionSmallBox = {'Shelf - 1': 'A1, B2', 'Shelf - 2': 'A2, C1'};
   final positionLargeBox = {
@@ -88,7 +93,7 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: data['orderId'],
+                  text: '#' + data.id.toString(),
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16,
@@ -110,7 +115,9 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: data['expiredDate'],
+                  text: 'Expired date: ' +
+                      DateFormat('dd/MM/yyyy').format(
+                          dateFormater.parse(data.expiredDate.split('T')[0])),
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16,
@@ -131,7 +138,7 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: data['price'],
+                  text: oCcy.format(data.total) + ' VND',
                   color: CustomColor.purple,
                   context: context,
                   fontSize: 16,
@@ -153,7 +160,7 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: data['months'].toString(),
+                  text: data.months.toString(),
                   color: CustomColor.purple,
                   context: context,
                   fontSize: 16,
@@ -168,11 +175,11 @@ class DetailBillScreen extends StatelessWidget {
             BoxInfoBillWidget(
               deviceSize: deviceSize,
               imagePath: 'assets/images/smallBox.png',
-              price: '200,000VND',
+              price: oCcy.format(data.smallBoxPrice) + ' VND',
               size: '0.5m x 1m x 1m',
-              amount: 4,
+              amount: data.smallBoxQuantity,
             ),
-            if (data['status'] != StatusBill.PAID)
+            if (data.status != 1)
               _buildPosition(
                   position: positionSmallBox,
                   deviceSize: deviceSize,
@@ -184,11 +191,11 @@ class DetailBillScreen extends StatelessWidget {
             BoxInfoBillWidget(
               deviceSize: deviceSize,
               imagePath: 'assets/images/largeBox.png',
-              price: '200,000VND',
+              price: oCcy.format(data.bigBoxPrice) + ' VND',
               size: '1m x 1m x 1m',
-              amount: 1,
+              amount: data.bigBoxQuantity,
             ),
-            if (data['status'] != StatusBill.PAID)
+            if (data.status != 1)
               _buildPosition(
                   position: positionLargeBox,
                   deviceSize: deviceSize,
@@ -200,9 +207,9 @@ class DetailBillScreen extends StatelessWidget {
             InfoCall(
                 role: 'Customer',
                 deviceSize: deviceSize,
-                phone: '07777777',
-                avatar: 'assets/images/avatar.png',
-                name: 'Clarent Jessica'),
+                phone: data.customerPhone,
+                avatar: data.customerAvatar,
+                name: data.customerName),
             CustomSizedBox(
               context: context,
               height: 36,

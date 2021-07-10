@@ -1,6 +1,4 @@
-import 'package:appwarehouse/common/custom_dialog.dart';
 import 'package:appwarehouse/common/custom_input.dart';
-import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/models/entity/box.dart';
 import 'package:appwarehouse/models/entity/imported_boxes.dart';
 import 'package:appwarehouse/models/entity/moved_boxes.dart';
@@ -154,7 +152,25 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         width: double.infinity,
                         isLoading: false,
                         textColor: CustomColor.white,
-                        onPressFunction: () {},
+                        onPressFunction: () {
+                          Box box = presenter
+                              .model.listBox[presenter.model.currentIndex];
+                          MovedBoxes movedBoxes =
+                              Provider.of<MovedBoxes>(context, listen: false);
+                          movedBoxes.setMovedBoxes(
+                              movedBoxes.copyWith(movedBox: box));
+                          widget.isMove = true;
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChooseStorageScreen(
+                                        isImported: false,
+                                        isMove: true,
+                                        box: box,
+                                        idPreviousStorage:
+                                            widget.shelf.storageId,
+                                      )));
+                        },
                         buttonColor: CustomColor.purple,
                         borderRadius: 4),
                   ],
@@ -373,11 +389,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     }
   }
 
-  _showDialogRemove(Box box, Size deviceSize) {
-    bool isText = false;
-    if (presenter.model.infoOrder['dateRemain'] != 'Expired') {
-      isText = true;
-    }
+  _showDialogWriteReasonMove(Box box, Size deviceSize) {
     bool isLoading = false;
 
     showDialog(
@@ -388,7 +400,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
                 title: CustomText(
-                  text: 'Remove',
+                  text: 'Reason move another storage',
                   color: Colors.black,
                   textAlign: TextAlign.center,
                   context: context,
@@ -404,49 +416,15 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                           focusNode: focusNode,
                           deviceSize: deviceSize,
                           labelText: 'Reason'),
-                      Row(
-                        children: [
-                          isLoading == false
-                              ? TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                  },
-                                  child: CustomText(
-                                    text: 'Delete',
-                                    color: Colors.red,
-                                    context: context,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ))
-                              : SizedBox(
-                                  height: 16,
-                                  width: 16,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        CustomColor.purple),
-                                  ),
-                                ),
-                          CustomSizedBox(
-                            context: context,
-                            width: 8,
-                          ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: CustomText(
-                                text: 'Cancel',
-                                color: CustomColor.black,
-                                context: context,
-                                fontSize: 16,
-                              ))
-                        ],
-                      )
+                      CustomButton(
+                          height: 32,
+                          text: 'Submit',
+                          width: double.infinity,
+                          isLoading: isLoading,
+                          textColor: CustomColor.green,
+                          onPressFunction: () {},
+                          buttonColor: CustomColor.lightBlue,
+                          borderRadius: 4)
                     ],
                   ),
                 ));
@@ -496,6 +474,11 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
         if (widget.isMove == true &&
             box.status == 1 &&
             movedBoxes.movedBox != null &&
+            movedBoxes.isMoveSamePlace == false) {}
+
+        if (widget.isMove == true &&
+            box.status == 1 &&
+            movedBoxes.movedBox != null &&
             movedBoxes.isMoveSamePlace == true) {
           //TODO
           final snackBar = SnackBar(
@@ -529,6 +512,21 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     User user = Provider.of(context, listen: false);
     ImportedBoxes importedBoxes =
         Provider.of<ImportedBoxes>(context, listen: false);
+
+    if (widget.isMove == true) {
+      Storage storage = Provider.of<Storage>(context, listen: false);
+      MovedBoxes movedBoxes = Provider.of<MovedBoxes>(context, listen: false);
+      if (storage.id != widget.shelf.storageId) {
+        movedBoxes.setMovedBoxes(movedBoxes.copyWith(
+          isMoveSamePlace: false,
+        ));
+      } else {
+        movedBoxes.setMovedBoxes(movedBoxes.copyWith(
+          isMoveSamePlace: true,
+        ));
+      }
+    }
+
     if (importedBoxes.importedShelves.containsKey(widget.shelf.id)) {
       presenter.model.listBox = importedBoxes.importedShelves[widget.shelf.id];
     } else {
@@ -553,6 +551,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
         content: Text('Move sucessful'),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      presenter.model.currentIndex = -1;
       presenter.fetchListBox(user.jwtToken, widget.shelf.id);
       MovedBoxes movedBoxes = Provider.of<MovedBoxes>(context, listen: false);
       movedBoxes.setMovedBoxes(MovedBoxes.empty());
@@ -960,25 +959,6 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                             _showMoveBox(deviceSize);
                         },
                         buttonColor: CustomColor.lightBlue,
-                        borderRadius: 4),
-                    CustomSizedBox(
-                      context: context,
-                      height: 16,
-                    ),
-                    CustomButton(
-                        isLoading: false,
-                        height: 32,
-                        text: 'Remove',
-                        width: deviceSize.width / 3,
-                        textColor: CustomColor.white,
-                        onPressFunction: () {
-                          if (presenter.model.currentIndex != -1)
-                            _showDialogRemove(
-                                presenter.model
-                                    .listBox[presenter.model.currentIndex],
-                                deviceSize);
-                        },
-                        buttonColor: CustomColor.red,
                         borderRadius: 4),
                   ],
                 )

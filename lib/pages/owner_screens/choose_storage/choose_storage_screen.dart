@@ -172,6 +172,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
   @override
   void fetchShelf(int pageKey, int idStorage) async {
     User user = Provider.of<User>(context, listen: false);
+
     await presenter.loadListShelves(
         pageKey,
         5,
@@ -433,44 +434,14 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                 context: context,
                 height: 8,
               ),
-              if (widget.box != null)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          style: BorderStyle.solid,
-                          color: CustomColor.lightBlue,
-                          width: 2)),
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(right: 24),
-                  child: Column(children: [
-                    CustomText(
-                      color: CustomColor.purple,
-                      context: context,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      text: 'Box\'s current shelf position',
-                    ),
-                    CustomSizedBox(
-                      context: context,
-                      height: 8,
-                    ),
-                    StatusShelf(
-                      isImported: widget.isImported,
-                      box: widget.box,
-                      deviceSize: deviceSize,
-                      data: Provider.of<Shelf>(context, listen: false),
-                      isMove: true,
-                    ),
-                  ]),
-                ),
               CustomSizedBox(
                 context: context,
                 height: 8,
               ),
               Container(
-                height: deviceSize.height / 4,
+                height: widget.box == null
+                    ? deviceSize.height / 4
+                    : deviceSize.height / 2,
                 child: RefreshIndicator(
                   onRefresh: () => Future.sync(
                       () => presenter.model.pagingShelfController.refresh()),

@@ -1,6 +1,7 @@
 import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
 import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/bill/detail_bill_screen.dart';
 import 'package:appwarehouse/presenters/bill_presenter.dart';
 import 'package:appwarehouse/views/bill_view.dart';
 
@@ -60,12 +61,12 @@ class _BillScreenState extends State<BillScreen> implements BillView {
 
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (_) => DetailBillScreen(
-        //               data: data,
-        //             )));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => DetailBillScreen(
+                      data: data,
+                    )));
       },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),

@@ -131,16 +131,20 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
             ),
             Container(
               height: deviceSize.height / 4,
-              child: PagedListView<int, dynamic>(
-                shrinkWrap: true,
-                pagingController: presenter.model.pagingController,
-                builderDelegate: PagedChildBuilderDelegate<dynamic>(
-                    itemBuilder: (context, item, index) => StatusShelf(
-                          data: item,
-                          isMove: false,
-                          deviceSize: deviceSize,
-                          presenter: presenter,
-                        )),
+              child: RefreshIndicator(
+                onRefresh: () => Future.sync(
+                    () => presenter.model.pagingController.refresh()),
+                child: PagedListView<int, dynamic>(
+                  shrinkWrap: true,
+                  pagingController: presenter.model.pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<dynamic>(
+                      itemBuilder: (context, item, index) => StatusShelf(
+                            data: item,
+                            isMove: false,
+                            deviceSize: deviceSize,
+                            presenter: presenter,
+                          )),
+                ),
               ),
             ),
             CustomSizedBox(

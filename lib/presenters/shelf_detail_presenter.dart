@@ -26,6 +26,7 @@ class ShelfDetailPresenter {
       var response = await ApiServices.loadDeatailShelf(jwt, shelfId);
       List<Box> listBox =
           response.data['boxes'].map<Box>((e) => Box.fromMap(e)).toList();
+      listBox = listBox.map((e) => e.copyWith(shelfId: shelfId)).toList();
       _model.listBox = listBox;
       _view.updateGridView(listBox);
     } catch (e) {
