@@ -1,3 +1,8 @@
+import 'package:appwarehouse/api/api_services.dart';
+import 'package:appwarehouse/models/entity/order.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
+import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
+
 import '/common/avatar_widget.dart';
 import '/models/entity/user.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +14,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
 
   CustomAppBar({this.isHome});
+  void callDetailOrder(BuildContext context, int orderId) async {
+    User user = Provider.of<User>(context, listen: false);
+
+    var resultOrder = await ApiServices.getOrder(user.jwtToken, orderId);
+    Order order = Provider.of<Order>(context, listen: false);
+    order.setOrder(Order.fromMap(resultOrder.data));
+    var resultStorage =
+        await ApiServices.getStorage(user.jwtToken, order.idStorage);
+    Storage storage = Provider.of<Storage>(context, listen: false);
+    storage.setStorage(Storage.fromMap(resultStorage.data));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChooseStorageScreen(
+                  isImported: true,
+                  idPreviousStorage: storage.id,
+                  order: order,
+                )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 '#8099FF', 'Cancel', false, ScanMode.DEFAULT);
                         if (barcodeScanRes != '-1') {
                           // Navigator to detail storage
+                          callDetailOrder(context, int.parse(barcodeScanRes));
                         }
                       },
                       child: Image.asset('assets/images/scan.png')),
