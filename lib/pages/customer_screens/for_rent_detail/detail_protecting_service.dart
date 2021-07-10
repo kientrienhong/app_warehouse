@@ -511,7 +511,7 @@ class _DetailProtectingServiceScreenState
                     width: 8,
                   ),
                   CustomText(
-                      text: '${presenter.model.totalPrice} VND',
+                      text: '${oCcy.format(presenter.model.totalPrice)} VND',
                       color: CustomColor.purple,
                       context: context,
                       fontWeight: FontWeight.bold,

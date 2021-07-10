@@ -16,12 +16,16 @@ class OrderCustomer {
   final double rating;
   final int storageId;
   final int status;
+  final String expiredDate;
+  final List<dynamic> boxUsed;
   OrderCustomer({
     this.id,
+    this.expiredDate,
     this.name,
     this.address,
     this.total,
     this.months,
+    this.boxUsed,
     this.smallBoxQuantity,
     this.smallBoxPrice,
     this.bigBoxQuantity,
@@ -40,9 +44,11 @@ class OrderCustomer {
     String address,
     int total,
     int months,
+    String expiredDate,
     int smallBoxQuantity,
     int smallBoxPrice,
     int bigBoxQuantity,
+    List<dynamic> boxUsed,
     int bigBoxPrice,
     String customerPhone,
     String customerName,
@@ -52,22 +58,23 @@ class OrderCustomer {
     int status,
   }) {
     return OrderCustomer(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      address: address ?? this.address,
-      total: total ?? this.total,
-      months: months ?? this.months,
-      smallBoxQuantity: smallBoxQuantity ?? this.smallBoxQuantity,
-      smallBoxPrice: smallBoxPrice ?? this.smallBoxPrice,
-      bigBoxQuantity: bigBoxQuantity ?? this.bigBoxQuantity,
-      bigBoxPrice: bigBoxPrice ?? this.bigBoxPrice,
-      customerPhone: customerPhone ?? this.customerPhone,
-      customerName: customerName ?? this.customerName,
-      customerAvatar: customerAvatar ?? this.customerAvatar,
-      rating: rating ?? this.rating,
-      storageId: storageId ?? this.storageId,
-      status: status ?? this.status,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        address: address ?? this.address,
+        total: total ?? this.total,
+        months: months ?? this.months,
+        smallBoxQuantity: smallBoxQuantity ?? this.smallBoxQuantity,
+        smallBoxPrice: smallBoxPrice ?? this.smallBoxPrice,
+        bigBoxQuantity: bigBoxQuantity ?? this.bigBoxQuantity,
+        bigBoxPrice: bigBoxPrice ?? this.bigBoxPrice,
+        customerPhone: customerPhone ?? this.customerPhone,
+        boxUsed: boxUsed ?? this.boxUsed,
+        customerName: customerName ?? this.customerName,
+        customerAvatar: customerAvatar ?? this.customerAvatar,
+        rating: rating ?? this.rating,
+        storageId: storageId ?? this.storageId,
+        status: status ?? this.status,
+        expiredDate: expiredDate ?? this.expiredDate);
   }
 
   Map<String, dynamic> toMap() {
@@ -79,12 +86,14 @@ class OrderCustomer {
       'months': months,
       'smallBoxQuantity': smallBoxQuantity,
       'smallBoxPrice': smallBoxPrice,
+      'expiredDate': expiredDate,
       'bigBoxQuantity': bigBoxQuantity,
       'bigBoxPrice': bigBoxPrice,
       'customerPhone': customerPhone,
       'customerName': customerName,
       'customerAvatar': customerAvatar,
       'rating': rating.toDouble(),
+      'boxUsed': boxUsed,
       'storageId': storageId,
       'status': status,
     };
@@ -97,12 +106,14 @@ class OrderCustomer {
       address: map['address'],
       total: map['total']?.toInt(),
       months: map['months']?.toInt(),
+      expiredDate: map['expiredDate'],
       smallBoxQuantity: map['smallBoxQuantity']?.toInt(),
       smallBoxPrice: map['smallBoxPrice']?.toInt(),
       bigBoxQuantity: map['bigBoxQuantity']?.toInt(),
       bigBoxPrice: map['bigBoxPrice']?.toInt(),
       customerPhone: map['customerPhone'],
       customerName: map['customerName'],
+      boxUsed: map['boxUsed'],
       customerAvatar: map['customerAvatar'],
       rating: map['rating']?.toDouble(),
       storageId: map['storageId']?.toInt(),
@@ -136,10 +147,12 @@ class OrderCustomer {
         other.bigBoxPrice == bigBoxPrice &&
         other.customerPhone == customerPhone &&
         other.customerName == customerName &&
+        other.boxUsed == boxUsed &&
         other.customerAvatar == customerAvatar &&
         other.rating == rating &&
         other.storageId == storageId &&
-        other.status == status;
+        other.status == status &&
+        other.expiredDate == expiredDate;
   }
 
   @override
@@ -150,10 +163,12 @@ class OrderCustomer {
         total.hashCode ^
         months.hashCode ^
         smallBoxQuantity.hashCode ^
+        boxUsed.hashCode ^
         smallBoxPrice.hashCode ^
         bigBoxQuantity.hashCode ^
         bigBoxPrice.hashCode ^
         customerPhone.hashCode ^
+        expiredDate.hashCode ^
         customerName.hashCode ^
         customerAvatar.hashCode ^
         rating.hashCode ^

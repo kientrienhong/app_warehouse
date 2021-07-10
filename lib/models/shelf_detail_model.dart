@@ -5,10 +5,12 @@ class ShelfDetailModel {
   bool _isLoading;
   List<Box> _listBox;
   int _currentIndex;
+
   List<Order> _listOrder;
   bool _isLoadingOrder;
   Map<String, dynamic> _infoOrder;
   bool _isError;
+
   String _msg;
   get isError => this._isError;
 
@@ -45,7 +47,7 @@ class ShelfDetailModel {
     _listBox = [];
     _listOrder = [];
     _currentIndex = -1;
-    _isError = true;
+    _isError = false;
     _msg = '';
     _isLoadingOrder = false;
     _infoOrder = {'id': '', 'dateRemain': ''};

@@ -25,8 +25,13 @@ class ChooseStorageScreen extends StatefulWidget {
   final Box box;
   final Order order;
   final bool isImported;
+  final bool isMove;
   ChooseStorageScreen(
-      {this.isImported, this.idPreviousStorage, this.box, this.order});
+      {this.isImported: false,
+      this.idPreviousStorage,
+      this.box,
+      this.order,
+      this.isMove: false});
   @override
   _ChooseStorageScreenState createState() => _ChooseStorageScreenState();
 }
@@ -479,7 +484,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                         box: widget.box,
                         deviceSize: deviceSize,
                         data: item,
-                        isMove: true,
+                        isMove: widget.isMove,
                       ),
                     ),
                   ),

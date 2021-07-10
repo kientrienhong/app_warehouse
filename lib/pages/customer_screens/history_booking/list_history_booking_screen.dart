@@ -174,6 +174,7 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                             DateFormat('dd/MM/yyyy').format(dateFormater
                                 .parse(data.expiredDate.split('T')[0])),
                         color: CustomColor.black,
+                        maxLines: 2,
                         context: context,
                         textAlign: TextAlign.right,
                         fontSize: 14),

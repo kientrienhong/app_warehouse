@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:appwarehouse/models/entity/imported_boxes.dart';
+import 'package:appwarehouse/models/entity/moved_boxes.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
@@ -34,6 +35,9 @@ void main() async {
       ),
       ChangeNotifierProvider<ImportedBoxes>(
         create: (_) => ImportedBoxes(),
+      ),
+      ChangeNotifierProvider<MovedBoxes>(
+        create: (_) => MovedBoxes(),
       ),
     ],
     child: MyApp(),

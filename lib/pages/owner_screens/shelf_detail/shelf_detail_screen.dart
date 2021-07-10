@@ -1,6 +1,9 @@
+import 'package:appwarehouse/common/custom_dialog.dart';
+import 'package:appwarehouse/common/custom_input.dart';
 import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/models/entity/box.dart';
 import 'package:appwarehouse/models/entity/imported_boxes.dart';
+import 'package:appwarehouse/models/entity/moved_boxes.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/shelf.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
@@ -23,7 +26,7 @@ enum TypeBox { small, big }
 
 class ShelfDetailScreen extends StatefulWidget {
   final Shelf shelf;
-  final bool isMove;
+  bool isMove;
   final bool isImported;
   ShelfDetailScreen(
       {this.shelf, @required this.isMove, @required this.isImported});
@@ -36,6 +39,8 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     implements ShelfDetailView {
   ShelfDetailPresenter presenter;
   TypeBox current = TypeBox.big;
+  TextEditingController textEditingController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   int staggeredTileBuilderIndex = 0;
 
   Widget _buildNoteForIconDialog(
@@ -110,58 +115,104 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     );
   }
 
-  _showDialogUndo(Box box, int indexFoundBoxes, Size deviceSize) {
+  _showMoveBox(Size deviceSize) {
     showDialog(
         context: context,
-        builder: (_) => Container(
-              height: deviceSize.height / 2,
-              child: AlertDialog(
-                title: CustomText(
-                    text: 'Undo',
-                    color: CustomColor.black,
-                    context: context,
-                    fontSize: 24),
-                content: Container(
-                    child: Column(
+        builder: (_) => AlertDialog(
+              title: CustomText(
+                  text: 'Move box',
+                  color: CustomColor.black,
+                  context: context,
+                  fontSize: 24),
+              content: Container(
+                height: deviceSize.height / 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomText(
-                        text: 'Are you sure?',
-                        color: CustomColor.black,
-                        context: context,
-                        fontSize: 16),
                     CustomButton(
                         height: 32,
-                        text: 'Undo',
+                        text: 'Move in same shelf',
                         width: double.infinity,
                         isLoading: false,
                         textColor: CustomColor.green,
                         onPressFunction: () {
-                          Order order =
-                              Provider.of<Order>(context, listen: false);
-                          ImportedBoxes importedBoxes =
-                              Provider.of<ImportedBoxes>(context,
-                                  listen: false);
-                          importedBoxes.undoBox(
-                              box, indexFoundBoxes, widget.shelf.id);
-                          if (box.type == 1) {
-                            int quantity = order.smallBoxQuantity + 1;
-                            order.setOrder(
-                                order.copyWith(smallBoxQuantity: quantity));
-                          } else {
-                            int quantity = order.bigBoxQuantity + 1;
-                            order.setOrder(
-                                order.copyWith(bigBoxQuantity: quantity));
-                          }
-                          updateGridView(
-                              importedBoxes.importedShelves[widget.shelf.id]);
-                          Navigator.of(context).pop();
+                          MovedBoxes movedBoxes =
+                              Provider.of<MovedBoxes>(context, listen: false);
+                          movedBoxes.setMovedBoxes(movedBoxes.copyWith(
+                              isMoveSamePlace: true,
+                              movedBox: presenter.model
+                                  .listBox[presenter.model.currentIndex]));
+                          widget.isMove = true;
+                          Navigator.pop(context);
                         },
                         buttonColor: CustomColor.lightBlue,
-                        borderRadius: 4)
+                        borderRadius: 4),
+                    CustomSizedBox(context: context, height: 8),
+                    CustomButton(
+                        height: 32,
+                        text: 'Move to another place',
+                        width: double.infinity,
+                        isLoading: false,
+                        textColor: CustomColor.white,
+                        onPressFunction: () {},
+                        buttonColor: CustomColor.purple,
+                        borderRadius: 4),
                   ],
-                )),
+                ),
               ),
             ));
+  }
+
+  _showDialogUndo(Box box, int indexFoundBoxes, Size deviceSize) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: CustomText(
+            text: 'Undo',
+            color: CustomColor.black,
+            context: context,
+            fontSize: 24),
+        content: Container(
+            height: deviceSize.height / 3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomText(
+                    text: 'Are you sure?',
+                    color: CustomColor.black,
+                    context: context,
+                    fontSize: 16),
+                CustomButton(
+                    height: 32,
+                    text: 'Undo',
+                    width: double.infinity,
+                    isLoading: false,
+                    textColor: CustomColor.green,
+                    onPressFunction: () {
+                      Order order = Provider.of<Order>(context, listen: false);
+                      ImportedBoxes importedBoxes =
+                          Provider.of<ImportedBoxes>(context, listen: false);
+                      importedBoxes.undoBox(
+                          box, indexFoundBoxes, widget.shelf.id);
+                      if (box.type == 1) {
+                        int quantity = order.smallBoxQuantity + 1;
+                        order.setOrder(
+                            order.copyWith(smallBoxQuantity: quantity));
+                      } else {
+                        int quantity = order.bigBoxQuantity + 1;
+                        order
+                            .setOrder(order.copyWith(bigBoxQuantity: quantity));
+                      }
+                      updateGridView(
+                          importedBoxes.importedShelves[widget.shelf.id]);
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: CustomColor.lightBlue,
+                    borderRadius: 4)
+              ],
+            )),
+      ),
+    );
   }
 
   _showDialog(Size deviceSize, int idBox, int index) {
@@ -322,6 +373,87 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     }
   }
 
+  _showDialogRemove(Box box, Size deviceSize) {
+    bool isText = false;
+    if (presenter.model.infoOrder['dateRemain'] != 'Expired') {
+      isText = true;
+    }
+    bool isLoading = false;
+
+    showDialog(
+        context: context,
+        builder: (_) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                title: CustomText(
+                  text: 'Remove',
+                  color: Colors.black,
+                  textAlign: TextAlign.center,
+                  context: context,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                content: Container(
+                  height: deviceSize.height / 3,
+                  child: Column(
+                    children: [
+                      CustomOutLineInput(
+                          isDisable: false,
+                          focusNode: focusNode,
+                          deviceSize: deviceSize,
+                          labelText: 'Reason'),
+                      Row(
+                        children: [
+                          isLoading == false
+                              ? TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  },
+                                  child: CustomText(
+                                    text: 'Delete',
+                                    color: Colors.red,
+                                    context: context,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ))
+                              : SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        CustomColor.purple),
+                                  ),
+                                ),
+                          CustomSizedBox(
+                            context: context,
+                            width: 8,
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: CustomText(
+                                text: 'Cancel',
+                                color: CustomColor.black,
+                                context: context,
+                                fontSize: 16,
+                              ))
+                        ],
+                      )
+                    ],
+                  ),
+                ));
+          });
+        });
+  }
+
   Widget _buildBox({
     @required int index,
     @required Box box,
@@ -330,7 +462,8 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     @required Size deviceSize,
   }) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        MovedBoxes movedBoxes = Provider.of<MovedBoxes>(context, listen: false);
         if (color == CustomColor.black[3] && widget.isImported == true) {
           _showDialog(deviceSize, box.id, index);
           return;
@@ -352,6 +485,34 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
           onClickBox(index, idOrder);
           return;
         }
+
+        if (widget.isMove == true &&
+            box.status == 2 &&
+            presenter.model.currentIndex == index) {
+          //TODO
+          _showMoveBox(deviceSize);
+        }
+
+        if (widget.isMove == true &&
+            box.status == 1 &&
+            movedBoxes.movedBox != null &&
+            movedBoxes.isMoveSamePlace == true) {
+          //TODO
+          final snackBar = SnackBar(
+            content: Text('Can not place!'),
+          );
+          if (movedBoxes.movedBox.type == 2) {
+            if (presenter.model.listBox[index + 1].status != 1) {
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return;
+            }
+            if (box.position[1] == '4') {
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return;
+            }
+          }
+          changePosition(movedBoxes.movedBox, box.id, null);
+        }
       },
       child: Container(
         decoration:
@@ -372,6 +533,30 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
       presenter.model.listBox = importedBoxes.importedShelves[widget.shelf.id];
     } else {
       presenter.fetchListBox(user.jwtToken, widget.shelf.id);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    textEditingController.dispose();
+    focusNode.dispose();
+  }
+
+  @override
+  void changePosition(Box box, int newIdBox, String msg) async {
+    User user = Provider.of<User>(context, listen: false);
+    bool result =
+        await presenter.changePosition(box, newIdBox, user.jwtToken, msg);
+    if (result == true) {
+      final snackBar = SnackBar(
+        content: Text('Move sucessful'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      presenter.fetchListBox(user.jwtToken, widget.shelf.id);
+      MovedBoxes movedBoxes = Provider.of<MovedBoxes>(context, listen: false);
+      movedBoxes.setMovedBoxes(MovedBoxes.empty());
+      widget.isMove = false;
     }
   }
 
@@ -406,6 +591,9 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
   }
 
   @override
+  void removeBox(Box box) {}
+
+  @override
   void onClickMoveBox() {
     Box box = presenter.model.listBox[presenter.model.currentIndex];
 
@@ -414,6 +602,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
         MaterialPageRoute(
             builder: (_) => ChooseStorageScreen(
                   box: box,
+                  isMove: true,
                   idPreviousStorage: widget.shelf.storageId,
                 )));
   }
@@ -543,66 +732,68 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         context: context,
                         width: 14,
                       ),
-                      Container(
-                        height: deviceSize.height / 2.8,
-                        width: deviceSize.width / 1.4,
-                        child: StaggeredGridView.countBuilder(
-                          shrinkWrap: true,
-                          crossAxisCount: 4,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: presenter.model.listBox.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            List<Box> listBox = presenter.model.listBox;
+                      Consumer<MovedBoxes>(
+                        builder: (context, item, child) => Container(
+                          height: deviceSize.height / 2.8,
+                          width: deviceSize.width / 1.4,
+                          child: StaggeredGridView.countBuilder(
+                            shrinkWrap: true,
+                            crossAxisCount: 4,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: presenter.model.listBox.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              List<Box> listBox = presenter.model.listBox;
 
-                            Box box = listBox[index];
+                              Box box = listBox[index];
 
-                            if (index == presenter.model.currentIndex ||
-                                box.isModified == true) {
+                              if (index == presenter.model.currentIndex ||
+                                  box.isModified == true) {
+                                return _buildBox(
+                                  deviceSize: deviceSize,
+                                  box: box,
+                                  idOrder: box.orderId,
+                                  index: index,
+                                  color: CustomColor.green,
+                                );
+                              }
+
+                              if (box.type == 1) {
+                                return _buildBox(
+                                  deviceSize: deviceSize,
+                                  box: box,
+                                  index: index,
+                                  idOrder: box.orderId,
+                                  color: CustomColor.purple,
+                                );
+                              }
+
+                              if (box.type == 2) {
+                                return _buildBox(
+                                  deviceSize: deviceSize,
+                                  box: box,
+                                  index: index,
+                                  idOrder: box.orderId,
+                                  color: CustomColor.lightBlue,
+                                );
+                              }
+
                               return _buildBox(
-                                deviceSize: deviceSize,
-                                box: box,
-                                idOrder: box.orderId,
                                 index: index,
-                                color: CustomColor.green,
-                              );
-                            }
-
-                            if (box.type == 1) {
-                              return _buildBox(
                                 deviceSize: deviceSize,
-                                box: box,
-                                index: index,
                                 idOrder: box.orderId,
-                                color: CustomColor.purple,
-                              );
-                            }
-
-                            if (box.type == 2) {
-                              return _buildBox(
-                                deviceSize: deviceSize,
                                 box: box,
-                                index: index,
-                                idOrder: box.orderId,
-                                color: CustomColor.lightBlue,
+                                color: CustomColor.black[3],
                               );
-                            }
-
-                            return _buildBox(
-                              index: index,
-                              deviceSize: deviceSize,
-                              idOrder: box.orderId,
-                              box: box,
-                              color: CustomColor.black[3],
-                            );
-                          },
-                          staggeredTileBuilder: (int index) =>
-                              new StaggeredTile.count(
-                                  presenter.model.listBox[index].type == 2
-                                      ? 2
-                                      : 1,
-                                  1),
-                          mainAxisSpacing: 8.0,
-                          crossAxisSpacing: 12.0,
+                            },
+                            staggeredTileBuilder: (int index) =>
+                                new StaggeredTile.count(
+                                    presenter.model.listBox[index].type == 2
+                                        ? 2
+                                        : 1,
+                                    1),
+                            mainAxisSpacing: 8.0,
+                            crossAxisSpacing: 12.0,
+                          ),
                         ),
                       ),
                     ]),
@@ -764,7 +955,10 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         text: 'Move',
                         width: deviceSize.width / 3,
                         textColor: CustomColor.green,
-                        onPressFunction: () {},
+                        onPressFunction: () {
+                          if (presenter.model.currentIndex != -1)
+                            _showMoveBox(deviceSize);
+                        },
                         buttonColor: CustomColor.lightBlue,
                         borderRadius: 4),
                     CustomSizedBox(
@@ -772,13 +966,17 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                       height: 16,
                     ),
                     CustomButton(
+                        isLoading: false,
                         height: 32,
                         text: 'Remove',
                         width: deviceSize.width / 3,
                         textColor: CustomColor.white,
                         onPressFunction: () {
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (_) => ChooseSelfScreen()));
+                          if (presenter.model.currentIndex != -1)
+                            _showDialogRemove(
+                                presenter.model
+                                    .listBox[presenter.model.currentIndex],
+                                deviceSize);
                         },
                         buttonColor: CustomColor.red,
                         borderRadius: 4),

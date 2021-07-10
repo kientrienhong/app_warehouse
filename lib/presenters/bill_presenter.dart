@@ -29,10 +29,27 @@ class BillPresenter {
         final nextPageKey = size + newItems.length;
         _model.pagingController.appendPage(newItems, nextPageKey);
       }
+      _model.order = null;
+      _model.isLoading = false;
+      _model.isSearch = false;
       _view.updateView();
     } catch (e) {
       print(e.toString());
       _model.pagingController.error = e;
+    }
+  }
+
+  void searchBill(String id, String jwt) async {
+    try {
+      _model.isSearch = true;
+      _view.updateLoading();
+      int idOrder = int.parse(id);
+      var response = await ApiServices.getOrder(jwt, idOrder);
+      _model.order = OrderCustomer.fromMap(response.data);
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      _view.updateLoading();
     }
   }
 }

@@ -76,4 +76,38 @@ class ShelfDetailPresenter {
       _view.updateLoadingOrder();
     }
   }
+
+  Future<bool> changePosition(
+      Box box, int newIdBox, String jwt, String msg) async {
+    try {
+      List<Map<String, dynamic>> listResult = [
+        {
+          "boxId": box.id,
+          "orderId": box.orderId,
+          "type": box.type,
+          "boxId2": box.type == 2 ? box.id + 1 : null,
+          "boxCode": box.boxCode,
+          "status": 1
+        },
+        {
+          "boxId": newIdBox,
+          "orderId": box.orderId,
+          "type": box.type,
+          "boxId2": box.type == 2 ? newIdBox + 1 : null,
+          "boxCode": box.boxCode,
+          "status": 2
+        }
+      ];
+      var response =
+          await ApiServices.updateBoxes(box.orderId, jwt, listResult, msg);
+      if (response.data is String) {
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 }

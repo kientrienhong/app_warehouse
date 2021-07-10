@@ -22,11 +22,13 @@ class BillScreen extends StatefulWidget {
 class _BillScreenState extends State<BillScreen> implements BillView {
   BillPresenter presenter;
   final oCcy = new NumberFormat("#,##0", "en_US");
-
+  TextEditingController _searchController;
   Widget _buildBillWidget(
       {@required OrderCustomer data,
       @required BuildContext context,
       @required Size deviceSize}) {
+    DateFormat dateFormater = DateFormat('yyyy-MM-dd');
+
     Color colorStatus;
     String status;
     switch (data.status) {
@@ -82,7 +84,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    width: deviceSize.width / 1.7,
+                    width: deviceSize.width / 2.3,
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -133,19 +135,11 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
-                              CustomSizedBox(
-                                context: context,
-                                height: 8,
-                              ),
-                              // CustomText(
-                              //     text: 'Expired Date: ' + data.,
-                              //     color: CustomColor.black,
-                              //     context: context,
-                              //     fontSize: 14),
                             ],
                           ),
                         ])),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     CustomText(
                       text: status,
@@ -157,7 +151,20 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                     ),
                     CustomSizedBox(
                       context: context,
-                      height: 56,
+                      height: 8,
+                    ),
+                    CustomText(
+                        text: 'Expired date: ' +
+                            DateFormat('dd/MM/yyyy').format(dateFormater
+                                .parse(data.expiredDate.split('T')[0])),
+                        color: CustomColor.black,
+                        context: context,
+                        maxLines: 2,
+                        textAlign: TextAlign.right,
+                        fontSize: 14),
+                    CustomSizedBox(
+                      context: context,
+                      height: 8,
                     ),
                     CustomText(
                       text: oCcy.format(data.total) + ' VND',
@@ -175,10 +182,30 @@ class _BillScreenState extends State<BillScreen> implements BillView {
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
     presenter = BillPresenter();
     presenter.view = this;
     presenter.model.pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
+    });
+  }
+
+  @override
+  void onClickSearch(String id) {
+    User user = Provider.of<User>(context, listen: false);
+    presenter.searchBill(id, user.jwtToken);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
+  }
+
+  @override
+  void updateLoading() {
+    setState(() {
+      presenter.model.isLoading = !presenter.model.isLoading;
     });
   }
 
@@ -193,61 +220,122 @@ class _BillScreenState extends State<BillScreen> implements BillView {
     presenter.fetchPage(pageKey, user.jwtToken, 5);
   }
 
+  Widget buildList(Size deviceSize) {
+    return presenter.model.pagingController.error == null
+        ? Container(
+            height: deviceSize.height / 1.3,
+            child: RefreshIndicator(
+              onRefresh: () =>
+                  Future.sync(() => presenter.model.pagingController.refresh()),
+              child: PagedListView<int, OrderCustomer>(
+                shrinkWrap: true,
+                pagingController: presenter.model.pagingController,
+                builderDelegate: PagedChildBuilderDelegate<OrderCustomer>(
+                    itemBuilder: (context, item, index) => _buildBillWidget(
+                        data: item, context: context, deviceSize: deviceSize)),
+              ),
+            ),
+          )
+        : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            CustomText(
+                text: 'Not have customer order yet!',
+                color: CustomColor.black[3],
+                context: context,
+                fontSize: 24),
+            CustomSizedBox(
+              context: context,
+              height: 16,
+            ),
+            CustomButton(
+                height: 32,
+                text: 'Refresh',
+                width: double.infinity,
+                isLoading: false,
+                textColor: CustomColor.white,
+                onPressFunction: () async {
+                  fetchPage(0);
+                },
+                buttonColor: CustomColor.purple,
+                borderRadius: 4),
+          ]);
+  }
+
+  Widget buildSearch(Size deviceSize) {
+    if (presenter.model.order == null) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        CustomSizedBox(
+          context: context,
+          height: 8,
+        ),
+        CustomText(
+            text: 'Not found!',
+            color: CustomColor.black[3],
+            context: context,
+            fontSize: 24),
+      ]);
+    } else {
+      return _buildBillWidget(
+          data: presenter.model.order,
+          context: context,
+          deviceSize: deviceSize);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      child: Column(children: [
-        CustomSizedBox(
-          context: context,
-          height: 16,
-        ),
-        presenter.model.pagingController.error == null
-            ? Container(
-                height: deviceSize.height / 1.3,
-                child: RefreshIndicator(
-                  onRefresh: () => Future.sync(
-                      () => presenter.model.pagingController.refresh()),
-                  child: PagedListView<int, OrderCustomer>(
-                    shrinkWrap: true,
-                    pagingController: presenter.model.pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<OrderCustomer>(
-                        itemBuilder: (context, item, index) => _buildBillWidget(
-                            data: item,
-                            context: context,
-                            deviceSize: deviceSize)),
-                  ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(children: [
+          CustomSizedBox(
+            context: context,
+            height: 16,
+          ),
+          Row(
+            children: [
+              Container(
+                width: deviceSize.width - 48,
+                height: 40,
+                child: TextFormField(
+                  controller: _searchController,
+                  textInputAction: TextInputAction.done,
+                  //its about this part
+                  onFieldSubmitted: (String value) {
+                    if (value.isEmpty) {
+                      setState(() {
+                        presenter.model.isSearch = false;
+                        presenter.model.isLoading = false;
+                        presenter.model.order = null;
+                      });
+                    } else {
+                      onClickSearch(_searchController.text);
+                    }
+                  },
+                  decoration: InputDecoration(
+                      suffixIcon: GestureDetector(
+                        onTap: () => onClickSearch(_searchController.text),
+                        child: ImageIcon(
+                          AssetImage('assets/images/search.png'),
+                          color: CustomColor.black,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: CustomColor.black[2]))),
                 ),
               )
-            : Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                CustomText(
-                    text: 'Not have customer order yet!',
-                    color: CustomColor.black[3],
-                    context: context,
-                    fontSize: 24),
-                CustomSizedBox(
-                  context: context,
-                  height: 16,
-                ),
-                CustomButton(
-                    height: 32,
-                    text: 'Refresh',
-                    width: double.infinity,
-                    isLoading: false,
-                    textColor: CustomColor.white,
-                    onPressFunction: () async {
-                      fetchPage(0);
-                    },
-                    buttonColor: CustomColor.purple,
-                    borderRadius: 4),
-              ]),
-        CustomSizedBox(
-          context: context,
-          height: 32,
-        )
-      ]),
+            ],
+          ),
+          if (presenter.model.isSearch == false) buildList(deviceSize),
+          if (presenter.model.isSearch == true) buildSearch(deviceSize),
+          CustomSizedBox(
+            context: context,
+            height: 32,
+          )
+        ]),
+      ),
     );
   }
 }

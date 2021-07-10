@@ -4,6 +4,7 @@ import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class BillInfoWidget extends StatelessWidget {
   final Order data;
@@ -13,6 +14,7 @@ class BillInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final oCcy = new NumberFormat("#,##0", "en_US");
 
     return Column(
       children: [
@@ -118,7 +120,7 @@ class BillInfoWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
             CustomText(
-              text: '${data.total} VND',
+              text: '${oCcy.format(data.total)} VND',
               color: CustomColor.purple,
               context: context,
               fontSize: 24,
