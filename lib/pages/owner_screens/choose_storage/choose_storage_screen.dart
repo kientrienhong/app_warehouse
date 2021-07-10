@@ -210,7 +210,8 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
     bool result;
     if (importedBoxes.boxInDifferentStorage.keys.length > 0) {
       if (reasonController.text.length == 0) {
-        updateMsg('You must provide reason but box another storage', true);
+        updateMsg(
+            'You must provide reason why move box to another storage', true);
         return;
       }
       result = await presenter.importedBoxes(user.jwtToken,

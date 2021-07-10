@@ -1,4 +1,10 @@
+import 'package:appwarehouse/common/custom_button.dart';
+import 'package:appwarehouse/common/custom_input.dart';
+import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
+import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/presenters/detail_bill_screen.dart';
+import 'package:appwarehouse/views/detail_bill_view.dart';
 
 import '/common/box_info_bill_widget.dart';
 import '/common/custom_app_bar.dart';
@@ -6,24 +12,29 @@ import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import '/common/info_call.dart';
-import '/pages/owner_screens/bill/bill_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class DetailBillScreen extends StatelessWidget {
+class DetailBillScreen extends StatefulWidget {
   final OrderCustomer data;
 
   DetailBillScreen({this.data});
-  DateFormat dateFormater = DateFormat('yyyy-MM-dd');
-  final oCcy = new NumberFormat("#,##0", "en_US");
 
-  final positionSmallBox = {'Shelf - 1': 'A1, B2', 'Shelf - 2': 'A2, C1'};
-  final positionLargeBox = {
-    'Shelf - 1': 'C1',
-  };
+  @override
+  State<DetailBillScreen> createState() => _DetailBillScreenState();
+}
+
+class _DetailBillScreenState extends State<DetailBillScreen>
+    implements DetailBillView {
+  DateFormat dateFormater = DateFormat('yyyy-MM-dd');
+  DetailBillScreenPresenter presenter;
+  final oCcy = new NumberFormat("#,##0", "en_US");
+  TextEditingController controller;
+  FocusNode focusNode;
 
   Widget _buildPosition(
-      {@required Map<String, String> position,
+      {@required Map<String, dynamic> position,
       @required Size deviceSize,
       @required BuildContext context}) {
     return Container(
@@ -53,19 +64,103 @@ class DetailBillScreen extends StatelessWidget {
               child: ListView.builder(
             shrinkWrap: true,
             itemBuilder: (_, index) {
-              String shelf = positionSmallBox.keys.toList()[index];
+              String shelf = position.keys.toList()[index];
 
               return CustomText(
-                  text: '$shelf - ${positionSmallBox[shelf]}',
+                  text: '$shelf - ${position[shelf]}',
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16);
             },
-            itemCount: positionSmallBox.keys.length,
+            itemCount: position.keys.length,
           )),
         ],
       ),
     );
+  }
+
+  Widget _buildCheckOut(Size deviceSize) {
+    return Column(
+      children: [
+        if (widget.data.status == 2)
+          CustomOutLineInput(
+              isDisable: false,
+              focusNode: focusNode,
+              controller: controller,
+              deviceSize: deviceSize,
+              labelText: 'Reason'),
+        CustomMsgInput(
+            msg: presenter.model.msg,
+            isError: presenter.model.isError,
+            maxLines: 1),
+        CustomSizedBox(
+          context: context,
+          height: 4,
+        ),
+        CustomButton(
+            height: 32,
+            text: 'Check out',
+            width: double.infinity,
+            isLoading: presenter.model.isLoading,
+            textColor: CustomColor.green,
+            onPressFunction: () => handleOnClick(),
+            buttonColor: CustomColor.lightBlue,
+            borderRadius: 4),
+      ],
+    );
+  }
+
+  @override
+  void updateLoading() {
+    setState(() {
+      presenter.model.isLoading = !presenter.model.isLoading;
+    });
+  }
+
+  @override
+  void updateMsg(String msg, bool isError) {
+    setState(() {
+      presenter.model.msg = msg;
+      presenter.model.isError = isError;
+    });
+  }
+
+  @override
+  void handleOnClick() {
+    User user = Provider.of<User>(context, listen: false);
+
+    if (presenter.model.isAlreadyCheckOut == true) {
+      updateMsg('You already check out', false);
+      return;
+    }
+
+    if (widget.data.status == 2) {
+      if (controller.text.isEmpty) {
+        updateMsg('You must provide reason', true);
+        return;
+      }
+      print(widget.data.id);
+      presenter.handleOnClick(user.jwtToken, widget.data.id, controller.text);
+    } else {
+      presenter.handleOnClick(user.jwtToken, widget.data.id, null);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    presenter = DetailBillScreenPresenter();
+    presenter.view = this;
+    presenter.formatData(widget.data.boxUsed);
+    controller = TextEditingController();
+    focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+    focusNode.dispose();
   }
 
   @override
@@ -79,10 +174,6 @@ class DetailBillScreen extends StatelessWidget {
             CustomAppBar(
               isHome: false,
             ),
-            CustomSizedBox(
-              context: context,
-              height: 32,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -93,7 +184,7 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: '#' + data.id.toString(),
+                  text: '#' + widget.data.id.toString(),
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16,
@@ -116,8 +207,8 @@ class DetailBillScreen extends StatelessWidget {
                     fontSize: 16),
                 CustomText(
                   text: 'Expired date: ' +
-                      DateFormat('dd/MM/yyyy').format(
-                          dateFormater.parse(data.expiredDate.split('T')[0])),
+                      DateFormat('dd/MM/yyyy').format(dateFormater
+                          .parse(widget.data.expiredDate.split('T')[0])),
                   color: CustomColor.black,
                   context: context,
                   fontSize: 16,
@@ -138,7 +229,7 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: oCcy.format(data.total) + ' VND',
+                  text: oCcy.format(widget.data.total) + ' VND',
                   color: CustomColor.purple,
                   context: context,
                   fontSize: 16,
@@ -160,7 +251,7 @@ class DetailBillScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
                 CustomText(
-                  text: data.months.toString(),
+                  text: widget.data.months.toString(),
                   color: CustomColor.purple,
                   context: context,
                   fontSize: 16,
@@ -175,13 +266,13 @@ class DetailBillScreen extends StatelessWidget {
             BoxInfoBillWidget(
               deviceSize: deviceSize,
               imagePath: 'assets/images/smallBox.png',
-              price: oCcy.format(data.smallBoxPrice) + ' VND',
+              price: oCcy.format(widget.data.smallBoxPrice) + ' VND',
               size: '0.5m x 1m x 1m',
-              amount: data.smallBoxQuantity,
+              amount: widget.data.smallBoxQuantity,
             ),
-            if (data.status != 1)
+            if (widget.data.status != 1)
               _buildPosition(
-                  position: positionSmallBox,
+                  position: presenter.model.positionSmallBox,
                   deviceSize: deviceSize,
                   context: context),
             CustomSizedBox(
@@ -191,13 +282,13 @@ class DetailBillScreen extends StatelessWidget {
             BoxInfoBillWidget(
               deviceSize: deviceSize,
               imagePath: 'assets/images/largeBox.png',
-              price: oCcy.format(data.bigBoxPrice) + ' VND',
+              price: oCcy.format(widget.data.bigBoxPrice) + ' VND',
               size: '1m x 1m x 1m',
-              amount: data.bigBoxQuantity,
+              amount: widget.data.bigBoxQuantity,
             ),
-            if (data.status != 1)
+            if (widget.data.status != 1)
               _buildPosition(
-                  position: positionLargeBox,
+                  position: presenter.model.positionLargeBox,
                   deviceSize: deviceSize,
                   context: context),
             CustomSizedBox(
@@ -207,9 +298,12 @@ class DetailBillScreen extends StatelessWidget {
             InfoCall(
                 role: 'Customer',
                 deviceSize: deviceSize,
-                phone: data.customerPhone,
-                avatar: data.customerAvatar,
-                name: data.customerName),
+                phone: widget.data.customerPhone,
+                avatar: widget.data.customerAvatar,
+                name: widget.data.customerName),
+            CustomSizedBox(context: context, height: 16),
+            if (widget.data.status != 1 && widget.data.status != 3)
+              _buildCheckOut(deviceSize),
             CustomSizedBox(
               context: context,
               height: 36,

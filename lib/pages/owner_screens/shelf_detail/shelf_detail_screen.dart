@@ -1,4 +1,5 @@
 import 'package:appwarehouse/common/custom_input.dart';
+import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/models/entity/box.dart';
 import 'package:appwarehouse/models/entity/imported_boxes.dart';
 import 'package:appwarehouse/models/entity/moved_boxes.dart';
@@ -391,7 +392,8 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
 
   _showDialogWriteReasonMove(Box box, Size deviceSize) {
     bool isLoading = false;
-
+    String msg = '';
+    bool isError = false;
     showDialog(
         context: context,
         builder: (_) {
@@ -408,21 +410,48 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                   fontWeight: FontWeight.bold,
                 ),
                 content: Container(
-                  height: deviceSize.height / 3,
+                  height: deviceSize.height / 4,
                   child: Column(
                     children: [
                       CustomOutLineInput(
                           isDisable: false,
+                          controller: textEditingController,
                           focusNode: focusNode,
                           deviceSize: deviceSize,
                           labelText: 'Reason'),
+                      if (msg.isNotEmpty)
+                        CustomMsgInput(msg: msg, isError: isError, maxLines: 2),
+                      CustomSizedBox(
+                        context: context,
+                        height: 4,
+                      ),
                       CustomButton(
                           height: 32,
                           text: 'Submit',
                           width: double.infinity,
                           isLoading: isLoading,
                           textColor: CustomColor.green,
-                          onPressFunction: () {},
+                          onPressFunction: () async {
+                            if (textEditingController.text.isEmpty) {
+                              setState(() {
+                                msg = 'You must provide reason';
+                                isError = true;
+                              });
+                              return;
+                            }
+
+                            setState(() {
+                              isLoading = true;
+                            });
+                            MovedBoxes movedBoxes =
+                                Provider.of<MovedBoxes>(context, listen: false);
+                            await changePosition(movedBoxes.movedBox, box.id,
+                                textEditingController.text);
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pop(context);
+                          },
                           buttonColor: CustomColor.lightBlue,
                           borderRadius: 4)
                     ],
@@ -474,7 +503,9 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
         if (widget.isMove == true &&
             box.status == 1 &&
             movedBoxes.movedBox != null &&
-            movedBoxes.isMoveSamePlace == false) {}
+            movedBoxes.isMoveSamePlace == false) {
+          _showDialogWriteReasonMove(box, deviceSize);
+        }
 
         if (widget.isMove == true &&
             box.status == 1 &&
@@ -542,7 +573,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
   }
 
   @override
-  void changePosition(Box box, int newIdBox, String msg) async {
+  Future<void> changePosition(Box box, int newIdBox, String msg) async {
     User user = Provider.of<User>(context, listen: false);
     bool result =
         await presenter.changePosition(box, newIdBox, user.jwtToken, msg);
@@ -595,7 +626,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
   @override
   void onClickMoveBox() {
     Box box = presenter.model.listBox[presenter.model.currentIndex];
-
+    Navigator.pop(context);
     Navigator.push(
         context,
         MaterialPageRoute(

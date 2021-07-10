@@ -303,6 +303,21 @@ class ApiServices {
     }
   }
 
+  static Future<dynamic> deleteBoxes(String jwt, int idOrder, String msg) {
+    try {
+      return Dio()
+          .delete('https://localhost:44318/api/v1/order-details/$idOrder',
+              data: {"orderId": idOrder, "mailMessage": msg},
+              options: Options(headers: {
+                'Authorization': 'bearer ' + jwt,
+                'Content-Type': "application/json",
+                'Accept': 'application/json',
+              }));
+    } catch (e) {
+      throw Exception('Feedback failed');
+    }
+  }
+
   static Future<dynamic> updateBoxes(int orderId, String jwt,
       List<Map<String, dynamic>> listResult, String msg) {
     try {
