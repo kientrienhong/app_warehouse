@@ -154,15 +154,57 @@ class _DetailBillScreenState extends State<DetailBillScreen>
                           height: 4,
                         ),
                         CustomButton(
-                            height: 32,
-                            text: 'Check out',
-                            width: double.infinity,
-                            isLoading: isLoading,
-                            textColor: CustomColor.green,
-                            onPressFunction: () => handleOnClickWithReason(
-                                msg, isError, isLoading),
-                            buttonColor: CustomColor.lightBlue,
-                            borderRadius: 4),
+                          height: 32,
+                          text: 'Check out',
+                          width: double.infinity,
+                          isLoading: isLoading,
+                          borderRadius: 4,
+                          buttonColor: CustomColor.lightBlue,
+                          textColor: CustomColor.green,
+                          onPressFunction: () async {
+                            {
+                              User user =
+                                  Provider.of<User>(context, listen: false);
+
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              if (presenter.model.isAlreadyCheckOut == true) {
+                                setState(() {
+                                  msg = 'You already check out';
+                                  isError = false;
+                                  isLoading = false;
+                                });
+                                return;
+                              }
+
+                              if (controller.text.isEmpty) {
+                                setState(() {
+                                  msg = 'You must provide reason';
+                                  isError = true;
+                                  isLoading = false;
+                                });
+                                return;
+                              }
+                              bool response = await presenter.handleOnClick(
+                                  user.jwtToken,
+                                  widget.data.id,
+                                  controller.text);
+
+                              if (response == true) {
+                                setState(() {
+                                  msg = 'Success Remove';
+                                  isError = false;
+                                });
+                              }
+
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          },
+                        )
                       ],
                     )),
               ),
@@ -170,36 +212,7 @@ class _DetailBillScreenState extends State<DetailBillScreen>
   }
 
   @override
-  void handleOnClickWithReason(String msg, bool isError, bool isLoading) {
-    User user = Provider.of<User>(context, listen: false);
-
-    setState(() {
-      isLoading = true;
-    });
-
-    if (presenter.model.isAlreadyCheckOut == true) {
-      setState(() {
-        msg = 'You already check out';
-        isError = false;
-        isLoading = false;
-      });
-      return;
-    }
-
-    if (controller.text.isEmpty) {
-      setState(() {
-        msg = 'You must provide reason';
-        isError = true;
-        isLoading = false;
-      });
-      return;
-    }
-    presenter.handleOnClick(user.jwtToken, widget.data.id, controller.text);
-
-    setState(() {
-      isLoading = false;
-    });
-  }
+  void handleOnClickWithReason(String msg, bool isError, bool isLoading) {}
 
   @override
   void handleOnClickWithoutReason() {
@@ -401,8 +414,7 @@ class _DetailBillScreenState extends State<DetailBillScreen>
                 avatar: widget.data.customerAvatar,
                 name: widget.data.customerName),
             CustomSizedBox(context: context, height: 16),
-            if (widget.data.status != 1 && widget.data.status != 2)
-              _buildCheckOut(deviceSize),
+            if (widget.data.status == 2) _buildCheckOut(deviceSize),
             CustomSizedBox(
               context: context,
               height: 36,

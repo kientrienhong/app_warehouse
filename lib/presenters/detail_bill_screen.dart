@@ -39,18 +39,21 @@ class DetailBillScreenPresenter {
     });
   }
 
-  void handleOnClick(String jwt, int idOrder, String msg) async {
+  Future<bool> handleOnClick(String jwt, int idOrder, String msg) async {
     try {
       _view.updateLoading();
       var response = await ApiServices.deleteBoxes(jwt, idOrder, msg);
       if (response.data is String) {
         _view.updateMsg('Check out sucesfull', false);
         _model.isAlreadyCheckOut = true;
+        return true;
       } else {
         _view.updateMsg('Check out failed', true);
+        return false;
       }
     } catch (e) {
       print(e.toString());
+      return false;
     } finally {
       _view.updateLoading();
     }

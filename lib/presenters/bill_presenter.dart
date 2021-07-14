@@ -2,6 +2,7 @@ import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/models/bill_model.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
 import 'package:appwarehouse/views/bill_view.dart';
+import 'package:intl/intl.dart';
 
 class BillPresenter {
   BillView _view;
@@ -21,6 +22,16 @@ class BillPresenter {
       List<OrderCustomer> newItems = response.data['data']
           .map<OrderCustomer>((e) => OrderCustomer.fromMap(e))
           .toList();
+      DateFormat dateFormater = DateFormat('yyyy-MM-dd');
+      DateTime now = DateTime.now();
+      newItems = newItems.map((e) {
+        DateTime expiredDate = dateFormater.parse(e.expiredDate.split('T')[0]);
+        if (expiredDate.isBefore(now) && (e.status == 2 || e.status == 1)) {
+          return e.copyWith(status: 4);
+        }
+
+        return e;
+      }).toList();
 
       final isLastPage = newItems.length < size;
       if (isLastPage) {
