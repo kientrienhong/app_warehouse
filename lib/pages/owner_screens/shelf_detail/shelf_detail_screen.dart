@@ -190,7 +190,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
             context: context,
             fontSize: 24),
         content: Container(
-            height: deviceSize.height / 3,
+            height: deviceSize.height / 5,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -198,7 +198,11 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                     text: 'Are you sure?',
                     color: CustomColor.black,
                     context: context,
-                    fontSize: 16),
+                    fontSize: 24),
+                CustomSizedBox(
+                  context: context,
+                  height: 16,
+                ),
                 CustomButton(
                     height: 32,
                     text: 'Undo',

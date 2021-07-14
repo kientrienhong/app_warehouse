@@ -118,7 +118,9 @@ class _StatusShelfState extends State<StatusShelf> {
                 context: context,
                 width: 8,
               ),
-            if (widget.data.usage == 0 && widget.isMove == false)
+            if (widget.data.usage == 0 &&
+                widget.isMove == false &&
+                widget.isImported == false)
               GestureDetector(
                 onTap: () => _showDialog(context, widget.data.id),
                 child: Container(

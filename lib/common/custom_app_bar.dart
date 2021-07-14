@@ -1,4 +1,7 @@
 import 'package:appwarehouse/api/api_services.dart';
+import 'package:appwarehouse/common/custom_color.dart';
+import 'package:appwarehouse/common/custom_sizebox.dart';
+import 'package:appwarehouse/common/custom_text.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
@@ -12,8 +15,8 @@ import 'package:intl/intl.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
-
-  CustomAppBar({this.isHome});
+  final String name;
+  CustomAppBar({this.isHome, this.name});
   void callDetailOrder(BuildContext context, int orderId) async {
     try {
       User user = Provider.of<User>(context, listen: false);
@@ -55,7 +58,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           width: deviceSize.width,
           height: 80,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: name == null
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -77,6 +82,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
               ),
+              if (name != null)
+                Row(children: [
+                  CustomSizedBox(
+                    context: context,
+                    width: 80,
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 32, bottom: 8),
+                      child: CustomText(
+                          text: name,
+                          color: CustomColor.black,
+                          context: context,
+                          fontSize: 24),
+                    ),
+                  ),
+                ]),
               if (value.role == UserRole.owner && isHome == true)
                 Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 8),

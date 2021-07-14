@@ -1,7 +1,6 @@
 import '/common/custom_msg_input.dart';
 import '/models/entity/order.dart';
 import '/pages/customer_screens/for_rent_detail/bill_protecting_service.dart';
-
 import '/common/custom_app_bar.dart';
 import '/common/custom_color.dart';
 import '/common/custom_sizebox.dart';
@@ -312,10 +311,6 @@ class _DetailProtectingServiceScreenState
                     viewportFraction: 0.8,
                     initialPage: 0,
                     reverse: false,
-                    // autoPlay: true,
-                    // autoPlayInterval: Duration(seconds: 3),
-                    // autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    // autoPlayCurve: Curves.fastOutSlowIn,
                     enlargeCenterPage: true,
                     scrollDirection: Axis.horizontal,
                   )),

@@ -332,6 +332,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
             children: [
               CustomAppBar(
                 isHome: false,
+                name: 'Choose Storage',
               ),
               CustomSizedBox(
                 context: context,
@@ -431,10 +432,6 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                   context: context,
                   fontWeight: FontWeight.bold,
                   fontSize: 24),
-              CustomSizedBox(
-                context: context,
-                height: 8,
-              ),
               CustomSizedBox(
                 context: context,
                 height: 8,

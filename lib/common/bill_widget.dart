@@ -31,7 +31,7 @@ class BillWidget extends StatelessWidget {
 
   void callDetailOrder(BuildContext context) async {
     String jwt =
-        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjU5MDI4OTUsInVzZXJfaWQiOiI5SE5vY0diZjhkY29URE9Fd1E4aTRNMFFLQ2cyIiwic3ViIjoiOUhOb2NHYmY4ZGNvVERPRXdROGk0TTBRS0NnMiIsImlhdCI6MTYyNTkwMjg5NSwiZXhwIjoxNjI1OTA2NDk1LCJlbWFpbCI6Im93bmVyMzIxM0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsib3duZXIzMjEzQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.V_nlNyb5rDHg0jiU71DIEujfN37WoECFnNC_iA6faL8yKXgzie1iRYmS5YobmIHbefIB0v6eQsu2146E4G_Q692-_Xry11IzxQU7ACXFPoTcEp_8jlTHVDrbwhQKDpgMc5U68bLUwAHyC-rqEMXzT1_nEe78XuuCHYRwly-2s2JH3eG0cynsGbOHwWiQQBWgL-e1AE8Xxobwy8Sg5_PP8K9O-wuXTx1jCL3OonIi0dzrxYFIWxH2g7h-1AtT6AcLvHXxiVbkJp3XGi7IroTfw-xG-F3d4YD76Lxi3Ru3FLEgou3VMpV8s-AejRz9KL042T3eNJUMNeuWjyJ_midF3Q';
+        'eyJhbGciOiJSUzI1NiIsImtpZCI6IjhmNDMyMDRhMTc5MTVlOGJlN2NjZDdjYjI2NGRmNmVhMzgzYzQ5YWIiLCJ0eXAiOiJKV1QifQ.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJPd25lciIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS93YWZheXUtODI3NTMiLCJhdWQiOiJ3YWZheXUtODI3NTMiLCJhdXRoX3RpbWUiOjE2MjYyNTg0MzksInVzZXJfaWQiOiIzOG9IdzZrU0VwTmsyVWFqZkQ1ZGxPYndlbWsyIiwic3ViIjoiMzhvSHc2a1NFcE5rMlVhamZENWRsT2J3ZW1rMiIsImlhdCI6MTYyNjI1ODQzOSwiZXhwIjoxNjI2MjYyMDM5LCJlbWFpbCI6InRyaWVuQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0cmllbkBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.kxuqLkkHYbFviPElpfKxgJM-M0GruaGFoBt1LfKPaixB7QrMFDP_GNya80ZM0Ejw2GSgH-LqylnvRmqRZ4ZkzsMqG4TUlvv6aiua-FLQq9P8NNZOSKd7dIEA_vb0V7xP5a-PQKhG_W8VO_u9UUpVr2-A_Q8JzQEyKVqfeEnEUkP5HF-eFwvZJ2btz3oBoHafPH13sJ3pf90o-yhyNj4aMJFItFGzxHD5fJpEysKYOgiSrQX2SKROIveUydY2dMJK6nM-ORftHplzAXDbq-KVjr9Ru3bDPq6E-vAEtHGQX0zomZzCZKt3yPTEzPo3hXHpj6uD7IwwKGtC8xvsQ4ErOw';
     var resultOrder = await ApiServices.getOrder(jwt, data.id);
     Order order = Provider.of<Order>(context, listen: false);
     order.setOrder(Order.fromMap(resultOrder.data));
@@ -98,7 +98,7 @@ class BillWidget extends StatelessWidget {
             height: 24,
           ),
           GestureDetector(
-            // onTap: () => callDetailOrder(context),
+            onTap: () => callDetailOrder(context),
             child: QrImage(
               data: data.id.toString(),
               size: 88.0,

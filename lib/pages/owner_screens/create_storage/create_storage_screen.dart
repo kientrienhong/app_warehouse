@@ -300,6 +300,7 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
           if (widget.data != null)
             CustomAppBar(
               isHome: false,
+              name: 'Update storage',
             ),
           CustomSizedBox(context: context, height: 16),
           CustomText(

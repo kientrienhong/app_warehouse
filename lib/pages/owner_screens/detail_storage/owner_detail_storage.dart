@@ -14,6 +14,7 @@ import '/common/custom_sizebox.dart';
 import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class OwnerDetailStorage extends StatefulWidget {
   final Storage data;
@@ -38,6 +39,20 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
     presenter.model.pagingFeedbackController.addPageRequestListener((pageKey) {
       fetchFeedBack(pageKey);
     });
+  }
+
+  List<Widget> _buildListImageWidget(
+      List<dynamic> listImages, Size deviceSize) {
+    return listImages.where((element) => element['type'] == 0).map((element) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: deviceSize.width,
+          height: deviceSize.height / 4.8,
+          child: Image.network(element['imageUrl'], fit: BoxFit.cover),
+        ),
+      );
+    }).toList();
   }
 
   @override
@@ -97,6 +112,22 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
           children: [
             CustomAppBar(
               isHome: false,
+              name: widget.data.name,
+            ),
+            CarouselSlider(
+                items: _buildListImageWidget(widget.data.picture, deviceSize),
+                options: CarouselOptions(
+                  height: deviceSize.height / 4.8,
+                  aspectRatio: 16 / 9,
+                  viewportFraction: 0.8,
+                  initialPage: 0,
+                  reverse: false,
+                  enlargeCenterPage: true,
+                  scrollDirection: Axis.horizontal,
+                )),
+            CustomSizedBox(
+              context: context,
+              height: 16,
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               CustomText(
@@ -139,6 +170,7 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
                   pagingController: presenter.model.pagingController,
                   builderDelegate: PagedChildBuilderDelegate<dynamic>(
                       itemBuilder: (context, item, index) => StatusShelf(
+                            isImported: false,
                             data: item,
                             isMove: false,
                             deviceSize: deviceSize,
