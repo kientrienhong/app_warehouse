@@ -414,7 +414,7 @@ class _DetailBillScreenState extends State<DetailBillScreen>
                 avatar: widget.data.customerAvatar,
                 name: widget.data.customerName),
             CustomSizedBox(context: context, height: 16),
-            if (widget.data.status == 2) _buildCheckOut(deviceSize),
+            if (widget.data.status == 4) _buildCheckOut(deviceSize),
             CustomSizedBox(
               context: context,
               height: 36,

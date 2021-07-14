@@ -11,9 +11,9 @@ import '/models/entity/user.dart';
 import '/presenters/customer_detail_storage_presenter.dart';
 import '/views/customer_detail_storage_view.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 

@@ -141,8 +141,12 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
                   ? GestureDetector(
                       onTap: () => onHandleAddShelf(widget.data.id),
                       child: Container(
+                        width: 24,
+                        height: 24,
                         child: ImageIcon(
-                          AssetImage('assets/images/plus.png'),
+                          AssetImage(
+                            'assets/images/plus.png',
+                          ),
                           color: CustomColor.purple,
                         ),
                       ),

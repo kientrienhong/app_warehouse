@@ -40,9 +40,9 @@ dev_dependencies:
   percent_indicator: "^2.1.7+2"
   provider: ^5.0.0
   dio: ^4.0.0
-  flutter_braintree: ^1.2.1
   image_picker: ^0.8.0+3
   url_launcher: ^6.0.6
+  flutter_braintree: ^1.2.1
   flutter_barcode_scanner: ^2.0.0
   firebase_core: ^1.3.0
   firebase_storage: ^8.1.3

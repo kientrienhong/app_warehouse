@@ -146,7 +146,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         },
                         buttonColor: CustomColor.lightBlue,
                         borderRadius: 4),
-                    CustomSizedBox(context: context, height: 8),
+                    CustomSizedBox(context: context, height: 24),
                     CustomButton(
                         height: 32,
                         text: 'Move to another place',
@@ -190,7 +190,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
             context: context,
             fontSize: 24),
         content: Container(
-            height: deviceSize.height / 5,
+            height: deviceSize.height / 7,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -245,7 +245,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
           builder: (_) => StatefulBuilder(
                 builder: (context, setState) => AlertDialog(
                   content: Container(
-                    height: deviceSize.height / 3,
+                    height: deviceSize.height / 4,
                     padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -405,18 +405,23 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
             return AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                title: CustomText(
-                  text: 'Reason move another storage',
-                  color: Colors.black,
-                  textAlign: TextAlign.center,
-                  context: context,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
                 content: Container(
-                  height: deviceSize.height / 4,
+                  height: deviceSize.height / 3.4,
                   child: Column(
                     children: [
+                      CustomText(
+                        text: 'Reason move another storage',
+                        color: Colors.black,
+                        textAlign: TextAlign.center,
+                        context: context,
+                        maxLines: 2,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      CustomSizedBox(
+                        context: context,
+                        height: 24,
+                      ),
                       CustomOutLineInput(
                           isDisable: false,
                           controller: textEditingController,
@@ -695,7 +700,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                 children: [
                   CustomSizedBox(
                     context: context,
-                    width: 46,
+                    width: 54,
                   ),
                   Container(
                     width: deviceSize.width / 1.4,
@@ -706,7 +711,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                       itemBuilder: (_, index) => Container(
                         margin: index == 3
                             ? const EdgeInsets.only(right: 0)
-                            : EdgeInsets.only(right: deviceSize.width / 6.3),
+                            : EdgeInsets.only(right: deviceSize.width / 6.8),
                         child: CustomText(
                           text: numbers[index],
                           color: CustomColor.black,
@@ -725,7 +730,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                     margin: EdgeInsets.only(top: 16),
                     child: Row(children: [
                       Container(
-                        height: deviceSize.height / 3.2,
+                        height: deviceSize.height / 3.25,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -735,20 +740,12 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                                 fontWeight: FontWeight.bold,
                                 context: context,
                                 fontSize: 24),
-                            CustomSizedBox(
-                              context: context,
-                              height: 24,
-                            ),
                             CustomText(
                                 text: 'B',
                                 color: CustomColor.black,
                                 fontWeight: FontWeight.bold,
                                 context: context,
                                 fontSize: 24),
-                            CustomSizedBox(
-                              context: context,
-                              height: 24,
-                            ),
                             CustomText(
                                 text: 'C',
                                 color: CustomColor.black,
@@ -757,7 +754,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                                 fontSize: 24),
                             CustomSizedBox(
                               context: context,
-                              height: 24,
+                              height: 30,
                             ),
                           ],
                         ),
@@ -853,7 +850,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         context: context),
                   ),
                   Container(
-                    width: deviceSize.width / 2.8,
+                    width: deviceSize.width / 2.4,
                     child: _buildNoteForIcon(
                         name: '0.5m x 1m x 1m',
                         color: CustomColor.purple,
@@ -878,7 +875,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         context: context),
                   ),
                   Container(
-                    width: deviceSize.width / 2.8,
+                    width: deviceSize.width / 2.4,
                     child: _buildNoteForIcon(
                         name: 'Selected',
                         color: CustomColor.green,
@@ -903,7 +900,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                         context: context),
                   ),
                   Container(
-                    width: deviceSize.width / 2.8,
+                    width: deviceSize.width / 2.4,
                     child: _buildNoteForIcon(
                         name: 'Expired',
                         color: CustomColor.red,

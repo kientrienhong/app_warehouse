@@ -148,7 +148,7 @@ class _OwnerStorageState extends State<OwnerStorage> {
       child: Stack(children: [
         Container(
           margin: const EdgeInsets.only(bottom: 24),
-          height: widget.deviceSize.height / 2.6,
+          height: widget.deviceSize.height / 2.9,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: CustomColor.white,

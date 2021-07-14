@@ -85,7 +85,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
           ),
           presenter.model.pagingController.error == null
               ? Container(
-                  height: deviceSize.height / 1.5,
+                  height: deviceSize.height / 1.2,
+                  padding: EdgeInsets.only(bottom: deviceSize.height / 10),
                   child: RefreshIndicator(
                     onRefresh: () => Future.sync(
                         () => presenter.model.pagingController.refresh()),

@@ -28,7 +28,7 @@ class BoxInputPrice extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: deviceSize.width / 2.6,
+          width: deviceSize.width / 2.44,
           child: Column(
             children: [
               Container(

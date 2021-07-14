@@ -305,7 +305,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                 child: TextFormField(
                   controller: _searchController,
                   textInputAction: TextInputAction.done,
-                  //its about this part
+                  keyboardType: TextInputType.number,
                   onFieldSubmitted: (String value) {
                     if (value.isEmpty) {
                       setState(() {
