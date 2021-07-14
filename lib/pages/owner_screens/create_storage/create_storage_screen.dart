@@ -20,7 +20,8 @@ import 'package:provider/provider.dart';
 
 class CreateStorageScreen extends StatefulWidget {
   final Storage data;
-  CreateStorageScreen({@required this.data});
+  final Function setTab;
+  CreateStorageScreen({@required this.data, this.setTab});
 
   @override
   _CreateStorageScreenState createState() => _CreateStorageScreenState();
@@ -28,9 +29,29 @@ class CreateStorageScreen extends StatefulWidget {
 
 class _CreateStorageScreenState extends State<CreateStorageScreen>
     implements CreateStorageView {
+  final _focusNodeLargeBox = FocusNode();
+  final _focusNodeDescription = FocusNode();
+  final _focusName = FocusNode();
+  final _focusAddress = FocusNode();
+  final _focusPriceSmallBox = FocusNode();
+  final _focusAmountShelves = FocusNode();
+
+  final _controllerPriceLargeBox = TextEditingController();
+  final _controllerDescription = TextEditingController();
+  final _controllerName = TextEditingController();
+  final _controllerAddress = TextEditingController();
+  final _controllerPriceSmallBox = TextEditingController();
+  final _controllerAmountShelves = TextEditingController();
+
+  String get _priceLargeBox => _controllerPriceLargeBox.text;
+  String get _description => _controllerDescription.text;
+  String get _name => _controllerName.text;
+  String get _address => _controllerAddress.text;
+  String get _amountShelves => _controllerAmountShelves.text;
+  String get _priceSmallBox => _controllerPriceSmallBox.text;
+
   CreateStoragePresenter presenter;
   var picker;
-  // List<file>
   @override
   void updateStatusButton(bool isAgree) {
     setState(() {
@@ -47,8 +68,20 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
   void onClickCreateStorage(String name, String address, String description,
       String amountShelves, String priceSmallBox, String priceBigBox) async {
     User user = Provider.of<User>(context, listen: false);
-    await presenter.onHandleAddStorage(name, address, description,
+    bool result = await presenter.onHandleAddStorage(name, address, description,
         amountShelves, user, priceSmallBox, priceBigBox);
+    if (result == true) {
+      widget.setTab(0, true);
+      _controllerAddress.text = '';
+      _controllerAmountShelves.text = '';
+      _controllerDescription.text = '';
+      _controllerName.text = '';
+      _controllerPriceLargeBox.text = '';
+      _controllerPriceSmallBox.text = '';
+      updateStatusButton(false);
+      updateGridView('paperStorage', []);
+      updateGridView('imageStorage', []);
+    }
   }
 
   @override
@@ -160,27 +193,6 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
     return Container();
   }
 
-  final _focusNodeLargeBox = FocusNode();
-  final _focusNodeDescription = FocusNode();
-  final _focusName = FocusNode();
-  final _focusAddress = FocusNode();
-  final _focusPriceSmallBox = FocusNode();
-  final _focusAmountShelves = FocusNode();
-
-  final _controllerPriceLargeBox = TextEditingController();
-  final _controllerDescription = TextEditingController();
-  final _controllerName = TextEditingController();
-  final _controllerAddress = TextEditingController();
-  final _controllerPriceSmallBox = TextEditingController();
-  final _controllerAmountShelves = TextEditingController();
-
-  String get _priceLargeBox => _controllerPriceLargeBox.text;
-  String get _description => _controllerDescription.text;
-  String get _name => _controllerName.text;
-  String get _address => _controllerAddress.text;
-  String get _amountShelves => _controllerAmountShelves.text;
-  String get _priceSmallBox => _controllerPriceSmallBox.text;
-
   _buildGridView(
       {@required List<dynamic> listFile,
       @required Size deviceSize,
@@ -289,25 +301,6 @@ class _CreateStorageScreenState extends State<CreateStorageScreen>
             CustomAppBar(
               isHome: false,
             ),
-          // if (widget.data != null)
-          //   if (widget.data['statusChecking'] == StatusCheckingStorage.Reject)
-          //     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          //       CustomText(
-          //         text: 'Reason',
-          //         color: CustomColor.red,
-          //         context: context,
-          //         fontSize: 24,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //       CustomSizedBox(context: context, height: 16),
-          //       CustomText(
-          //         text: 'You must provide enough paperworkers',
-          //         color: CustomColor.red,
-          //         context: context,
-          //         fontSize: 16,
-          //       ),
-          //       CustomSizedBox(context: context, height: 16),
-          //     ]),
           CustomSizedBox(context: context, height: 16),
           CustomText(
             text: 'Storage Infomation',

@@ -24,7 +24,7 @@ class AvatarWidget extends StatelessWidget {
     final subTitle = isHome == true ? 'Hi' : role;
     return Container(
       height: 48,
-      width: deviceSize.width / 2.2,
+      width: deviceSize.width / 2,
       child: Row(
         children: [
           ClipRRect(
@@ -62,6 +62,7 @@ class AvatarWidget extends StatelessWidget {
               ),
               CustomText(
                   text: name,
+                  maxLines: 2,
                   color: CustomColor.black,
                   context: context,
                   fontWeight: FontWeight.bold,

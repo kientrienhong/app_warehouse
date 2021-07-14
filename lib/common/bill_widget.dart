@@ -98,7 +98,7 @@ class BillWidget extends StatelessWidget {
             height: 24,
           ),
           GestureDetector(
-            onTap: () => callDetailOrder(context),
+            // onTap: () => callDetailOrder(context),
             child: QrImage(
               data: data.id.toString(),
               size: 88.0,

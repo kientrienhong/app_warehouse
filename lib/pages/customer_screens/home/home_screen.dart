@@ -1,5 +1,4 @@
 import '/common/custom_text.dart';
-
 import '/api/api_services.dart';
 import '/common/custom_app_bar.dart';
 import '/common/custom_color.dart';
@@ -26,8 +25,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
       PagingController(firstPageKey: 0);
   TextEditingController _searchController;
   @override
-  void onClickSearch(String search) {
-    presenter.onClickSearch(search);
+  void onClickSearch(int pageKey, String search) {
+    User user = Provider.of<User>(context, listen: false);
+    presenter.onClickSearch(pageKey, search, user.jwtToken, _pageSize);
   }
 
   @override
@@ -40,6 +40,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
 
   @override
   void updateLoadingDeleteStorage() {}
+
   @override
   void updateLoadingRefresh() {}
 
@@ -106,11 +107,11 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
                   textInputAction: TextInputAction.done,
                   //its about this part
                   onFieldSubmitted: (String value) {
-                    onClickSearch(_searchController.text);
+                    onClickSearch(0, _searchController.text);
                   },
                   decoration: InputDecoration(
                       suffixIcon: GestureDetector(
-                        onTap: () => onClickSearch(_searchController.text),
+                        onTap: () => onClickSearch(0, _searchController.text),
                         child: ImageIcon(
                           AssetImage('assets/images/search.png'),
                           color: CustomColor.black,

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import '/api/api_services.dart';
-import '/api/firebase_services.dart';
 import '/helpers/firebase_storage_helper.dart';
 import '/helpers/validator.dart';
 import '/models/create_storage_model.dart';
@@ -289,7 +288,7 @@ class CreateStoragePresenter {
             responseUploadImage,
             user.jwtToken);
         if (reponseUpdate.data == 'Update success') {
-          _view.updateMsg('Create sucessfully', false);
+          _view.updateMsg('', false);
           return true;
         } else {
           _view.updateMsg(reponseUpdate.data['error']['message'], true);

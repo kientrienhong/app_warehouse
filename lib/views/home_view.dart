@@ -5,6 +5,6 @@ abstract class HomeView {
   void updateLoadingDeleteStorage();
 
   //handle search
-  void onClickSearch(String search);
+  void onClickSearch(int pageKey, String search);
   Future<void> fetchPage(int pageKey, String address);
 }

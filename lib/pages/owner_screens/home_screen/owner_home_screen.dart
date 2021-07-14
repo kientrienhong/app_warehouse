@@ -16,6 +16,9 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 enum StatusCheckingStorage { Pending, Approved, Reject }
 
 class OwnerHomeScreen extends StatefulWidget {
+  bool isForceReload;
+  OwnerHomeScreen({@required this.isForceReload});
+
   @override
   _OwnerHomeScreenState createState() => _OwnerHomeScreenState();
 }
@@ -35,11 +38,11 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   @override
   Future<void> fetchPage(int pageKey, String address) async {
     User user = Provider.of<User>(context, listen: false);
-    await presenter.loadList(pageKey, 5, user.jwtToken, '');
+    await presenter.loadList(pageKey, 5, user.jwtToken);
   }
 
   @override
-  void onClickSearch(String search) {}
+  void onClickSearch(int pageKey, String search) {}
 
   @override
   void updateSearch() {
@@ -64,6 +67,11 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    if (widget.isForceReload == true) {
+      presenter.model.pagingController.refresh();
+      widget.isForceReload = false;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ListView(

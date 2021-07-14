@@ -18,7 +18,6 @@ class DetailBillScreenPresenter {
   }
 
   void formatData(List<dynamic> boxUsed) {
-    print(boxUsed);
     boxUsed.forEach((e) {
       if (e['boxType'] == 2) {
         if (_model.positionLargeBox.containsKey("Shelf - ${e['shelfId']}")) {

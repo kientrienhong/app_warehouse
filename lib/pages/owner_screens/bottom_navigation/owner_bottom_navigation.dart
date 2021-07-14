@@ -13,16 +13,19 @@ class OwnerBottomNavigation extends StatefulWidget {
 
 class _OwnerBottomNavigationState extends State<OwnerBottomNavigation> {
   int _index = 0;
-
+  bool isForceReload = false;
   @override
   void initState() {
     super.initState();
     _index = 0;
   }
 
-  void _tapTab(int index) {
+  void _tapTab(int index, bool isForceReload) {
     setState(() {
       _index = index;
+      if (_index == 0 && isForceReload == true) {
+        this.isForceReload = true;
+      }
     });
   }
 
@@ -38,10 +41,13 @@ class _OwnerBottomNavigationState extends State<OwnerBottomNavigation> {
           IndexedStack(
             index: _index,
             children: [
-              OwnerHomeScreen(),
+              OwnerHomeScreen(
+                isForceReload: isForceReload,
+              ),
               BillScreen(),
               CreateStorageScreen(
                 data: null,
+                setTab: _tapTab,
               ),
               ProfileScreen()
             ],

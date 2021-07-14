@@ -16,10 +16,10 @@ class HomePresenter {
 
   set view(value) => this._view = value;
 
-  Future<void> loadList(int page, int size, String jwt, String address) async {
+  Future<void> loadList(int page, int size, String jwt) async {
     try {
-      var response =
-          await ApiServices.loadListStorage(page, size, jwt, address);
+      var response = await ApiServices.loadListStorage(
+          page, size, jwt, _model.searchAddress);
       List<Storage> newItems = response.data['data']
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();
@@ -37,9 +37,13 @@ class HomePresenter {
     }
   }
 
-  void onClickSearch(String search) {
+  void onClickSearch(int page, String search, String jwt, int size) {
     _model.searchAddress = search;
-    view.updateSearch();
+    loadList(
+      page,
+      size,
+      jwt,
+    );
   }
 
   Future<bool> deleteStorage(String jwt, int idStorage) async {

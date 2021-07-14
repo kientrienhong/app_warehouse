@@ -17,7 +17,7 @@ class BoxInfoBillWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: deviceSize.width / 3.5,
+          width: deviceSize.width / 3.2,
           height: deviceSize.height / 6,
           child: Center(child: Image.asset(imagePath)),
           decoration: BoxDecoration(

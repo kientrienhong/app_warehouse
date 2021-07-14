@@ -15,23 +15,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   CustomAppBar({this.isHome});
   void callDetailOrder(BuildContext context, int orderId) async {
-    User user = Provider.of<User>(context, listen: false);
+    try {
+      User user = Provider.of<User>(context, listen: false);
 
-    var resultOrder = await ApiServices.getOrder(user.jwtToken, orderId);
-    Order order = Provider.of<Order>(context, listen: false);
-    order.setOrder(Order.fromMap(resultOrder.data));
-    var resultStorage =
-        await ApiServices.getStorage(user.jwtToken, order.idStorage);
-    Storage storage = Provider.of<Storage>(context, listen: false);
-    storage.setStorage(Storage.fromMap(resultStorage.data));
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => ChooseStorageScreen(
-                  isImported: true,
-                  idPreviousStorage: storage.id,
-                  order: order,
-                )));
+      var resultOrder = await ApiServices.getOrder(user.jwtToken, orderId);
+      Order order = Provider.of<Order>(context, listen: false);
+      order.setOrder(Order.fromMap(resultOrder.data));
+      var resultStorage =
+          await ApiServices.getStorage(user.jwtToken, order.idStorage);
+      Storage storage = Provider.of<Storage>(context, listen: false);
+      storage.setStorage(Storage.fromMap(resultStorage.data));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => ChooseStorageScreen(
+                    isImported: true,
+                    idPreviousStorage: storage.id,
+                    order: order,
+                  )));
+    } catch (e) {
+      final snackBar = SnackBar(
+        content: Text('Not found!'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override
@@ -80,6 +88,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         if (barcodeScanRes != '-1') {
                           // Navigator to detail storage
                           callDetailOrder(context, int.parse(barcodeScanRes));
+                        } else {
+                          final snackBar = SnackBar(
+                            content: Text('Not found!'),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       },
                       child: Image.asset('assets/images/scan.png')),

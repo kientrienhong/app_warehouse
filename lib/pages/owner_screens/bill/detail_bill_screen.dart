@@ -5,6 +5,7 @@ import 'package:appwarehouse/models/entity/order_customer.dart';
 import 'package:appwarehouse/models/entity/user.dart';
 import 'package:appwarehouse/presenters/detail_bill_screen.dart';
 import 'package:appwarehouse/views/detail_bill_view.dart';
+import 'package:flutter/cupertino.dart';
 
 import '/common/box_info_bill_widget.dart';
 import '/common/custom_app_bar.dart';
@@ -82,13 +83,6 @@ class _DetailBillScreenState extends State<DetailBillScreen>
   Widget _buildCheckOut(Size deviceSize) {
     return Column(
       children: [
-        if (widget.data.status == 2)
-          CustomOutLineInput(
-              isDisable: false,
-              focusNode: focusNode,
-              controller: controller,
-              deviceSize: deviceSize,
-              labelText: 'Reason'),
         CustomMsgInput(
             msg: presenter.model.msg,
             isError: presenter.model.isError,
@@ -103,7 +97,7 @@ class _DetailBillScreenState extends State<DetailBillScreen>
             width: double.infinity,
             isLoading: presenter.model.isLoading,
             textColor: CustomColor.green,
-            onPressFunction: () => handleOnClick(),
+            onPressFunction: () => handleOnClickWithoutReason(),
             buttonColor: CustomColor.lightBlue,
             borderRadius: 4),
       ],
@@ -125,8 +119,90 @@ class _DetailBillScreenState extends State<DetailBillScreen>
     });
   }
 
+  _showDialogDialog(Size deviceSize) {
+    String msg = '';
+    bool isError = false;
+    bool isLoading = false;
+    showDialog(
+        context: context,
+        builder: (_) => StatefulBuilder(
+              builder: (context, setState) => AlertDialog(
+                content: Container(
+                    height: deviceSize.height / 3.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomText(
+                            text: 'Return item to customers',
+                            color: CustomColor.purple,
+                            fontWeight: FontWeight.bold,
+                            context: context,
+                            fontSize: 20),
+                        CustomSizedBox(
+                          context: context,
+                          height: 24,
+                        ),
+                        CustomOutLineInput(
+                            isDisable: false,
+                            focusNode: focusNode,
+                            controller: controller,
+                            deviceSize: deviceSize,
+                            labelText: 'Reason'),
+                        CustomMsgInput(msg: msg, isError: isError, maxLines: 1),
+                        CustomSizedBox(
+                          context: context,
+                          height: 4,
+                        ),
+                        CustomButton(
+                            height: 32,
+                            text: 'Check out',
+                            width: double.infinity,
+                            isLoading: isLoading,
+                            textColor: CustomColor.green,
+                            onPressFunction: () => handleOnClickWithReason(
+                                msg, isError, isLoading),
+                            buttonColor: CustomColor.lightBlue,
+                            borderRadius: 4),
+                      ],
+                    )),
+              ),
+            ));
+  }
+
   @override
-  void handleOnClick() {
+  void handleOnClickWithReason(String msg, bool isError, bool isLoading) {
+    User user = Provider.of<User>(context, listen: false);
+
+    setState(() {
+      isLoading = true;
+    });
+
+    if (presenter.model.isAlreadyCheckOut == true) {
+      setState(() {
+        msg = 'You already check out';
+        isError = false;
+        isLoading = false;
+      });
+      return;
+    }
+
+    if (controller.text.isEmpty) {
+      setState(() {
+        msg = 'You must provide reason';
+        isError = true;
+        isLoading = false;
+      });
+      return;
+    }
+    presenter.handleOnClick(user.jwtToken, widget.data.id, controller.text);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void handleOnClickWithoutReason() {
     User user = Provider.of<User>(context, listen: false);
 
     if (presenter.model.isAlreadyCheckOut == true) {
@@ -139,7 +215,6 @@ class _DetailBillScreenState extends State<DetailBillScreen>
         updateMsg('You must provide reason', true);
         return;
       }
-      print(widget.data.id);
       presenter.handleOnClick(user.jwtToken, widget.data.id, controller.text);
     } else {
       presenter.handleOnClick(user.jwtToken, widget.data.id, null);
@@ -167,12 +242,36 @@ class _DetailBillScreenState extends State<DetailBillScreen>
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: CustomColor.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ListView(
           children: [
             CustomAppBar(
               isHome: false,
+            ),
+            if (widget.data.status == 4 || widget.data.status == 2)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () => _showDialogDialog(deviceSize),
+                    child: Container(
+                        height: 40,
+                        width: 40,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: CustomColor.purple, width: 1),
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Image.asset('assets/images/danger.png',
+                            fit: BoxFit.cover)),
+                  )
+                ],
+              ),
+            CustomSizedBox(
+              context: context,
+              height: 8,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,7 +401,7 @@ class _DetailBillScreenState extends State<DetailBillScreen>
                 avatar: widget.data.customerAvatar,
                 name: widget.data.customerName),
             CustomSizedBox(context: context, height: 16),
-            if (widget.data.status != 1 && widget.data.status != 3)
+            if (widget.data.status != 1 && widget.data.status != 2)
               _buildCheckOut(deviceSize),
             CustomSizedBox(
               context: context,

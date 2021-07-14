@@ -169,15 +169,18 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                       context: context,
                       height: 8,
                     ),
-                    CustomText(
-                        text: 'Expired date: ' +
-                            DateFormat('dd/MM/yyyy').format(dateFormater
-                                .parse(data.expiredDate.split('T')[0])),
-                        color: CustomColor.black,
-                        maxLines: 2,
-                        context: context,
-                        textAlign: TextAlign.right,
-                        fontSize: 14),
+                    Container(
+                      width: deviceSize.width / 2.8,
+                      child: CustomText(
+                          text: 'Expired date: ' +
+                              DateFormat('dd/MM/yyyy').format(dateFormater
+                                  .parse(data.expiredDate.split('T')[0])),
+                          color: CustomColor.black,
+                          maxLines: 2,
+                          context: context,
+                          textAlign: TextAlign.right,
+                          fontSize: 14),
+                    ),
                     CustomSizedBox(
                       context: context,
                       height: 8,
