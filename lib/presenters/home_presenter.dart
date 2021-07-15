@@ -16,10 +16,11 @@ class HomePresenter {
 
   set view(value) => this._view = value;
 
-  Future<void> loadList(int page, int size, String jwt) async {
+  Future<void> loadList(
+      int page, int size, String jwt, bool isPrice, bool isRating) async {
     try {
       var response = await ApiServices.loadListStorage(
-          page, size, jwt, _model.searchAddress);
+          page, size, jwt, _model.searchAddress, isPrice, isRating);
       List<Storage> newItems = response.data['data']
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();
@@ -37,13 +38,10 @@ class HomePresenter {
     }
   }
 
-  void onClickSearch(int page, String search, String jwt, int size) {
+  void onClickSearch(int page, String search, String jwt, int size,
+      bool isPrice, bool isRating) {
     _model.searchAddress = search;
-    loadList(
-      page,
-      size,
-      jwt,
-    );
+    loadList(page, size, jwt, isPrice, isRating);
   }
 
   Future<bool> deleteStorage(String jwt, int idStorage) async {
@@ -56,9 +54,13 @@ class HomePresenter {
 
       return false;
     } catch (e) {
-      return null;
+      return false;
     } finally {
       _view.updateLoadingDeleteStorage();
     }
+  }
+
+  void handleOnChangeDropDown(String jwt, bool isPrice, bool isRating) {
+    loadList(0, 10, jwt, isPrice, isRating);
   }
 }

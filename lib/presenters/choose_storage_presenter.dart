@@ -23,8 +23,8 @@ class ChooseStoragePresenter {
   Future<void> loadListStorage(int page, int size, String jwt, String address,
       int idPreviousStorage) async {
     try {
-      var response =
-          await ApiServices.loadListStorage(page, size, jwt, address);
+      var response = await ApiServices.loadListStorage(
+          page, size, jwt, address, null, null);
       List<Storage> newItems = response.data['data']
           .map<Storage>((e) => Storage.fromMap(e))
           .toList();

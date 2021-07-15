@@ -38,7 +38,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
   @override
   Future<void> fetchPage(int pageKey, String address) async {
     User user = Provider.of<User>(context, listen: false);
-    await presenter.loadList(pageKey, 5, user.jwtToken);
+    await presenter.loadList(pageKey, 5, user.jwtToken, null, null);
   }
 
   @override
@@ -63,6 +63,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> implements HomeView {
       presenter.model.isLoadingRefresh = !presenter.model.isLoadingRefresh;
     });
   }
+
+  @override
+  void onClickChangeDropDown(String value) {}
 
   @override
   Widget build(BuildContext context) {

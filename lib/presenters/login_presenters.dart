@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:appwarehouse/api/firebase_services.dart';
+
 import '/api/api_services.dart';
 import '/models/entity/user.dart';
 import '/models/login_model.dart';
@@ -10,7 +12,6 @@ class LoginPresenter {
   LoginView _view;
   LoginView get view => this._view;
 
-  // set view(LoginView value) => this._view = value;
   setView(LoginView value) {
     _view = value;
   }
@@ -28,7 +29,12 @@ class LoginPresenter {
   Future<User> handleSignIn(String email, String password) async {
     _view.updateLoading();
     try {
-      var response = await ApiServices.logIn(email, password);
+      final result = await FirebaseServices.firebaseLogin(email, password);
+      if (result == null) {
+        _view.updateViewErrorMsg('Invalid username / password');
+        throw Exception('Invalid email or password');
+      }
+      var response = await ApiServices.logIn(result);
       response = json.encode(response.data);
       _model.user = User.fromJson(json.decode(response));
       return _model.user;

@@ -92,7 +92,7 @@ class User with ChangeNotifier {
         address: json['address'],
         email: json['email'],
         jwtToken: json['idToken'],
-        name: json['fullName'],
+        name: json['displayName'],
         phone: json['phone'],
         role: userRole);
   }

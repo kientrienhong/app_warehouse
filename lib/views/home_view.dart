@@ -7,4 +7,5 @@ abstract class HomeView {
   //handle search
   void onClickSearch(int pageKey, String search);
   Future<void> fetchPage(int pageKey, String address);
+  void onClickChangeDropDown(String value);
 }

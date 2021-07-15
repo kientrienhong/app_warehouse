@@ -26,7 +26,13 @@ class ShelfDetailPresenter {
       var response = await ApiServices.loadDeatailShelf(jwt, shelfId);
       List<Box> listBox =
           response.data['boxes'].map<Box>((e) => Box.fromMap(e)).toList();
-      listBox = listBox.map((e) => e.copyWith(shelfId: shelfId)).toList();
+      listBox = listBox.map((e) {
+        if (e.status == 2) {
+          fetchOrder(jwt, e.orderId, false);
+        }
+
+        return e.copyWith(shelfId: shelfId);
+      }).toList();
       _model.listBox = listBox;
       _view.updateGridView(listBox);
     } catch (e) {
@@ -58,9 +64,9 @@ class ShelfDetailPresenter {
     return {'id': order.id.toString(), 'dateRemain': dateRemain};
   }
 
-  void fetchOrder(String jwt, int orderId) async {
+  Future<void> fetchOrder(String jwt, int orderId, bool isClick) async {
     try {
-      _view.updateLoadingOrder();
+      if (isClick == true) _view.updateLoadingOrder();
       Order order;
       try {
         order = _model.listOrder.firstWhere((e) => e.id == orderId);
@@ -70,11 +76,11 @@ class ShelfDetailPresenter {
         _model.listOrder.add(order);
       }
 
-      _view.updateInfoOrder(formatData(order));
+      if (isClick == true) _view.updateInfoOrder(formatData(order));
     } catch (e) {
       print(e.toString());
     } finally {
-      _view.updateLoadingOrder();
+      if (isClick == true) _view.updateLoadingOrder();
     }
   }
 

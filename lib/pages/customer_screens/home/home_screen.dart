@@ -27,12 +27,54 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
   @override
   void onClickSearch(int pageKey, String search) {
     User user = Provider.of<User>(context, listen: false);
-    presenter.onClickSearch(pageKey, search, user.jwtToken, _pageSize);
+    presenter.onClickSearch(pageKey, search, user.jwtToken, _pageSize,
+        presenter.model.isPrice, presenter.model.isRating);
   }
 
   @override
   void updateSearch() async {
     _pagingController.refresh();
+  }
+
+  @override
+  void onClickChangeDropDown(String value) {
+    setState(() {
+      presenter.model.typeOfSort = value;
+    });
+
+    switch (value) {
+      case 'Sort':
+        {
+          presenter.model.isPrice = null;
+          presenter.model.isRating = null;
+          break;
+        }
+      case 'Ascending Price':
+        {
+          presenter.model.isPrice = true;
+          presenter.model.isRating = null;
+          break;
+        }
+      case 'Descending Price':
+        {
+          presenter.model.isPrice = false;
+          presenter.model.isRating = null;
+          break;
+        }
+      case 'Ascending Rating':
+        {
+          presenter.model.isPrice = null;
+          presenter.model.isRating = false;
+          break;
+        }
+      default:
+        {
+          presenter.model.isPrice = null;
+          presenter.model.isRating = true;
+          break;
+        }
+    }
+    onClickSearch(0, _searchController.text);
   }
 
   @override
@@ -66,7 +108,12 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
     try {
       User user = Provider.of<User>(context, listen: false);
       final response = await ApiServices.loadListStorage(
-          pageKey, _pageSize, user.jwtToken, presenter.model.searchAddress);
+          pageKey,
+          _pageSize,
+          user.jwtToken,
+          presenter.model.searchAddress,
+          presenter.model.isPrice,
+          presenter.model.isRating);
       List<dynamic> result = response.data['data'];
       List<Storage> newItems =
           result.map<Storage>((e) => Storage.fromMap(e)).toList();
@@ -98,14 +145,14 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
             height: 24,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: deviceSize.width - 48,
+                width: deviceSize.width / 1.5 - 48,
                 height: 40,
                 child: TextFormField(
                   controller: _searchController,
                   textInputAction: TextInputAction.done,
-                  //its about this part
                   onFieldSubmitted: (String value) {
                     onClickSearch(0, _searchController.text);
                   },
@@ -121,7 +168,58 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(color: CustomColor.black[2]))),
                 ),
-              )
+              ),
+              Container(
+                height: 40,
+                width: 106,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                    border: Border.all(color: CustomColor.black[3], width: 1),
+                    borderRadius: BorderRadius.circular(8)),
+                child: DropdownButton(
+                    // icon: ImageIcon(
+                    //   AssetImage('assets/images/arrowDown.png'),
+                    // ),
+                    iconSize: 16,
+                    underline: Container(
+                      width: 0,
+                    ),
+                    value: presenter.model.typeOfSort,
+                    onChanged: (value) {
+                      onClickChangeDropDown(value);
+                    },
+                    items: <String>[
+                      'Sort',
+                      'Ascending Price',
+                      'Descending Price',
+                      'Ascending Rating',
+                      'Descending Rating'
+                    ].map((e) {
+                      String imageUrl = '';
+                      String content =
+                          e.split(' ').length == 1 ? 'Sort' : e.split(' ')[1];
+                      if (e.contains('Ascending')) {
+                        imageUrl = 'assets/images/arrowUp.png';
+                      } else {
+                        imageUrl = 'assets/images/arrowDown.png';
+                      }
+
+                      return DropdownMenuItem<String>(
+                          value: e,
+                          child: Row(children: [
+                            CustomText(
+                                text: content,
+                                color: CustomColor.black,
+                                context: context,
+                                fontSize: 16),
+                            if (content != 'Sort')
+                              Container(
+                                  height: 16,
+                                  width: 16,
+                                  child: Image.asset(imageUrl))
+                          ]));
+                    }).toList()),
+              ),
             ],
           ),
           CustomSizedBox(
@@ -140,11 +238,13 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
                                 data: item, deviceSize: deviceSize)),
                   ),
                 )
-              : CustomText(
-                  text: 'Not found!',
-                  color: CustomColor.black[3],
-                  context: context,
-                  fontSize: 24),
+              : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  CustomText(
+                      text: 'Not found!',
+                      color: CustomColor.black[3],
+                      context: context,
+                      fontSize: 24),
+                ]),
           CustomSizedBox(
             context: context,
             height: 72,

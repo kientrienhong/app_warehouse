@@ -20,6 +20,7 @@ import '/common/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 enum TypeBox { small, big }
 
@@ -621,7 +622,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
       presenter.model.currentIndex = index;
     });
     User user = Provider.of<User>(context, listen: false);
-    presenter.fetchOrder(user.jwtToken, idOrder);
+    presenter.fetchOrder(user.jwtToken, idOrder, true);
   }
 
   @override
@@ -662,7 +663,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-
+    User user = Provider.of<User>(context, listen: false);
     List<String> numbers = ['1', '2', '3', '4'];
 
     return Scaffold(
@@ -777,8 +778,36 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                             itemCount: presenter.model.listBox.length,
                             itemBuilder: (BuildContext context, int index) {
                               List<Box> listBox = presenter.model.listBox;
-
                               Box box = listBox[index];
+
+                              Order order;
+                              if (box.status == 2 &&
+                                  presenter.model.listOrder.length > 0) {
+                                order = presenter.model.listOrder
+                                    .firstWhere((e) => e.id == box.orderId);
+                                DateTime expiredDate = DateFormat('yyyy-MM-dd')
+                                    .parse(order.expiredDate.split('T')[0]);
+                                DateTime now = DateTime.now();
+                                if (expiredDate.isBefore(now)) {
+                                  return _buildBox(
+                                    deviceSize: deviceSize,
+                                    box: box,
+                                    idOrder: box.orderId,
+                                    index: index,
+                                    color: CustomColor.red,
+                                  );
+                                }
+
+                                if (expiredDate.difference(now).inDays <= 3) {
+                                  return _buildBox(
+                                    deviceSize: deviceSize,
+                                    box: box,
+                                    idOrder: box.orderId,
+                                    index: index,
+                                    color: CustomColor.orange,
+                                  );
+                                }
+                              }
 
                               if (index == presenter.model.currentIndex ||
                                   box.isModified == true) {
