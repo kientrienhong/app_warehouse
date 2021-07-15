@@ -333,6 +333,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
               CustomAppBar(
                 isHome: false,
                 name: 'Choose Storage',
+                isChooseStorage: true,
               ),
               CustomSizedBox(
                 context: context,

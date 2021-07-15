@@ -30,6 +30,7 @@ class LoginPresenter {
     _view.updateLoading();
     try {
       final result = await FirebaseServices.firebaseLogin(email, password);
+      print(result);
       if (result == null) {
         _view.updateViewErrorMsg('Invalid username / password');
         throw Exception('Invalid email or password');

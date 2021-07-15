@@ -1,5 +1,9 @@
 class DetailBillScreenModel {
   bool _isLoading;
+  bool _isLoadingStorage;
+  get isLoadingStorage => this._isLoadingStorage;
+
+  set isLoadingStorage(value) => this._isLoadingStorage = value;
   bool _isError;
   String _msg;
   Map<String, dynamic> _positionSmallBox;
@@ -35,6 +39,7 @@ class DetailBillScreenModel {
     _isLoading = false;
     _isError = false;
     _positionSmallBox = {};
+    _isLoadingStorage = false;
     _isAlreadyCheckOut = false;
   }
 }
