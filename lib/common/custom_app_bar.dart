@@ -101,9 +101,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             order.setOrder(Order.empty());
                             movedBoxes.setMovedBoxes(MovedBoxes.empty());
                           }
-                          print(isAlreadyMove);
-                          print(movedBoxes.movedBox);
-
+                          Navigator.of(context).pop();
                           if (isAlreadyMove == true &&
                               movedBoxes.movedBox == null) {
                             Navigator.pushAndRemoveUntil(
