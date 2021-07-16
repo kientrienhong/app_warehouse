@@ -22,7 +22,6 @@ class ShelfDetailPresenter {
 
   void fetchListBox(String jwt, int shelfId) async {
     try {
-      print('fetchListBox');
       _view.updateLoading();
       var response = await ApiServices.loadDeatailShelf(jwt, shelfId);
       List<Box> listBox =
@@ -48,12 +47,19 @@ class ShelfDetailPresenter {
     DateTime expiredDate =
         DateFormat('yyyy-MM-dd').parse(order.expiredDate.split('T')[0]);
     DateTime now = DateTime.now();
-    int differenceInDays = expiredDate.difference(now).inDays;
+    int differenceInDays = 0;
+    String dateRemain = '';
+
+    if (expiredDate.isAfter(now)) {
+      differenceInDays = expiredDate.difference(now).inDays;
+    } else {
+      differenceInDays = now.difference(expiredDate).inDays;
+      dateRemain += 'Minus ';
+    }
     int years = (differenceInDays / 365).floor();
     differenceInDays -= 365 * years;
     int months = (differenceInDays / 30).floor();
     differenceInDays -= months * 30;
-    String dateRemain = '';
     if (years > 0) {
       dateRemain += 'Years: $years ';
     }
@@ -63,6 +69,7 @@ class ShelfDetailPresenter {
     if (differenceInDays > 0) {
       dateRemain += 'Days: $differenceInDays ';
     }
+
     return {'id': order.id.toString(), 'dateRemain': dateRemain};
   }
 

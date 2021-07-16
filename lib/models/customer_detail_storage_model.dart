@@ -5,6 +5,16 @@ class CustomerDetailStorageModel {
   double _priceTo;
   bool _isLoading;
   bool _isError;
+  bool _isErrorQuantity;
+  String _msgQuantity;
+
+  get isErrorQuantity => this._isErrorQuantity;
+
+  set isErrorQuantity(value) => this._isErrorQuantity = value;
+
+  get msgQuantity => this._msgQuantity;
+
+  set msgQuantity(value) => this._msgQuantity = value;
   String _datePickUp;
 
   get datePickUp => this._datePickUp;
@@ -47,6 +57,8 @@ class CustomerDetailStorageModel {
     };
     _totalPrice = 0.0;
     _isLoading = false;
+    _isErrorQuantity = false;
+    _msgQuantity = '';
     _msg = '';
     _isError = false;
     _datePickUp = 'Not Yet';

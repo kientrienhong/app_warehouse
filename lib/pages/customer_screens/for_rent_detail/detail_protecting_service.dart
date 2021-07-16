@@ -152,7 +152,8 @@ class _DetailProtectingServiceScreenState
                   width: 16,
                 ),
                 GestureDetector(
-                    onTap: () => onClickChangeQuantity(value, false),
+                    onTap: () => onClickChangeQuantity(
+                        value, false, widget.data.remainingBoxes),
                     child: Image.asset('assets/images/sub.png')),
                 CustomSizedBox(
                   context: context,
@@ -170,7 +171,8 @@ class _DetailProtectingServiceScreenState
                   width: 8,
                 ),
                 GestureDetector(
-                  onTap: () => onClickChangeQuantity(value, true),
+                  onTap: () => onClickChangeQuantity(
+                      value, true, widget.data.remainingBoxes),
                   child: Image.asset('assets/images/plus.png'),
                 ),
               ],
@@ -258,6 +260,14 @@ class _DetailProtectingServiceScreenState
   }
 
   @override
+  void updateMsgQuantity(bool isError, String msg) {
+    setState(() {
+      presenter.model.isErrorQuantity = isError;
+      presenter.model.msgQuantity = msg;
+    });
+  }
+
+  @override
   void updateLoading() {
     setState(() {
       presenter.model.isLoading = !presenter.model.isLoading;
@@ -273,8 +283,8 @@ class _DetailProtectingServiceScreenState
   }
 
   @override
-  void onClickChangeQuantity(String value, bool isIncrease) {
-    presenter.onHandleChangeQuantity(value, isIncrease);
+  void onClickChangeQuantity(String value, bool isIncrease, int remainBoxes) {
+    presenter.onHandleChangeQuantity(value, isIncrease, remainBoxes);
   }
 
   @override
@@ -411,7 +421,18 @@ class _DetailProtectingServiceScreenState
                   imagePath: 'assets/images/largeBox.png'),
               CustomSizedBox(
                 context: context,
-                height: 32,
+                height: 16,
+              ),
+              if (presenter.model.msgQuantity.length >= 0)
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  CustomMsgInput(
+                      msg: presenter.model.msgQuantity,
+                      isError: presenter.model.isErrorQuantity,
+                      maxLines: 2),
+                ]),
+              CustomSizedBox(
+                context: context,
+                height: 16,
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -427,7 +448,8 @@ class _DetailProtectingServiceScreenState
                     width: 32,
                     height: 32,
                     child: TextButton(
-                      onPressed: () => onClickChangeQuantity('months', false),
+                      onPressed: () => onClickChangeQuantity(
+                          'months', false, widget.data.remainingBoxes),
                       child: Image.asset('assets/images/sub.png',
                           fit: BoxFit.cover),
                     ),
@@ -443,7 +465,8 @@ class _DetailProtectingServiceScreenState
                     width: 32,
                     height: 32,
                     child: TextButton(
-                        onPressed: () => onClickChangeQuantity('months', true),
+                        onPressed: () => onClickChangeQuantity(
+                            'months', true, widget.data.remainingBoxes),
                         child: Image.asset('assets/images/plus.png',
                             fit: BoxFit.cover)),
                   ),

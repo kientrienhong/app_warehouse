@@ -566,7 +566,6 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     if (importedBoxes.importedShelves.containsKey(widget.shelf.id)) {
       presenter.model.listBox = importedBoxes.importedShelves[widget.shelf.id];
     } else {
-      print('test');
       presenter.fetchListBox(user.jwtToken, widget.shelf.id);
     }
   }
@@ -780,9 +779,20 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                             itemBuilder: (BuildContext context, int index) {
                               List<Box> listBox = presenter.model.listBox;
                               Box box = listBox[index];
-                              print('buildBox');
 
                               Order order;
+
+                              if (index == presenter.model.currentIndex ||
+                                  box.isModified == true) {
+                                return _buildBox(
+                                  deviceSize: deviceSize,
+                                  box: box,
+                                  idOrder: box.orderId,
+                                  index: index,
+                                  color: CustomColor.green,
+                                );
+                              }
+
                               if (box.status == 2 &&
                                   presenter.model.listOrder.length > 0) {
                                 order = presenter.model.listOrder
@@ -809,17 +819,6 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                                     color: CustomColor.orange,
                                   );
                                 }
-                              }
-
-                              if (index == presenter.model.currentIndex ||
-                                  box.isModified == true) {
-                                return _buildBox(
-                                  deviceSize: deviceSize,
-                                  box: box,
-                                  idOrder: box.orderId,
-                                  index: index,
-                                  color: CustomColor.green,
-                                );
                               }
 
                               if (box.type == 1) {

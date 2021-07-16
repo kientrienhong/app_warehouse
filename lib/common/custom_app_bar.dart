@@ -99,23 +99,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
               ),
-              if (name != null)
-                Row(children: [
-                  CustomSizedBox(
-                    context: context,
-                    width: 80,
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 32, bottom: 8),
-                      child: CustomText(
-                          text: name,
-                          color: CustomColor.black,
-                          context: context,
-                          fontSize: 24),
-                    ),
-                  ),
-                ]),
               if (value.role == UserRole.owner && isHome == true)
                 Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 8),

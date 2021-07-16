@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '/models/entity/storage.dart';
@@ -115,6 +116,17 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
             CustomAppBar(
               isHome: false,
               name: widget.data.name,
+            ),
+            CustomText(
+                text: widget.data.name,
+                color: CustomColor.black,
+                context: context,
+                maxLines: 2,
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
+            CustomSizedBox(
+              context: context,
+              height: 8,
             ),
             CarouselSlider(
                 items: _buildListImageWidget(widget.data.picture, deviceSize),
