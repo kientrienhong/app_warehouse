@@ -98,14 +98,14 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
     return Container(
       height: widget.statusTypeInput != StatusTypeInput.INVALID
           ? widget.deviceSize.height / 9.5
-          : widget.deviceSize.height / 8,
+          : widget.deviceSize.height / 7,
       width: widget.deviceSize.width,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Stack(
           overflow: Overflow.visible,
           children: [
             Container(
-                height: widget.deviceSize.height / 15,
+                height: widget.deviceSize.height / 13,
                 padding: const EdgeInsets.only(left: 16, top: 4, bottom: 2),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
@@ -114,6 +114,7 @@ class _CustomOutLineInputState extends State<CustomOutLineInput> {
                   child: TextFormField(
                     obscureText: widget.isSecure,
                     validator: widget.validator,
+                    maxLines: 1,
                     keyboardType: widget.textInputType,
                     style: TextStyle(color: colorLabel, fontSize: 16),
                     enabled: !widget.isDisable,
