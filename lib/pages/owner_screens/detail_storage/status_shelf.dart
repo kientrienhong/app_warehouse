@@ -32,17 +32,36 @@ class StatusShelf extends StatefulWidget {
 
 class _StatusShelfState extends State<StatusShelf> {
   void _showDialog(BuildContext context, int idShelf) {
+    bool isError = false;
+    String msg = '';
+    bool isLoading = false;
     showDialog(
         context: context,
-        builder: (_) {
-          return CustomDeleteDialog(
-            isLoading: widget.presenter.model.isLoadingDeleteShelf,
-            title: 'Delete Storage',
-            content: 'Are you sure?',
-            deleteFunction: () =>
-                widget.presenter.view.onHandleDeleteShelf(idShelf),
-          );
-        });
+        builder: (_) => StatefulBuilder(
+            builder: (context, setState) => CustomDeleteDialog(
+                  isLoading: false,
+                  title: 'Delete Shelf',
+                  content: 'Are you sure?',
+                  isError: isError,
+                  errorMsg: msg,
+                  deleteFunction: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    bool result = await widget.presenter.view
+                        .onHandleDeleteShelf(idShelf);
+                    if (result == false) {
+                      setState(() {
+                        isError = true;
+                        msg = 'Delete failed due to having boxes';
+                      });
+                    }
+
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                )));
   }
 
   @override

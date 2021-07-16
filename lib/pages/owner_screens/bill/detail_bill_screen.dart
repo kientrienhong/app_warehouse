@@ -2,7 +2,9 @@ import 'package:appwarehouse/common/custom_button.dart';
 import 'package:appwarehouse/common/custom_input.dart';
 import 'package:appwarehouse/common/custom_msg_input.dart';
 import 'package:appwarehouse/models/entity/order_customer.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/models/entity/user.dart';
+import 'package:appwarehouse/pages/owner_screens/detail_storage/owner_detail_storage.dart';
 import 'package:appwarehouse/presenters/detail_bill_screen.dart';
 import 'package:appwarehouse/views/detail_bill_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -112,6 +114,13 @@ class _DetailBillScreenState extends State<DetailBillScreen>
   }
 
   @override
+  void updateLoadingStorage() {
+    setState(() {
+      presenter.model.isLoadingStorage = !presenter.model.isLoadingStorage;
+    });
+  }
+
+  @override
   void updateMsg(String msg, bool isError) {
     setState(() {
       presenter.model.msg = msg;
@@ -213,6 +222,21 @@ class _DetailBillScreenState extends State<DetailBillScreen>
 
   @override
   void handleOnClickWithReason(String msg, bool isError, bool isLoading) {}
+
+  @override
+  void handleOnClickGoToStorage() async {
+    User user = Provider.of<User>(context, listen: false);
+    var result = await presenter.handleOnClickGoToStorage(
+        user.jwtToken, widget.data.storageId);
+    Storage currentStorage = Provider.of<Storage>(context, listen: false);
+    currentStorage.setStorage(result);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => OwnerDetailStorage(
+                  data: result,
+                )));
+  }
 
   @override
   void handleOnClickWithoutReason() {
@@ -413,11 +437,23 @@ class _DetailBillScreenState extends State<DetailBillScreen>
                 phone: widget.data.customerPhone,
                 avatar: widget.data.customerAvatar,
                 name: widget.data.customerName),
-            CustomSizedBox(context: context, height: 16),
+            CustomSizedBox(context: context, height: 24),
             if (widget.data.status == 4) _buildCheckOut(deviceSize),
+            if (widget.data.status == 4 || widget.data.status == 2)
+              CustomButton(
+                  height: 32,
+                  text: 'Go to storage',
+                  width: double.infinity,
+                  isLoading: presenter.model.isLoadingStorage,
+                  textColor: CustomColor.white,
+                  onPressFunction: () {
+                    handleOnClickGoToStorage();
+                  },
+                  buttonColor: CustomColor.purple,
+                  borderRadius: 4),
             CustomSizedBox(
               context: context,
-              height: 36,
+              height: 40,
             ),
           ],
         ),

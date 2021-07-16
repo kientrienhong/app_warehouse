@@ -1,3 +1,5 @@
+import 'package:appwarehouse/api/firebase_services.dart';
+
 import '/common/circle_background.dart';
 import '/common/custom_button.dart';
 import '/common/custom_color.dart';
@@ -148,7 +150,6 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
       User user = Provider.of<User>(context, listen: false);
 
       final result = await loginPresenter.handleSignIn(email, password);
-
       if (result != null) {
         user.setUser(user: result);
         if (_model.user.role == UserRole.customer) {
@@ -199,36 +200,6 @@ class _FormLogInState extends State<FormLogIn> implements LoginView {
     setState(() {
       _model.errorMsg = error;
     });
-  }
-
-  Widget _buildButton(
-      {@required Color color,
-      @required String text,
-      @required String imageUrl}) {
-    return Container(
-      height: 32,
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(4), color: color),
-      child: TextButton(
-        onPressed: () {},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(imageUrl),
-            SizedBox(
-              width: 8,
-            ),
-            CustomText(
-              text: text,
-              context: context,
-              color: CustomColor.white,
-              textAlign: TextAlign.start,
-              fontSize: 16,
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   @override

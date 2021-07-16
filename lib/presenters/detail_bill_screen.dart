@@ -1,5 +1,6 @@
 import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/models/detail_bill_screen_model.dart';
+import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/views/detail_bill_view.dart';
 
 class DetailBillScreenPresenter {
@@ -56,6 +57,19 @@ class DetailBillScreenPresenter {
       return false;
     } finally {
       _view.updateLoading();
+    }
+  }
+
+  Future<Storage> handleOnClickGoToStorage(String jwt, int idStorage) async {
+    try {
+      _view.updateLoadingStorage();
+      var resultStorage = await ApiServices.getStorage(jwt, idStorage);
+      return Storage.fromMap(resultStorage.data);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    } finally {
+      _view.updateLoadingStorage();
     }
   }
 }

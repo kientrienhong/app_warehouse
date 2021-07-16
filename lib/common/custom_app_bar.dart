@@ -2,6 +2,8 @@ import 'package:appwarehouse/api/api_services.dart';
 import 'package:appwarehouse/common/custom_color.dart';
 import 'package:appwarehouse/common/custom_sizebox.dart';
 import 'package:appwarehouse/common/custom_text.dart';
+import 'package:appwarehouse/models/entity/imported_boxes.dart';
+import 'package:appwarehouse/models/entity/moved_boxes.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
 import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
@@ -16,7 +18,8 @@ import 'package:intl/intl.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
   final String name;
-  CustomAppBar({this.isHome, this.name});
+  final bool isChooseStorage;
+  CustomAppBar({this.isHome, this.name, this.isChooseStorage: false});
   void callDetailOrder(BuildContext context, int orderId) async {
     try {
       User user = Provider.of<User>(context, listen: false);
@@ -75,30 +78,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ? 'Customer'
                             : 'Owner')
                     : GestureDetector(
-                        onTap: () => {Navigator.of(context).pop()},
+                        onTap: () {
+                          if (isChooseStorage == true) {
+                            ImportedBoxes importedBoxes =
+                                Provider.of<ImportedBoxes>(context,
+                                    listen: false);
+                            MovedBoxes movedBoxes =
+                                Provider.of<MovedBoxes>(context, listen: false);
+                            Order order =
+                                Provider.of<Order>(context, listen: false);
+                            importedBoxes.setImportedBoxes(ImportedBoxes());
+                            order.setOrder(Order.empty());
+                            movedBoxes.setMovedBoxes(MovedBoxes.empty());
+                          }
+                          Navigator.of(context).pop();
+                        },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: Image.asset('assets/images/arrowLeft.png'),
                         ),
                       ),
               ),
-              if (name != null)
-                Row(children: [
-                  CustomSizedBox(
-                    context: context,
-                    width: 80,
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 32, bottom: 8),
-                      child: CustomText(
-                          text: name,
-                          color: CustomColor.black,
-                          context: context,
-                          fontSize: 24),
-                    ),
-                  ),
-                ]),
               if (value.role == UserRole.owner && isHome == true)
                 Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 8),

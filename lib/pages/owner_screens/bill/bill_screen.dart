@@ -85,7 +85,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    width: deviceSize.width / 2.3,
+                    width: deviceSize.width / 2.2,
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -129,12 +129,16 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                                 context: context,
                                 height: 8,
                               ),
-                              CustomText(
-                                text: data.name,
-                                color: CustomColor.black,
-                                context: context,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              Container(
+                                width: deviceSize.width / 3.6,
+                                child: CustomText(
+                                  text: data.name,
+                                  color: CustomColor.black,
+                                  context: context,
+                                  maxLines: 3,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
@@ -155,7 +159,7 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                       height: 8,
                     ),
                     Container(
-                      width: deviceSize.width / 2.8,
+                      width: deviceSize.width / 3,
                       child: CustomText(
                           text: 'Expired date: ' +
                               DateFormat('dd/MM/yyyy').format(dateFormater

@@ -143,12 +143,16 @@ class _ListHistoryBookingScreenState extends State<ListHistoryBookingScreen>
                                 context: context,
                                 height: 8,
                               ),
-                              CustomText(
-                                text: data.name,
-                                color: CustomColor.black,
-                                context: context,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              Container(
+                                width: deviceSize.width / 3.6,
+                                child: CustomText(
+                                  text: data.name,
+                                  color: CustomColor.black,
+                                  context: context,
+                                  maxLines: 3,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '/models/entity/storage.dart';
@@ -71,13 +72,15 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
   }
 
   @override
-  void onHandleDeleteShelf(int idShelf) async {
+  Future<bool> onHandleDeleteShelf(int idShelf) async {
     User user = Provider.of<User>(context, listen: false);
     var result = await presenter.deleteShelf(user.jwtToken, idShelf);
     if (result == true) {
       Navigator.of(context).pop();
       presenter.model.pagingController.refresh();
     }
+
+    return result;
   }
 
   @override
@@ -113,6 +116,17 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
             CustomAppBar(
               isHome: false,
               name: widget.data.name,
+            ),
+            CustomText(
+                text: widget.data.name,
+                color: CustomColor.black,
+                context: context,
+                maxLines: 2,
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
+            CustomSizedBox(
+              context: context,
+              height: 8,
             ),
             CarouselSlider(
                 items: _buildListImageWidget(widget.data.picture, deviceSize),

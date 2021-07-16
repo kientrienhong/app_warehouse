@@ -31,7 +31,7 @@ class _OwnerStorageState extends State<OwnerStorage> {
 
   String statusChecking;
 
-  void deleteStorage(BuildContext context) async {
+  Future<bool> deleteStorage(BuildContext context) async {
     User user = Provider.of<User>(context, listen: false);
     bool result =
         await widget.presenter.deleteStorage(user.jwtToken, widget.data.id);
@@ -40,19 +40,31 @@ class _OwnerStorageState extends State<OwnerStorage> {
       Navigator.of(context).pop();
       widget.presenter.model.pagingController.refresh();
     }
+    return result;
   }
 
   void _showDialog(BuildContext context) {
+    bool isError = false;
+    String msg = '';
     showDialog(
         context: context,
-        builder: (_) {
-          return CustomDeleteDialog(
-            isLoading: widget.presenter.model.isLoadingDeleteStorage,
-            title: 'Delete Storage',
-            content: 'Are you sure?',
-            deleteFunction: () => deleteStorage(context),
-          );
-        });
+        builder: (_) => StatefulBuilder(
+            builder: (context, setState) => CustomDeleteDialog(
+                  isLoading: widget.presenter.model.isLoadingDeleteStorage,
+                  title: 'Delete Storage',
+                  content: 'Are you sure?',
+                  isError: isError,
+                  errorMsg: msg,
+                  deleteFunction: () async {
+                    bool result = await deleteStorage(context);
+                    if (result == false) {
+                      setState(() {
+                        isError = true;
+                        msg = 'Delete failed due to having boxes';
+                      });
+                    }
+                  },
+                )));
   }
 
   void _showDialogReject(BuildContext context, Size deviceSize) {

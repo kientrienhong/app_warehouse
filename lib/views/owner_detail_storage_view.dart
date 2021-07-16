@@ -2,7 +2,7 @@ abstract class OwnerDetailStorageView {
   void updateLoadingAddShelf();
   void updateLoadingDeleteShelf();
   void onHandleAddShelf(int idStorage);
-  void onHandleDeleteShelf(int idShelf);
+  Future<bool> onHandleDeleteShelf(int idShelf);
   void fetchPage(int pageKey);
   void fetchFeedBack(int pageKey);
 }

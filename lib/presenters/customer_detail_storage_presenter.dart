@@ -17,14 +17,27 @@ class CustomerDetailStoragePresenter {
 
   set view(value) => this._view = value;
 
-  void onHandleChangeQuantity(String value, bool isIncrease) {
+  void onHandleChangeQuantity(String value, bool isIncrease, int remainingBox) {
     if (isIncrease == true) {
-      _model.quantities[value]++;
+      if (value != 'months') {
+        int total = _model.quantities['amountSmallBox'] +
+            _model.quantities['amountBigBox'] * 2;
+        if (total == remainingBox - 1 && value == 'amountBigBox') {
+          _view.updateMsgQuantity(true, 'Not enough space in storage');
+        } else if (total >= remainingBox) {
+          _view.updateMsgQuantity(true, 'Not enough space in storage');
+        } else {
+          _model.quantities[value]++;
+        }
+      } else {
+        _model.quantities[value]++;
+      }
     } else {
       if (_model.quantities[value] == 0) {
         return;
       }
       _model.quantities[value]--;
+      _view.updateMsgQuantity(false, '');
     }
     _model.totalPrice =
         ((_model.priceFrom * _model.quantities['amountSmallBox']) +
@@ -55,7 +68,7 @@ class CustomerDetailStoragePresenter {
 
       return {'id': response.data['id'], 'status': response.data['status']};
     } catch (e) {
-      _view.updateMsg(true, 'Pay failed');
+      _view.updateMsg(true, 'Pay failed due not enough space');
       print(e.toString());
       return null;
     } finally {

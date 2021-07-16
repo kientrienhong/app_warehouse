@@ -6,8 +6,9 @@ abstract class CustomerDetailStorageView {
   void updateLoading();
   void updateMsg(bool isError, String msg);
   void updateDatePickUp(String newDate);
+  void updateMsgQuantity(bool isError, String msg);
   // event customer
-  void onClickChangeQuantity(String value, bool isIncrease);
+  void onClickChangeQuantity(String value, bool isIncrease, int remainingBox);
   void onClickPayment(int idStorage);
   void onClickSelectDate(BuildContext context);
 }
