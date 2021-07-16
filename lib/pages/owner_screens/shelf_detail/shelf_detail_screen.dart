@@ -42,7 +42,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
   TextEditingController textEditingController = TextEditingController();
   FocusNode focusNode = FocusNode();
   int staggeredTileBuilderIndex = 0;
-
+  bool isAlreadyMove = false;
   Widget _buildNoteForIconDialog(
       {@required String name,
       @required Color color,
@@ -588,6 +588,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       presenter.model.currentIndex = -1;
+      isAlreadyMove = true;
       presenter.fetchListBox(user.jwtToken, widget.shelf.id);
       MovedBoxes movedBoxes = Provider.of<MovedBoxes>(context, listen: false);
       movedBoxes.setMovedBoxes(MovedBoxes.empty());
@@ -673,6 +674,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
           children: [
             CustomAppBar(
               isHome: false,
+              isAlreadyMove: isAlreadyMove,
             ),
             CustomSizedBox(
               context: context,

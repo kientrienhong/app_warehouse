@@ -344,89 +344,89 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
                 context: context,
                 height: 8,
               ),
-              // CustomText(
-              //     text: 'Storages',
-              //     color: CustomColor.black,
-              //     context: context,
-              //     fontSize: 24),
-              // CustomSizedBox(
-              //   context: context,
-              //   height: 8,
-              // ),
-              // Container(
-              //   width: double.infinity,
-              //   child:
-              //       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              //     CustomText(
-              //         text: 'Box\'s current position',
-              //         color: CustomColor.blue,
-              //         context: context,
-              //         fontSize: 14),
-              //   ]),
-              // ),
-              // CustomSizedBox(
-              //   context: context,
-              //   height: 4,
-              // ),
-              // Container(
-              //   height: deviceSize.height / 7,
-              //   child: Row(
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         GestureDetector(
-              //           onTap: () => onClickStorage(0),
-              //           child: _buildStorage(
-              //               context: context,
-              //               currentIndex: 0,
-              //               data: Provider.of<Storage>(context, listen: false),
-              //               deviceSize: deviceSize),
-              //         ),
-              //         Container(
-              //           width: 4,
-              //           height: deviceSize.height / 7,
-              //           color: CustomColor.black[2],
-              //         ),
-              //         presenter.model.pagingStorageController.error == null
-              //             ? Container(
-              //                 width: deviceSize.width * (2 / 3) - 40,
-              //                 child: RefreshIndicator(
-              //                   onRefresh: () => Future.sync(() => presenter
-              //                       .model.pagingStorageController
-              //                       .refresh()),
-              //                   child: PagedListView<int, Storage>(
-              //                     shrinkWrap: true,
-              //                     scrollDirection: Axis.horizontal,
-              //                     pagingController:
-              //                         presenter.model.pagingStorageController,
-              //                     builderDelegate:
-              //                         PagedChildBuilderDelegate<Storage>(
-              //                             itemBuilder: (context, item, index) =>
-              //                                 GestureDetector(
-              //                                   onTap: () =>
-              //                                       onClickStorage(index + 1),
-              //                                   child: _buildStorage(
-              //                                       context: context,
-              //                                       currentIndex: index + 1,
-              //                                       data: item,
-              //                                       deviceSize: deviceSize),
-              //                                 )),
-              //                   ),
-              //                 ),
-              //               )
-              //             : Container(
-              //                 margin: const EdgeInsets.only(left: 16),
-              //                 child: CustomText(
-              //                     text: 'Empty Storage',
-              //                     color: CustomColor.purple,
-              //                     context: context,
-              //                     fontWeight: FontWeight.bold,
-              //                     fontSize: 16))
-              //       ]),
-              // ),
-              // CustomSizedBox(
-              //   context: context,
-              //   height: 8,
-              // ),
+              CustomText(
+                  text: 'Storages',
+                  color: CustomColor.black,
+                  context: context,
+                  fontSize: 24),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
+              Container(
+                width: double.infinity,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  CustomText(
+                      text: 'Box\'s current position',
+                      color: CustomColor.blue,
+                      context: context,
+                      fontSize: 14),
+                ]),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 4,
+              ),
+              Container(
+                height: deviceSize.height / 7,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () => onClickStorage(0),
+                        child: _buildStorage(
+                            context: context,
+                            currentIndex: 0,
+                            data: Provider.of<Storage>(context, listen: false),
+                            deviceSize: deviceSize),
+                      ),
+                      Container(
+                        width: 4,
+                        height: deviceSize.height / 7,
+                        color: CustomColor.black[2],
+                      ),
+                      presenter.model.pagingStorageController.error == null
+                          ? Container(
+                              width: deviceSize.width * (2 / 3) - 40,
+                              child: RefreshIndicator(
+                                onRefresh: () => Future.sync(() => presenter
+                                    .model.pagingStorageController
+                                    .refresh()),
+                                child: PagedListView<int, Storage>(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  pagingController:
+                                      presenter.model.pagingStorageController,
+                                  builderDelegate:
+                                      PagedChildBuilderDelegate<Storage>(
+                                          itemBuilder: (context, item, index) =>
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    onClickStorage(index + 1),
+                                                child: _buildStorage(
+                                                    context: context,
+                                                    currentIndex: index + 1,
+                                                    data: item,
+                                                    deviceSize: deviceSize),
+                                              )),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              margin: const EdgeInsets.only(left: 16),
+                              child: CustomText(
+                                  text: 'Empty Storage',
+                                  color: CustomColor.purple,
+                                  context: context,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16))
+                    ]),
+              ),
+              CustomSizedBox(
+                context: context,
+                height: 8,
+              ),
               CustomText(
                   text: 'Shelves',
                   color: CustomColor.black,

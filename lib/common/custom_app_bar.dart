@@ -1,12 +1,15 @@
 import 'package:appwarehouse/api/api_services.dart';
-import 'package:appwarehouse/common/custom_color.dart';
-import 'package:appwarehouse/common/custom_sizebox.dart';
-import 'package:appwarehouse/common/custom_text.dart';
 import 'package:appwarehouse/models/entity/imported_boxes.dart';
 import 'package:appwarehouse/models/entity/moved_boxes.dart';
 import 'package:appwarehouse/models/entity/order.dart';
 import 'package:appwarehouse/models/entity/storage.dart';
+import 'package:appwarehouse/pages/customer_screens/bottom_navigation/customer_bottom_navigation.dart';
+import 'package:appwarehouse/pages/customer_screens/for_rent_detail/detail_protecting_service.dart';
+import 'package:appwarehouse/pages/owner_screens/bottom_navigation/owner_bottom_navigation.dart';
 import 'package:appwarehouse/pages/owner_screens/choose_storage/choose_storage_screen.dart';
+import 'package:appwarehouse/pages/owner_screens/detail_storage/owner_detail_storage.dart';
+import 'package:appwarehouse/pages/owner_screens/home_screen/owner_storage.dart';
+import 'package:appwarehouse/presenters/home_presenter.dart';
 
 import '/common/avatar_widget.dart';
 import '/models/entity/user.dart';
@@ -19,7 +22,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
   final String name;
   final bool isChooseStorage;
-  CustomAppBar({this.isHome, this.name, this.isChooseStorage: false});
+  bool isAlreadyMove;
+  CustomAppBar(
+      {this.isHome,
+      this.name,
+      this.isChooseStorage: false,
+      this.isAlreadyMove: false});
   void callDetailOrder(BuildContext context, int orderId) async {
     try {
       User user = Provider.of<User>(context, listen: false);
@@ -79,19 +87,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             : 'Owner')
                     : GestureDetector(
                         onTap: () {
+                          ImportedBoxes importedBoxes =
+                              Provider.of<ImportedBoxes>(context,
+                                  listen: false);
+                          MovedBoxes movedBoxes =
+                              Provider.of<MovedBoxes>(context, listen: false);
+                          Order order =
+                              Provider.of<Order>(context, listen: false);
+                          Storage storage =
+                              Provider.of<Storage>(context, listen: false);
                           if (isChooseStorage == true) {
-                            ImportedBoxes importedBoxes =
-                                Provider.of<ImportedBoxes>(context,
-                                    listen: false);
-                            MovedBoxes movedBoxes =
-                                Provider.of<MovedBoxes>(context, listen: false);
-                            Order order =
-                                Provider.of<Order>(context, listen: false);
                             importedBoxes.setImportedBoxes(ImportedBoxes());
                             order.setOrder(Order.empty());
                             movedBoxes.setMovedBoxes(MovedBoxes.empty());
                           }
-                          Navigator.of(context).pop();
+                          print(isAlreadyMove);
+                          print(movedBoxes.movedBox);
+
+                          if (isAlreadyMove == true &&
+                              movedBoxes.movedBox == null) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => OwnerDetailStorage(
+                                          data: storage,
+                                        )),
+                                (route) => false);
+                            isAlreadyMove = false;
+                            return;
+                          }
+
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          } else {
+                            if (value.role == UserRole.customer) {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          CustomerBottomNavigation()),
+                                  (route) => false);
+                            } else {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => OwnerBottomNavigation()),
+                                  (route) => false);
+                            }
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 16.0),
