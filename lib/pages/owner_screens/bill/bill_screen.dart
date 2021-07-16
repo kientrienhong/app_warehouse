@@ -161,9 +161,8 @@ class _BillScreenState extends State<BillScreen> implements BillView {
                     Container(
                       width: deviceSize.width / 3,
                       child: CustomText(
-                          text: 'Expired date: ' +
-                              DateFormat('dd/MM/yyyy').format(dateFormater
-                                  .parse(data.expiredDate.split('T')[0])),
+                          text: DateFormat('dd/MM/yyyy').format(dateFormater
+                              .parse(data.expiredDate.split('T')[0])),
                           color: CustomColor.black,
                           context: context,
                           maxLines: 2,
