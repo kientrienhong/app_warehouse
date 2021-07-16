@@ -22,17 +22,19 @@ class ShelfDetailPresenter {
 
   void fetchListBox(String jwt, int shelfId) async {
     try {
+      print('fetchListBox');
       _view.updateLoading();
       var response = await ApiServices.loadDeatailShelf(jwt, shelfId);
       List<Box> listBox =
           response.data['boxes'].map<Box>((e) => Box.fromMap(e)).toList();
-      listBox = listBox.map((e) {
+
+      listBox = await Future.wait(listBox.map((e) async {
         if (e.status == 2) {
-          fetchOrder(jwt, e.orderId, false);
+          await fetchOrder(jwt, e.orderId, false);
         }
 
         return e.copyWith(shelfId: shelfId);
-      }).toList();
+      }).toList());
       _model.listBox = listBox;
       _view.updateGridView(listBox);
     } catch (e) {

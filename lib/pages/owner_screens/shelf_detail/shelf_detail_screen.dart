@@ -566,6 +566,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
     if (importedBoxes.importedShelves.containsKey(widget.shelf.id)) {
       presenter.model.listBox = importedBoxes.importedShelves[widget.shelf.id];
     } else {
+      print('test');
       presenter.fetchListBox(user.jwtToken, widget.shelf.id);
     }
   }
@@ -779,6 +780,7 @@ class _ShelfDetailScreenState extends State<ShelfDetailScreen>
                             itemBuilder: (BuildContext context, int index) {
                               List<Box> listBox = presenter.model.listBox;
                               Box box = listBox[index];
+                              print('buildBox');
 
                               Order order;
                               if (box.status == 2 &&

@@ -37,7 +37,9 @@ class LoginPresenter {
       }
       var response = await ApiServices.logIn(result);
       response = json.encode(response.data);
-      _model.user = User.fromJson(json.decode(response));
+      User user = User.fromJson(json.decode(response));
+      print(user.jwtToken);
+      _model.user = user.copyWith(idTokenFirebase: result);
       return _model.user;
     } catch (e) {
       print(e.toString());

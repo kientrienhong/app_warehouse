@@ -71,13 +71,15 @@ class _OwnerDetailStorageState extends State<OwnerDetailStorage>
   }
 
   @override
-  void onHandleDeleteShelf(int idShelf) async {
+  Future<bool> onHandleDeleteShelf(int idShelf) async {
     User user = Provider.of<User>(context, listen: false);
     var result = await presenter.deleteShelf(user.jwtToken, idShelf);
     if (result == true) {
       Navigator.of(context).pop();
       presenter.model.pagingController.refresh();
     }
+
+    return result;
   }
 
   @override

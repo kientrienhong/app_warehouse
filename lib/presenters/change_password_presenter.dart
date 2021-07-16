@@ -44,7 +44,7 @@ class ChangePasswordPresenter {
   }
 
   Future<void> onHandleChangePassword(String newPassword, String oldPassword,
-      String confirmPassword, String jwt) async {
+      String confirmPassword, String jwt, String firebaseTokenId) async {
     try {
       _view.updateLoading();
       String validateMsg = validate(newPassword, oldPassword, confirmPassword);
@@ -54,7 +54,7 @@ class ChangePasswordPresenter {
       }
 
       await ApiServices.changePassword(
-          newPassword, oldPassword, confirmPassword, jwt);
+          newPassword, oldPassword, confirmPassword, jwt, firebaseTokenId);
       _view.updateMsg('Change sucessfull', false);
     } catch (e) {
       _view.updateMsg('Wrong password', true);

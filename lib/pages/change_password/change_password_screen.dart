@@ -96,7 +96,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm>
   onHandleChangePasword(String password, String oldPassword, String confirm) {
     User user = Provider.of<User>(context, listen: false);
     presenter.onHandleChangePassword(
-        password, oldPassword, confirm, user.jwtToken);
+        password, oldPassword, confirm, user.jwtToken, user.idTokenFirebase);
   }
 
   Widget _buildMsg({BuildContext context}) {

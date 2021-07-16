@@ -10,10 +10,12 @@ class User with ChangeNotifier {
   UserRole role;
   String jwtToken;
   String avatar;
+  String idTokenFirebase;
   User.empty() {
     name = '';
     email = '';
     phone = '';
+    idTokenFirebase = '';
     address = '';
     role = UserRole.customer;
     jwtToken = '';
@@ -23,12 +25,14 @@ class User with ChangeNotifier {
   User(
       {String name,
       String email,
+      String idTokenFirebase,
       String phone,
       String address,
       UserRole role,
       String avatar,
       String jwtToken}) {
     this.name = name;
+    this.idTokenFirebase = idTokenFirebase;
     this.email = email;
     this.phone = phone;
     this.address = address;
@@ -43,11 +47,13 @@ class User with ChangeNotifier {
       String phone,
       String address,
       UserRole role,
+      String idTokenFirebase,
       String jwtToken,
       String avatar}) {
     name = name;
     email = email;
     phone = phone;
+    idTokenFirebase = idTokenFirebase;
     address = address;
     role = role;
     jwtToken = jwtToken;
@@ -58,6 +64,7 @@ class User with ChangeNotifier {
     name = user.name ?? this.name;
     email = user.email ?? this.email;
     phone = user.phone ?? this.phone;
+    idTokenFirebase = user.idTokenFirebase ?? this.idTokenFirebase;
     address = user.address ?? this.address;
     role = user.role ?? this.role;
     jwtToken = user.jwtToken ?? this.jwtToken;
@@ -71,11 +78,13 @@ class User with ChangeNotifier {
       String phone,
       String address,
       UserRole role,
+      String idTokenFirebase,
       String jwtToken,
       String avatar}) {
     return User(
         address: address ?? this.address,
         email: email ?? this.email,
+        idTokenFirebase: idTokenFirebase ?? this.idTokenFirebase,
         jwtToken: jwtToken ?? this.jwtToken,
         name: name ?? this.name,
         phone: phone ?? this.phone,

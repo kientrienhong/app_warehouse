@@ -218,7 +218,7 @@ class _ChooseStorageScreenState extends State<ChooseStorageScreen>
           importedBoxes.listResult, order, reasonController.text);
     } else {
       result = await presenter.importedBoxes(
-          user.jwtToken, importedBoxes.listResult, order, '');
+          user.jwtToken, importedBoxes.listResult, order, null);
     }
 
     if (result == true) {
